@@ -1,0 +1,43 @@
+a{
+    text-decoration: none;
+    color: inherit;
+}
+
+#header {
+    background: purple;
+    height: 25%;
+    width: 100%;
+    padding: 5%;
+}
+
+#menu table {
+    width: 100%;
+    border: solid purple;
+}
+
+#menu table td{
+    background: purple;
+    padding-left: 3%;
+   /* border: solid beige;*/
+    color: beige;
+}
+
+#menu table td:hover {
+    color: purple;
+    background: beige;
+}
+
+h1{
+    color: beige;
+}
+
+body{
+    margin: 0;
+    background: beige;
+ /*DOTTED*/
+}
+
+.text{
+    padding: 5%;
+    color: black;
+}
