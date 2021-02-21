@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-
 <html>
 <head>
     <title>Milica Gnjatovć</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../public/css/index.css">
+    <link rel="stylesheet" type="text/css" href="/public/css/index.css">
 </head>
 
 <body>
