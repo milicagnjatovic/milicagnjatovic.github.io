@@ -13,7 +13,7 @@
         <table>
             <tr>
                 <td>games</td>
-                <td> <a href = "about_me.html">about me </a></td>
+                <td> <a href = "https://github.com/milicagnjatovic/milicagnjatovic.github.io/blob/master/resources/milica_gnjatovic.pdf">about me </a></td>
             </tr>
         </table>
     </div>
