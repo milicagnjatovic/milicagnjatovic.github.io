@@ -2,9 +2,6 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>
-    precice
-</title>
 <style>
 body {
     background-color: brown;
@@ -33,4 +30,5 @@ body {
  
 
  </body>
+ 
 </html>
