@@ -1,17 +1,3 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<style>
-body {
-    background-color: brown;
-}
-</style>
-
-</head>
-
-<body>
-
 # Milica Gnjatović
 
 ---
@@ -26,9 +12,4 @@ body {
 * [2048](https://github.com/milicagnjatovic/2048)
 * [Game of codes](https://github.com/milicagnjatovic/game_of_codes)
 * [Morse - learn and play](https://play.google.com/store/apps/details?id=com.milica2020.morsegame)
-* [Graphic project](https://github.com/milicagnjatovic/grafika_projekat)
- 
-
- </body>
- 
-</html>
+* [Graphic pro
