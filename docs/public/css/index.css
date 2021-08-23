@@ -40,3 +40,11 @@ body{
     padding: 1%;
     box-shadow: 0 0 10px purple;
 }
+
+iframe {
+    width: 100%;;
+    height: max-content;
+    outline: none;
+    margin: 0;
+    padding: 0;
+}

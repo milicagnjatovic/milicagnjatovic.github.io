@@ -6,13 +6,8 @@
         "date" : "1234"    
         },   
         {
-        "title": "First project",
-        "text": "Some first projects",
-        "date" : "1234"    
-        },   
-        {
-        "title": "First project",
-        "text": "Some first projects",
+        "title": "Scond project",
+        "text": "Some second projects",
         "date" : "1234"    
         }
     ]

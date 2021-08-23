@@ -4,60 +4,30 @@
 <head>
     <title>Milica Gnjatovć</title>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="public/css/index.css">
+    <link rel="stylesheet" type="text/css" href="public/css/index.css?vr=1.0">
     <script type="text/javascript" src="public/js/index.js"></script>
 </head>
 
-<body>
+<body onload="loadJSON()">
     <div id = "header">
         <h1> Milica Gnjatovć</h1>
     </div>
 
-    <div class="project" onclick="loadJSON()">
+    <div class="project" onclick="showAll(this)">
         <div class="project_title">O meni</div>
         <div class="project_content">
-            <a href="../resources/milica_gnjatovic.pdf">CV</a>
+            <iframe src="resources/milica_gnjatovic.pdf" title="CV"></iframe>
         </div>
     </div>
 
     <div id="projects">
-        <div class="project" onclick="showAll(this)">
+        <!-- <div class="project" onclick="showAll(this)">
             <div class="project_title">1</div>
             <div class="project_content">
             Opis projekta
             </div>
-        </div>
+        </div> -->
         
-        <div class="project" onclick="showAll(this)">
-            <div class="project_title">2</div>
-            <div class="project_content">
-            Opis projekta
-            </div>
-        </div>
-
-        <div class="project" onclick="showAll(this)">
-            <div class="project_title">3</div>
-            <div class="project_content">
-            Opis projekta
-            </div>
-        </div>
-
-        <div class="project" onclick="showAll(this)">
-            <div class="project_title">4</div>
-            <div class="project_content">
-            Opis projekta
-            </div>
-        </div>
-
-        <div class="project" onclick="showAll(this)">
-            <div class="project_title">5</div>
-            <div class="project_content">
-            Opis projekta
-            </div>
-        </div>
-        
-        
-        nekitekst
     </div>
 
 </body>
