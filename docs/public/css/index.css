@@ -1,13 +1,11 @@
-a{
-    text-decoration: none;
-    color: inherit;
-}
 
 #header {
-    background: purple;
-    height: 25%;
-    width: 100%;
+    background-image: linear-gradient(to right, purple , pink);
+    height: 10%;
+    width: 90%;
     padding: 5%;
+    font-size: 30px;
+    color: beige;
 }
 
 body{
@@ -20,14 +18,20 @@ body{
     color: black;
 }
 
-.project_title {
-    color: red;
+h1 {
+    color: purple;
     border: 1px;
     font-size: 25px;
 }
 
 .project_content {
     display: none;
+}
+
+img {
+    display: block;
+    width: 30%;
+    margin: auto;
 }
 
 .project {
@@ -42,9 +46,8 @@ body{
 }
 
 iframe {
-    width: 100%;;
-    height: max-content;
-    outline: none;
-    margin: 0;
-    padding: 0;
+    width: 100%;
+    border: none;
+    scroll-padding: 0;
 }
+

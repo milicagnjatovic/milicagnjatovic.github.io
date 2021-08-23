@@ -1,14 +1,40 @@
 {
     "project":[
         {
-        "title": "First project",
-        "text": "Some first projects",
-        "date" : "1234"    
+        "title": "Guessing game",
+        "text": "Igra pogađanja identična igri kviza slagalica, cilj je pogoditi sve četiri boje i postaviti ih na odovarajuća mesta.",
+        "link" : "https://github.com/milicagnjatovic/guessing_game",   
+        "image": "imgs/guessing_game.png"
         },   
         {
-        "title": "Scond project",
-        "text": "Some second projects",
-        "date" : "1234"    
+        "title": "Morse - learn and play",
+        "text": "Morz je osmišljen kako bi se kroz igru naučio Morzov kod.\nRađeno u Kotlin-u.",
+        "link" : "https://play.google.com/store/apps/details?id=com.milica2020.morsegame&hl=sr&gl=US",
+        "image": "imgs/morse.png" 
+        },   
+        {
+        "title": "2048",
+        "text": "Cilj igre je spajanjem polja doći do što većeg broja.",
+        "link" : "https://github.com/milicagnjatovic/2048",
+        "image": "imgs/2048.png" 
+        },   
+        {
+        "title": "Game of codes",
+        "text": "Igra koja omogućava učenje različitih kodova, poput Morzovog. Moguće je uneti i druge kodove i kroz igru i naučiti.",
+        "link" : "https://github.com/milicagnjatovic/game_of_codes",
+        "image": "imgs/coding_game.png" 
+        },   
+        {
+        "title": "Robot igrica",
+        "text": "Studentski timski projekat. Robot se kreće po podlozi i sakuplja baterije i poneki bonus. Rađeno u C++u uz korišćenje OpenGLa.",
+        "link" : "https://github.com/milicagnjatovic/grafika_projekat",
+        "image": "imgs/robot.png" 
+        },   
+        {
+        "title": "Kviiiz",
+        "text": "Studentski timski projekat. Kviz zasnovan na chat room-u. Igrači mogu slobodno da se dopisuju dok admin ne pokrene igru, nakon toga kreću pitanja. Rađeno u programskom jeziku go.",
+        "link" : "https://github.com/matf-pp/2021_Kviiiz-cid",
+        "image": "imgs/kviz.png" 
         }
     ]
 }
