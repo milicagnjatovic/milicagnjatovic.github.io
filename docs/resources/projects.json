@@ -35,6 +35,12 @@
         "text": "Studentski timski projekat. Kviz zasnovan na chat room-u. Igrači mogu slobodno da se dopisuju dok admin ne pokrene igru, nakon toga kreću pitanja. Rađeno u programskom jeziku go.",
         "link" : "https://github.com/matf-pp/2021_Kviiiz-cid",
         "image": "imgs/kviz.png" 
+        },   
+        {
+        "title": "Analiza rezultata MATF-a",
+        "text": "Java program koji prikazuje kako studenti prolaze na ispitima.",
+        "link" : "https://github.com/milicagnjatovic/analiza_rezultata_matf",
+        "image": "imgs/analiza_rezultata.png" 
         }
     ]
 }

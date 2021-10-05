@@ -1,3 +1,8 @@
+/*
+TESTING
+RUN local server in folder: python3 -m http.server 8000
+in browser: http://localhost:8000/
+*/
 function showAll(element){
     content = element.children[1]
     if (content.style.display === "none" || content.style.display===''){
