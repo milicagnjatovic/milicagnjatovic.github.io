@@ -41,6 +41,13 @@
         "text": "Java program koji prikazuje kako studenti prolaze na ispitima.",
         "link" : "https://github.com/milicagnjatovic/analiza_rezultata_matf",
         "image": "imgs/analiza_rezultata.png" 
+        },   
+        {
+        "title": "WhatsApp Message Analyser - WAMA",
+        "text": "Android aplikacija rađena u jeziku Kotlin. Analizira WhatsApp poruke i daje izveštaj ko je koliko poruka poslao i ko je koliko puta rekao određene reči.",
+        "link" : "https://play.google.com/store/apps/details?id=com.milica2020.messageanalyser",
+        "image": "imgs/wama.png" 
         }
+    ]
     ]
 }
