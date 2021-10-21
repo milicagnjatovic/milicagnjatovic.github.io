@@ -1,4 +1,52 @@
 {
-    "projects": "Projects",
-    "aboutme":"About me"
+    "project":[
+        {
+        "title": "Guessing game",
+        "text":  "Game identical to game Skocko from Serbian quiz Slagalica. Goal is to guess four colors in corect order. When you submit your guess app will show you how much you've guessed right - yellow circle means you got color right but it's in wrong position, and red circle means you guessed right color in right place. Position of red and yellow circles doesn't match position of colors you guessed correctly.\nLanguage: Java using JavaFX library.",
+        "link" : "https://github.com/milicagnjatovic/guessing_game",   
+        "image": "imgs/guessing_game.png"
+        },   
+        {
+        "title": "Morse - learn and play",
+        "text": "Morse is game made to make learning morse code fun. There are few functionalities. You can trasnslate both ways or use training mode to practice.\nWhen you start game mode letters will start falling from top of the scree. Your task is to type in correct morse code for falling letter. If letter hit the ground you'll lose a life. Game can be plaeyd in infinite mode where letters fall until you lose all lifes, or in mode with levels, where letters fall faster in each nect level.\nLangauge: Kotlin. Availabble on Play Store.",
+        "link" : "https://play.google.com/store/apps/details?id=com.milica2020.morsegame&hl=sr&gl=US",
+        "image": "imgs/morse.png" 
+        },   
+        {
+        "title": "2048",
+        "text": "Game inspired by game 2048 Original from Google play. You can swipe in four directions. When two cells with same number get next to eaacch other after you swipe they'll collide in one cell with value of sum of starting cells. Goal is to get highest number possible. 2048 is not the maximum you can get, just pretty good goal ;)\nLangauge: Java using JavaFX library.",
+        "link" : "https://github.com/milicagnjatovic/2048",
+        "image": "imgs/2048.png" 
+        },   
+        {
+        "title": "Game of codes",
+        "text": "Game made for learning specific codes, like Morse code. You can input your own coding scheme and practice. Game contains of quick typing codes of characters on the screen. There is translate option too. Langauge: Java using JavaFX library.",
+        "link" : "https://github.com/milicagnjatovic/game_of_codes",
+        "image": "imgs/coding_game.png" 
+        },   
+        {
+        "title": "Robot game",
+        "text": "Student grouop project. Robot is moving and collecting bateries. From time to time magic box will appear for short period of time, and if robot collect it in time it gains speed. Language: C++ with OpenGL.",
+        "link" : "https://github.com/milicagnjatovic/grafika_projekat",
+        "image": "imgs/robot.png" 
+        },   
+        {
+        "title": "Kviiiz",
+        "text": "Student group project. Quiz based on chat room. While not playing participants can normaly chat. When game starts each player will get message with question. Players reply by texting what tehy think correct answer is. After game everyone get score board. Langueage: GO",
+        "link" : "https://github.com/matf-pp/2021_Kviiiz-cid",
+        "image": "imgs/kviz.png" 
+        },   
+        {
+        "title": "MATF result analyse",
+        "text": "Aplication that shows how many students pass certain course, what are they scores, how many student got specific grade, how many failed... Database contains actual data from students of Belgrade Univerity of Mathematics (MATF). That database is not available from privacy reasosn. Lanuagae: Java using JavaFX library, DB2 for databases and Hibernate.",
+        "link" : "https://github.com/milicagnjatovic/analiza_rezultata_matf",
+        "image": "imgs/analiza_rezultata.png" 
+        },   
+        {
+        "title": "Message Analyser",
+        "text": "Aplication that shows how many messages each participant in chat sent, how many characters. You can input word (or regex) that will be counted in chat. Information you get will be stored on phone. Later on you can add date to chat you analysed before. All you need to do is to export chat from WhatsApp and input it aplication with words you want to count. Langauge: Kotlin. Avaliable on Play Store.",
+        "link" : "https://play.google.com/store/apps/details?id=com.milica2020.messageanalyser",
+        "image": "imgs/wama.png" 
+        }
+    ]
 }

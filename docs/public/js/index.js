@@ -3,6 +3,8 @@ TESTING
 RUN local server in folder: python3 -m http.server 8000
 in browser: http://localhost:8000/
 */
+var data_file = 'languages/en.json'
+
 function showAll(element){
     content = element.children[1]
     if (content.style.display === "none" || content.style.display===''){
@@ -15,10 +17,10 @@ function showAll(element){
 
 function loadJSON(){
     var el = document.getElementById("projects")
-    fetch('./resources/projects.json?vr=1.0') // vr=1.0 da bi se video najnoviji fajl
+    el.innerHTML = ''
+    fetch(data_file) // vr=1.0 da bi se video najnoviji fajl
     .then(response => response.json())
     .then(data => {
-        console.log(data)
         for(let i=0; i<data.project.length; i++){
             var main_div = document.createElement("div")
             main_div.className = "project"
@@ -38,7 +40,7 @@ function loadJSON(){
 
             var link_tag = document.createElement("a")
             link_tag.href = data.project[i].link
-            link_tag.text = "Više..."
+            link_tag.text = '****'
 
             var img_tag = document.createElement("img")
             img_tag.src = data.project[i].image
@@ -54,4 +56,9 @@ function loadJSON(){
         }
     })
     .catch(error => console.log(error))
+}
+
+function change_language(){
+    data_file = document.getElementById("language_select").value;
+    loadJSON()
 }
