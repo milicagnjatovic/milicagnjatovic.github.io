@@ -8,7 +8,7 @@
         },   
         {
         "title": "Morse - learn and play",
-        "text": "Morse is game made to make learning morse code fun. There are few functionalities. You can trasnslate both ways or use training mode to practice.\nWhen you start game mode letters will start falling from top of the scree. Your task is to type in correct morse code for falling letter. If letter hit the ground you'll lose a life. Game can be plaeyd in infinite mode where letters fall until you lose all lifes, or in mode with levels, where letters fall faster in each nect level.\nLangauge: Kotlin. Availabble on Play Store.",
+        "text": "Morse is game made to make learning morse code fun. There are few functionalities. You can trasnslate both ways or use training mode to practice.\nWhen you start game mode letters will start falling from top of the scree. Your task is to type in correct morse code for falling letter. If letter hit the ground you'll lose a life. Game can be plaeyd in infinite mode where letters fall until you lose all lifes, or in mode with levels, where letters fall faster in each next level.\nLangauge: Kotlin. Availabble on Play Store.",
         "link" : "https://play.google.com/store/apps/details?id=com.milica2020.morsegame&hl=sr&gl=US",
         "image": "imgs/morse.png" 
         },   
@@ -47,6 +47,18 @@
         "text": "Aplication that shows how many messages each participant in chat sent, how many characters. You can input word (or regex) that will be counted in chat. Information you get will be stored on phone. Later on you can add date to chat you analysed before. All you need to do is to export chat from WhatsApp and input it aplication with words you want to count. Langauge: Kotlin. Avaliable on Play Store.",
         "link" : "https://play.google.com/store/apps/details?id=com.milica2020.messageanalyser",
         "image": "imgs/wama.png" 
+        },   
+        {
+        "title": "GuessMyDrawing",
+        "text": "This is a game in which one player is drawing something and other players are guessing what is that player drawing. Players who guess correctly will become new host, choose new word and start drawing it. This was group university project. Language: C++, using Qt framework.",
+        "link" : "https://gitlab.com/matf-bg-ac-rs/course-rs/projects-2021-2022/07-GuessMyDrawing",
+        "image": "imgs/guess_my_drawing.png" 
+        },   
+        {
+        "title": "IfYouKnowYouKnow",
+        "text": "This is a quiz game. You can play with or without account. Quiz has 5 games: jigsaw, if you know, match pairs, jumper and associations. After one played game your score will be saved in database if you are logged in. This was group university project. Made with Angular, using MongoDB",
+        "link" : "https://gitlab.com/matfpveb/projekti/2021-2022/04-IfYouKnowYouKnow",
+        "image": "imgs/if_you_know.png" 
         }
     ]
 }
