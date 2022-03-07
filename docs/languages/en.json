@@ -13,6 +13,12 @@
         "image": "imgs/morse.png" 
         },   
         {
+        "title": "Tetris",
+        "text": "Good old Tetris, classic old game. Game is made in Java, using JavaFX for drawing scene.",
+        "link" : "https://github.com/milicagnjatovic/Tetris",
+        "image": "imgs/tetris.png" 
+        }, 
+        {
         "title": "2048",
         "text": "Game inspired by game 2048 Original from Google play. You can swipe in four directions. When two cells with same number get next to eaacch other after you swipe they'll collide in one cell with value of sum of starting cells. Goal is to get highest number possible. 2048 is not the maximum you can get, just pretty good goal ;)\nLangauge: Java using JavaFX library.",
         "link" : "https://github.com/milicagnjatovic/2048",

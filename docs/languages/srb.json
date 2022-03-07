@@ -2,7 +2,7 @@
     "project":[
         {
         "title": "Guessing game",
-        "text": "Igra pogađanja identična igri kviza slagalica, cilj je pogoditi sve četiri boje i postaviti ih na odovarajuća mesta.",
+        "text": "Igra pogađanja identična igri kviza slagalica, cilj je pogoditi sve četiri boje i postaviti ih na odovarajuća mesta.\nRađeno u Javi, sa bibliotekom JavaFX.",
         "link" : "https://github.com/milicagnjatovic/guessing_game",   
         "image": "imgs/guessing_game.png"
         },   
@@ -13,6 +13,12 @@
         "image": "imgs/morse.png" 
         },   
         {
+        "title": "Tetris",
+        "text": "Tetris je klasična igra, šta više reći. Rađeno u Javi, sa bibliotekom JavaFX.",
+        "link" : "https://github.com/milicagnjatovic/Tetris",
+        "image": "imgs/tetris.png" 
+        }, 
+        {
         "title": "2048",
         "text": "Cilj igre je spajanjem polja doći do što većeg broja.",
         "link" : "https://github.com/milicagnjatovic/2048",
@@ -20,7 +26,7 @@
         },   
         {
         "title": "Game of codes",
-        "text": "Igra koja omogućava učenje različitih kodova, poput Morzovog. Moguće je uneti i druge kodove i kroz igru i naučiti.",
+        "text": "Igra koja omogućava učenje različitih kodova, poput Morzovog. Moguće je uneti i druge kodove i kroz igru i naučiti.\nRađeno u Javi, sa bibliotekom JavaFX.",
         "link" : "https://github.com/milicagnjatovic/game_of_codes",
         "image": "imgs/coding_game.png" 
         },   
@@ -38,13 +44,13 @@
         },   
         {
         "title": "Analiza rezultata MATF-a",
-        "text": "Java program koji prikazuje kako studenti prolaze na ispitima.",
+        "text": "Java program koji prikazuje kako studenti prolaze na ispitima.\nRađeno u Javi, sa bibliotekom JavaFX.",
         "link" : "https://github.com/milicagnjatovic/analiza_rezultata_matf",
         "image": "imgs/analiza_rezultata.png" 
         },   
         {
         "title": "Message Analyser",
-        "text": "Android aplikacija rađena u jeziku Kotlin. Analizira WhatsApp poruke i daje izveštaj ko je koliko poruka poslao i ko je koliko puta rekao određene reči.",
+        "text": "Android aplikacija rađena u jeziku Kotlin. Analizira WhatsApp poruke i daje izveštaj ko je koliko poruka poslao i ko je koliko puta rekao određene reči.\nRađeno u Kotlinu.",
         "link" : "https://play.google.com/store/apps/details?id=com.milica2020.messageanalyser",
         "image": "imgs/wama.png" 
         },   

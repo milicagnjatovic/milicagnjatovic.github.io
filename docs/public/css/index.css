@@ -63,3 +63,10 @@ iframe {
     border: inset;
     color: beige;
 }
+
+#contact {
+    position: absolute;
+    bottom: 0px;
+    right: 0px;
+    margin: 10px;
+}
