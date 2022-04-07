@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+</head>
+<body>
+
+    <div id="instructions" class="box">
+        Use up, down, left and right key to move and collect flowers :)
+        <br>
+        <br>
+        <button id="okBtn" class="box" style="width: 100%;">OK</button>
+    </div>
+
+    <div id="options">
+        <h1 style="text-align: center;"> Game </h1>
+        <h1 id="score" class="box" style="width: 50%;"> 0</h1>
+        <button class="box" style="display: block;" onclick="new_game()">new game</button>
+        <button class="box" style="display: block;" id="changeBtn">character</button>
+
+        <table id="characters" >
+            <tr>
+                <td id="0"><img src="./resources/emoji1.png" alt="el1" ></td>
+                <td id="1"><img src="./resources/emoji2.png" alt="el1"></td>
+            </tr>
+            <tr>
+                <td id="2"><img src="./resources/emoji3.png" alt="el1"></td>
+                <td id="3"><img src="./resources/emoji4.png" alt="el1"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div id="board">
+        <div id="square"></div>
+        <img id="target" src="./resources/flower.png" alt="flower">
+    </div>
+
+    <script src="index.js">
+      
+    </script>
+</body>
+</html>

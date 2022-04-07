@@ -2,6 +2,8 @@
 TESTING
 RUN local server in folder: python3 -m http.server 8000
 in browser: http://localhost:8000/
+or
+live server
 */
 var data_file = 'languages/en.json'
 
@@ -27,7 +29,6 @@ function loadJSON(){
             main_div.onclick = function() {showAll(this);}
 
             var div_title = document.createElement("h1")
-            div_title.className = "project_title"
             var title = document.createTextNode(data.project[i].title)
             div_title.appendChild(title)
 
