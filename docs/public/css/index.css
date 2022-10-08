@@ -1,12 +1,38 @@
-
 #header {
     background-image: linear-gradient(to right, purple , pink);
-    height: 10%;
-    width: 90%;
+    /* height: 10%; */
+    /* width: 90%; */
     padding: 5%;
     font-size: 30px;
     color: beige;
+    position: relative;
+    margin: 0;
 }
+
+#menu {
+    font-size: 20px;
+    position: absolute;
+    bottom: 5px;
+    width: 90%;
+}
+
+#menu th {
+    border: solid white 2px;
+}
+
+#menu th:hover {
+    background-color: white;
+    color: purple;
+}
+
+td a, td a:hover, td a:focus, td a:active,
+th a, th a:hover, th a:focus, th a:active {
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    display: block;
+}
+
 
 body{
     margin: 0;

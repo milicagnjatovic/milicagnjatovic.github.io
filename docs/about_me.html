@@ -1,30 +1,61 @@
 <!DOCTYPE html>
 
 <html>
-    <head>
-        <title>Milica Gnjatovć</title>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" type="text/css" href="../public/css/index.css">
-    </head>
+<head>
+    <title>Milica Gnjatović</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="public/css/index.css">  
+    <script type="text/javascript" src="public/js/index.js"></script>
+</head>
 
-    <body>
-        <div id = "header">
-            <h1><a href="index.html"> Milica Gnjatovć </a></h1>
-        </div>
-        <div id = "menu">
-            <table>
-                <tr>
-                    <td>games</td>
-                    <td> <a href="about_me.html">about me</a></td>
-                </tr>
-            </table>
-        </div>
+<body onload="loadJSON()">
+    <div id = "header">
+        <h2>Milica Gnjatović</h2>
+        <select id = "language_select" onchange="change_language();">
+            <option value="languages/en.json">eng</option>
+            <option value="languages/srb.json">srb</option>
+        </select>
 
-        <div class = "text">
-            <p>
-                I'm Milica Gnjatovć and I'm studying programming at Belgrade University of Mathematics. <br>
-                My <b><a href="../resources/milica_gnjatovic.pdf">CV</a></b>.
-            </p>
+        <table id="menu">
+            <tr>
+                <th> <a href="./index.html"> časovi </a> </th>                    
+                <th> <a href="./about_me.html"> o meni </a> </th>
+            </tr>
+        </table>
+    </div>
+
+    <!-- <div class="project" onclick="showAll(this)">
+        <h1>CV</h1>
+        <div class="project_content">
+            <iframe src="resources/milica_gnjatovic_public.pdf" title="CV" height="300px"></iframe>
         </div>
-    </body>
+    </div> -->
+
+    <div id="projects">
+        <!-- <div class="project" onclick="showAll(this)">
+            <div class="project_title">1</div>
+            <div class="project_content">
+            <p>Opis projektaaaaaaaprojektaaaaaaaprojektaaaaaaaprojektaaaaaaaprojektaaaaaaapr ojektaaaaaaaprojek taaaaaaapro jektaaaaaaaprojektaaa aaaaprojek taaaaaaaprojektaaaaaaa</p>
+            
+            <a href="neki link">Link</a>
+            <img src="imgs/2048.png">
+            </div>
+        </div> -->
+        
+    </div>
+    <div class="project">
+        <h1> Collector game </h1>
+        <div class="project+"></div>
+        Once upon a time I was bored and simple game happened... 
+        <a href="./collecting_game/game.html" class="project" style="display: block; margin: 10px; text-align: center;">PLAY</a>
+    </div>
+    <!-- <div id="contacts"> -->
+        <!-- <a href="mailto:milicagnjatovic18@gmail.com"> -->
+            <!-- <img src="imgs/gmail.png" alt="email"> -->
+        <!-- </a> -->
+    <!-- </div> -->
+
+</body>
+
+
 </html>

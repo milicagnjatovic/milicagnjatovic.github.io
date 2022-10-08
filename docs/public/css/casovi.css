@@ -1,0 +1,84 @@
+#right_menu, #left_menu {
+    position: absolute;
+    margin: 2%;
+}
+
+main {
+    font-size: 20px;
+    position: relative;
+    width: 90%;
+}
+
+
+#left_menu {
+    width: 20%;
+    left: 0px;
+}
+
+#right_menu {
+    width: 75%;
+    right: 0px;
+    padding: 5px;
+}
+
+#left_menu table {
+    width: 100% ;
+}
+
+#left_menu table td {
+    border: solid purple 2px;
+    color: purple;
+    width: 100%;
+    padding: 4%;
+}
+
+#left_menu table td:hover {
+    border: solid purple 2px;
+    color: white;
+    font-weight: bold;
+    background-color: purple;
+
+}
+
+.kod {
+    font-family: monospace;
+    background-color: rgba(128, 128, 128, 0.5);
+    padding: 2%;
+}
+
+#pocetak {
+    background-color: purple;
+    color: white;
+    z-index: 5;
+    position: fixed;
+    bottom: 0;
+    right: 0px;
+    padding: 10px;
+    margin: 10px;
+}
+
+.basic_underline td{
+    padding-right: 100px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    border-bottom: solid black 1px;
+}
+.zadatak {
+    font-style: italic;
+}
+
+.domaci {
+    background-color: rgba(219, 207, 101, 0.5);
+    padding: 2%;
+}
+
+h1 {
+    border-top: solid purple 4px;
+    padding-top: 20px;
+    font-size: 40px;
+}
+
+h3 {
+    font-size: 30px;
+}
+
