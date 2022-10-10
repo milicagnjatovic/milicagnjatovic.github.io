@@ -57,7 +57,12 @@ main {
     margin: 10px;
 }
 
+.basic_underline {
+    border-collapse: collapse;
+}
+
 .basic_underline td{
+    width: inherit;
     padding-right: 100px;
     padding-top: 10px;
     padding-bottom: 10px;
