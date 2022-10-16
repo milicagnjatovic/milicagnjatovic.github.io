@@ -116,5 +116,13 @@
                 "SELECT D.INDEKS, D.IME, D.PREZIME, P.NAZIV, I.OCENA<br>FROM DA.DOSIJE AS D LEFT JOIN DA.ISPIT AS I<br><tab></tab><tab></tab>ON D.INDEKS = I.INDEKS AND I.OCENA>5 AND I.STATUS='o'<br><tab></tab>LEFT JOIN DA.PREDMET AS P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br>WHERE D.IME LIKE '%ark%'<br>ORDER BY INDEKS;"
             ]
         }
+    ],
+    "zadaciZaVezbanje":[
+        " Izdvojiti podatke o priznatim ispitima sa poznatom ocenom.",
+        " Izdvojiti podatke o upisanim školskim godinama studenata. Izdvojiti indeks, ime i prezime studenta, školsku godinu i datum upisa godine. Rezultat urediti prema indeksu u opadajućem poretku i školskoj godini u rastućem poretku.",
+        " Izdvojiti parove studenata koji su rođeni u istom mestu. Izdvojiti indekse studenata.",
+        " Za svaki predmet izdvojiti podatke o ispitnim rokovima u kojima je predmet poništen. Izdvojiti naziv predmeta, školsku godinu u kojoj je održan ispitni rok i oznaku roka. Izdvojiti podatke i o predmetima čiji nijedan ispit nije poništen. Upit napisati tako da nema ponavljanja redova u rezultatu. ",
+        " Za svaki predmet izdvojiti podatke o ispitnim rokovima u kojima je predmet poništen. Izdvojiti naziv predmeta i naziv ispitnog roka. Izdvojiti podatke i o predmetima čiji nijedan ispit nije poništen. Upit napisati tako da nema ponavljanja redova u rezultatu. ",
+        " Izdvojiti podatke o studentima i njihovim upisanim predmetima od 5, 10, 12 ili 25 espb čiji naziv počinje sa Pr i sadrži malo slovo o. Izdvojiti podatke samo za školske godine u intervalu od 2016/2017. do 2020/2021. Izdvojiti indeks, ime, prezime studenta, školsku godinu, naziv upisanog predmeta i broj espb predmeta. Rezultat urediti prema indeks, školskoj godini i oznaci predmeta. "
     ]
 }

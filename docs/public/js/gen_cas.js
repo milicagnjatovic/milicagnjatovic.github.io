@@ -1,8 +1,9 @@
 function loadClassFromJSON(elId, classFile){
-    let el = document.getElementById(elId)
+    let root = document.getElementById(elId)
     fetch(classFile) // vr=1.0 da bi se video najnoviji fajl
     .then(response => response.json())
     .then(data => {
+        let zadaciOL = document.createElement("ol");
         for(let zadatak of data.zadaci){
             console.log(zadatak)
             let item = document.createElement('li');
@@ -26,8 +27,25 @@ function loadClassFromJSON(elId, classFile){
                 napomena.textContent = zadatak.n;
                 item.appendChild(napomena);
             }
-            el.appendChild(item);
+            zadaciOL.appendChild(item);
         }
+        root.appendChild(zadaciOL);
+
+        let vezbanjeDIV = document.createElement("div");
+        vezbanjeDIV.className = "domaci";
+
+        let naslov = document.createElement("h3");
+        naslov.textContent = "Zadaci za vežbanje";
+        vezbanjeDIV.appendChild(naslov)
+
+        let vezbanjeOL = document.createElement("ol");
+        for(let zad of data.zadaciZaVezbanje){
+            let li = document.createElement("li");
+            li.textContent = zad;
+            vezbanjeOL.appendChild(li);
+        }
+        vezbanjeDIV.appendChild(vezbanjeOL);
+        root.append(vezbanjeDIV);
     })
     .catch(error => console.log(error))
 }
