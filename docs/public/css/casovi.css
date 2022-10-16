@@ -19,6 +19,7 @@ main {
     width: 75%;
     right: 0px;
     padding: 5px;
+    padding-bottom: 50px;
 }
 
 #left_menu table {
@@ -87,3 +88,7 @@ h3 {
     font-size: 30px;
 }
 
+tab {
+    width: 2em;
+    display: inline-block;
+}

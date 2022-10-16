@@ -7,6 +7,7 @@
     <link rel="stylesheet" type="text/css" href="public/css/index.css">  
     <link rel="stylesheet" type="text/css" href="public/css/casovi.css">  
     <script type="text/javascript" src="public/js/index.js"></script>
+    <script type="text/javascript" src="public/js/gen_cas.js"></script>
 </head>
 
 <body>
@@ -31,7 +32,7 @@
             <table>
                 <tr><td><a href="#podesavanje_sistema">Podešavanje sistema</a></td></tr>
                 <tr><td><a href="#cas1">ČAS 1</a></td></tr>
-
+                <tr><td><a href="#cas2">ČAS 2</a></td></tr>
             </table>
         </div>
 
@@ -458,6 +459,21 @@
                 </ol>
                 </div>  
 
+
+<!-- CAS2-->
+            <h1 id="cas2">ČAS 2</h1>
+            <h3>Vrste spajanja</h3>
+
+<!-- primeri spajanja-->
+            <img src="../docs/resources/rbp/spajanje.png" width="100" style="width: 100%;">
+<!-- primeri spajanja-->
+
+        <h3>Zadaci:</h3>
+        <ol id="cas2zadaci"></ol>
+        <script>
+            loadClassFromJSON("cas2zadaci", "../docs/resources/rbp/cas2.json")
+        </script>
+<!-- levi div-->
          </div>
 
     </main>

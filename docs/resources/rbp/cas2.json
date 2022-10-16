@@ -1,0 +1,120 @@
+{
+    "zadaci": [
+        {
+            "z": "Izdvojiti podatke o studentima čiji je datum diplomiranja nepoznat.",
+            "r": [
+                "SELECT INDEKS, DATDIPLOMIRANJA\nFROM DA.DOSIJE<br>WHERE DATDIPLOMIRANJA IS NULL;"
+            ],
+            "n": "Za proveru da li je vrednost null se ne može koristiti = null."
+        },
+
+        {
+            "z": "Izdvojiti podatke o studentima čiji je datum diplomiranja nije nepoznat.",
+            "r": ["SELECT INDEKS, DATDIPLOMIRANJA<br>FROM DA.DOSIJE<br>WHERE DATDIPLOMIRANJA IS NOT NULL;"]
+        },
+
+        {
+            "z": "Prikazati podatke o studentima i ispitima.",
+            "r": [
+                "SELECT *<br>FROM DA.DOSIJE, DA.ISPIT;"
+            ],
+            "n": "SVAKI student je spojen sa SVAKIM ispitom."
+        },
+
+        {
+            "z": "Prikazati podatke o studentima i njihovim ispitima.",
+            "r": [
+                "SELECT *<br>FROM DA.DOSIJE, DA.ISPIT<br>WHERE DA.DOSIJE.INDEKS = DA.ISPIT.INDEKS;",
+                "SELECT *<br>FROM DA.DOSIJE JOIN DA.ISPIT<br><tab></tab> DA.DOSIJE.INDEKS = DA.ISPIT.INDEKS;",
+                "SELECT *<br>FROM DA.DOSIJE AS D JOIN DA.ISPIT AS I<br><tab></tab>ON D.INDEKS = I.INDEKS;"
+            ]
+        },
+
+        {
+            "z": "Prikazati podatke o studentima i njihovim ispitima koji su održani 28.1.2016. Izdvojiti indeks, ime i prezime studenta, id predmeta i ocenu.",
+            "r": [
+                "SELECT D.INDEKS, D.IME, D.PREZIME, I.IDPREDMETA, I.OCENA<br>    FROM DA.DOSIJE AS D JOIN DA.ISPIT AS I<br>    <tab></tab>ON D.INDEKS = I.INDEKS<br>    WHERE DATPOLAGANJA='28.1.2016';",
+                "SELECT D.INDEKS, D.IME, D.PREZIME, I.IDPREDMETA, I.OCENA<br>FROM DA.DOSIJE AS D JOIN DA.ISPIT AS I<br><tab></tab>ON D.INDEKS = I.INDEKS AND I.DATPOLAGANJA='28.1.2016';"
+            ]
+        },
+
+        {
+            "z": "Izdvojiti podatke o položenim ispitima. Prikazati indeks, ime i prezime studenta koji je položio ispit, naziv položenog predmeta i ocenu.",
+            "r": [
+                "SELECT D.INDEKS, D.IME, D.PREZIME, P.NAZIV, OCENA<br>                FROM DA.DOSIJE AS D, DA.ISPIT AS I, DA.PREDMET AS P<br>                WHERE D.INDEKS = I.INDEKS<br>                <tab></tab>AND P.ID = I.IDPREDMETA<br>                <tab></tab>AND OCENA>5<br>                <tab></tab>AND STATUS = 'o';",
+                "SELECT D.INDEKS, D.IME, D.PREZIME, P.NAZIV, I.OCENA<br>            FROM DA.ISPIT AS I JOIN DA.DOSIJE AS D<br>            <tab></tab><tab></tab>ON I.INDEKS=D.INDEKS<br>            <tab></tab>JOIN DA.PREDMET AS P<br>            <tab></tab><tab></tab>ON P.ID = I.IDPREDMETA<br>            WHERE I.OCENA>5 AND I.STATUS='o';",
+                "SELECT D.INDEKS, D.IME, D.PREZIME, P.NAZIV, I.OCENA<br>FROM DA.ISPIT AS I JOIN DA.DOSIJE AS D<br><tab></tab><tab></tab>ON I.INDEKS=D.INDEKS AND<br><tab></tab><tab></tab><tab></tab>I.OCENA>5 AND I.STATUS='o'<br><tab></tab>JOIN DA.PREDMET AS P<br><tab></tab><tab></tab>ON P.ID = I.IDPREDMETA;"
+            ],
+            "n": "Ispit je položen ako je ocena veća od 5 i ako je status ispita o (polagao). Ostali statusi koje ispit može da ima su su p (prijavljen), n (nije izašao) d (diskvalifikovan), x (poništen), s (odustao)."
+        },
+
+        {
+            "z": "Izdvojiti podatke o studentima za koje važi da su diplomirali dana kada je održan neki ispit.",
+            "r": [
+                "SELECT DISTINCT D.*<br>FROM DA.DOSIJE D, DA.ISPIT I<br>WHERE D.DATDIPLOMIRANJA = I.DATPOLAGANJA;",
+                "SELECT DISTINCT D.*<br>FROM DA.DOSIJE D JOIN DA.ISPIT I<br><tab></tab>ON DATDIPLOMIRANJA = I.DATPOLAGANJA;"
+            ],
+            "n": "D.* koristimo za ispis svih informacija iz tabele dosije, da nismo uveli alijas D morali bi da koristimo DA.DOSIJE.*."
+        }, 
+
+        {
+            "z": "Izdvojiti parove predmeta koji imaju isti broj espb bodova. Izdvojiti oznake predmeta i broj espb bodova.",
+            "r": [
+                "SELECT P1.OZNAKA, P2.OZNAKA, P1.ESPB<br>FROM DA.PREDMET AS P1 JOIN DA.PREDMET AS P2<br><tab></tab>ON P1.ESPB = P2.ESPB AND P1.OZNAKA < P2.OZNAKA;"
+            ],
+            "n": "Da bi izbegli parove poput: p1-p1, p1-p2 i p2-p1 dodajemo uslov da je oznaka jednog predmeta manja od oznake drugog, time od prethodna tri rezultata dobijamo jedan: p1-p2."
+        },
+
+        {
+            "z": "Izdvojiti indeks, ime i prezime studenata čije prezime sadrži malo slovo a na 4. poziciji i završava na malo slovo c i koji su predmet čiji je broj espb bodova između 2 i 10 položili sa ocenom 6, 8 ili 10 između 5. januara 2018. i 15. decembra 2018. Rezultat urediti prema prezimenu u rastućem poretku i imenu u opadajućem poretku. ",
+            "r": [
+                "SELECT DISTINCT D.INDEKS, D.IME, D.PREZIME<br>FROM DA.DOSIJE AS D JOIN DA.ISPIT AS I<br><tab></tab><tab></tab>ON D.INDEKS =  I.INDEKS<br><tab></tab>JOIN DA.PREDMET AS P<br><tab></tab><tab></tab>ON P.ID = I.IDPREDMETA<br>WHERE PREZIME LIKE '___a%c' AND<br><tab></tab>P.ESPB BETWEEN 2 AND 10 AND<br><tab></tab>I.OCENA IN (6,8,10) AND<br><tab></tab>I.DATPOLAGANJA BETWEEN '5.1.2018' AND '15.12.2018'<br>ORDER BY D.PREZIME ASC, D.IME DESC;"
+            ]
+        },
+
+        {
+            "z": "Za svaki predmet koji može da se sluša na nekom studijskom programu izdvojiti uslovne predmete tog predmeta. Izdvojiti identifikator studijskog programa, identifikator predmeta, vrstu tog predmeta (obavezan ili izborni) na studijskom programu i identifikator uslovnog predmeta. Izdvojiti i predmete koji nemaju uslovne predmete.",
+            "r": [
+                "SELECT PP.IDPROGRAMA, PP.IDPREDMETA, PP.VRSTA, UP.IDUSLOVNOGPREDMETA<br>FROM DA.PREDMETPROGRAMA PP LEFT JOIN DA.USLOVNIPREDMET UP<br><tab></tab><tab></tab>ON PP.IDPREDMETA = UP.IDPREDMETA AND PP.IDPROGRAMA = UP.IDPROGRAMA;",
+                "SELECT PP.IDPROGRAMA, PP.IDPREDMETA, PP.VRSTA, UP.IDUSLOVNOGPREDMETA<br>FROM DA.USLOVNIPREDMET UP RIGHT JOIN DA.PREDMETPROGRAMA PP<br><tab></tab><tab></tab>ON PP.IDPREDMETA = UP.IDPREDMETA AND PP.IDPROGRAMA = UP.IDPROGRAMA;"
+            ]
+        },
+
+        {
+            "z": "U prethodnom zadatku pored identifikatora predmeta dodati njihove nazive.",
+            "r": [
+                "SELECT PP.IDPROGRAMA, PP.IDPREDMETA, P1.NAZIV, PP.VRSTA, UP.IDUSLOVNOGPREDMETA, P2.NAZIV<br>FROM DA.PREDMETPROGRAMA PP LEFT JOIN DA.USLOVNIPREDMET UP<br><tab></tab><tab></tab>ON PP.IDPREDMETA = UP.IDPREDMETA AND PP.IDPROGRAMA = UP.IDPROGRAMA<br><tab></tab>JOIN DA.PREDMET AS P1<br><tab></tab><tab></tab>ON PP.IDPREDMETA = P1.ID<br><tab></tab>LEFT JOIN DA.PREDMET AS P2<br><tab></tab><tab></tab>ON UP.IDUSLOVNOGPREDMETA = P2.ID;"
+            ],
+            "n": "Za spajanje sa predmetom programa je dovoljno samo join jer znamo da svaki predmet programa ima svog para u tabeli predmet. Kada spajamo po id-u uslovnog predmeta moramo da koristimo left join, jer ćemo imati red npr p1 - null (p1 nema uslovni predmet), null nema para u tabeli predmet pa se će nestati pri unutrašnjem spajanju."
+        },
+
+        {
+            "z": "Izdvojiti parove naziva razlicitih ispitnih rokova u kojima je isti student polagao isti predmet. ",
+            "r": [
+                "SELECT D.INDEKS, I1.IDPREDMETA, I1.OZNAKAROKA, I2.OZNAKAROKA<br>FROM DA.DOSIJE AS D JOIN DA.ISPIT AS I1<br><tab></tab><tab></tab>ON D.INDEKS = I1.INDEKS<br><tab></tab>JOIN DA.ISPIT AS I2<br><tab></tab><tab></tab>ON D.INDEKS=I2.INDEKS AND I1.IDPREDMETA=I2.IDPREDMETA AND I1.OZNAKAROKA < I2.OZNAKAROKA;"
+            ]
+        },
+
+        {
+            "z": "Izdvojiti parove student-ispitni rok za koje važi da je student diplomirao poslednjeg dana roka. Izdvojiti indeks, ime, prezime, datum diplomiranja studenta, naziv ispitnog roka i datum kraja ispitnog roka. Prikazati i studente i ispitne rokove koji nemaju odgovarajućeg para.",
+            "r": [
+                "SELECT D.INDEKS, D.IME, D.PREZIME, D.DATDIPLOMIRANJA, IR.NAZIV, IR.DATKRAJA<br>FROM DA.DOSIJE AS D FULL JOIN DA.ISPITNIROK AS IR<br><tab></tab>ON D.DATDIPLOMIRANJA = IR.DATKRAJA;"
+            ]
+        },
+
+        {
+            "z": "Za svaki ispitni rok izdvojiti ocene sa kojima su studenti položili ispite u tom roku. Izdvojiti naziv ispitnog roka i ocene. Izdvojiti i ispitne rokove u kojima nije položen nijedan ispit. Rezultat urediti prema nazivu ispitnog roka u rastućem poretku i prema oceni u opadajućem poretku.",
+            "r": [
+                "SELECT DISTINCT IR.NAZIV, I.OCENA<br>FROM DA.ISPITNIROK AS IR LEFT JOIN DA.ISPIT AS I<br><tab></tab>ON <tab></tab>IR.OZNAKAROKA = I.OZNAKAROKA AND IR.SKGODINA = I.SKGODINA<br><tab></tab><tab></tab>AND STATUS='o' AND OCENA>5<br>ORDER BY IR.NAZIV ASC, I.OCENA DESC;"
+            ],
+            "n": "Ukoliko u roku nije položen ni jedan ispit taj rok će biti sparen sa NULL, inače će biti uparen sa svakom ocenom dobijenom u tom roku. Ukoliko uslov da je ispit položen ne bi bio u ON nego u WHERE nestao bi rok sparen sa NULL."
+        },
+
+        {
+            "z": "Za svakog studenta koji u imenu sadrži nisku ark izdvojiti podatke o položenim ispitima. Izdvojiti indeks, ime i prezime studenta, naziv položenog predmeta i dobijenu ocenu. Izdvojiti podatke i o studentu koji nema nijedan položen ispit. Rezultat urediti prema indeksu.",
+            "r": [
+                "SELECT D.INDEKS, D.IME, D.PREZIME, P.NAZIV, I.OCENA<br>FROM DA.DOSIJE AS D LEFT JOIN DA.ISPIT AS I<br><tab></tab><tab></tab>ON D.INDEKS = I.INDEKS AND I.OCENA>5 AND I.STATUS='o'<br><tab></tab>LEFT JOIN DA.PREDMET AS P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br>WHERE D.IME LIKE '%ark%'<br>ORDER BY INDEKS;"
+            ]
+        }
+    ]
+}
