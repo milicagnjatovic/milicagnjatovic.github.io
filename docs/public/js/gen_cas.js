@@ -3,6 +3,10 @@ function loadClassFromJSON(elId, classFile){
     fetch(classFile) // vr=1.0 da bi se video najnoviji fajl
     .then(response => response.json())
     .then(data => {
+        let naslov1 = document.createElement("h3");
+        naslov1.textContent = "Zadaci";
+        root.appendChild(naslov1)
+
         let zadaciOL = document.createElement("ol");
         for(let zadatak of data.zadaci){
             console.log(zadatak)
