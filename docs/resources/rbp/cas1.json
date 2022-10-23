@@ -150,7 +150,7 @@
         {
             "z": "Napraviti masku koja bi mogla da prepozna naredni string \"%x_\"",
             "r": [
-                "LIKE '/_x/%' ESCAPE '/'",
+                "LIKE '/%x_%' ESCAPE '/'",
                 "SELECT * <br>FROM DA.DOSIJE<br> WHERE '_xxx%' LIKE '%/_%/%' ESCAPE '/';"
             ],
             "n": "Nakon ESCAPE se pod jednostrukim navodnicima navodi karakter koji će se koristiti za eskejpovanje (ukoliko u nisci želimo karakter koji je specijalan, % ili _)."
