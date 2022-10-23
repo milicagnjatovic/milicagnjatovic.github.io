@@ -17,19 +17,37 @@ function loadClassFromJSON(elId, classFile){
             tekstZadatka.textContent = zadatak.z;
             item.appendChild(tekstZadatka);
 
+            let resenjaDiv = document.createElement('div');
+            item.append(resenjaDiv);
+            resenjaDiv.style.display = 'none'
+
+            let showBtn = document.createElement('button');
+            showBtn.textContent = 'rešenje';
+            showBtn.className = 'resenje_btn'
+            item.append(showBtn);
+
+            showBtn.onclick = function(){
+                if (resenjaDiv.style.display === 'block'){
+                    resenjaDiv.style.display = 'none';
+                    showBtn.textContent = 'rešenje';
+                } else {
+                    resenjaDiv.style.display = 'block';
+                    showBtn.textContent = 'sakrij rešenje';    
+                }
+            }
+
             for(let resenje of zadatak.r){
                 let r = document.createElement('p');
                 r.innerHTML = resenje;
                 r.className = 'kod';
-                // let text = document.createTextNode(resenje);
-                // r.appendChild(text);
-                item.appendChild(r);
+                resenjaDiv.appendChild(r);
+                // item.appendChild(r);
             }
 
             if(zadatak.n != ''){
                 let napomena = document.createElement('p')
                 napomena.textContent = zadatak.n;
-                item.appendChild(napomena);
+                resenjaDiv.appendChild(napomena);
             }
             zadaciOL.appendChild(item);
         }

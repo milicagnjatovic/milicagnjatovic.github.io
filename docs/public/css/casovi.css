@@ -92,3 +92,15 @@ tab {
     width: 2em;
     display: inline-block;
 }
+
+.resenje_btn {
+    background-color:  rgb(235, 235, 100);
+    width: 100%;
+    font-style: italic;
+}
+
+.resenje_btn:hover  {
+    background-color:  rgb(100, 241, 84);
+    font-style: italic;
+    font-weight: bold;
+}
