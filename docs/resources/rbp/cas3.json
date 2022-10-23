@@ -1,0 +1,110 @@
+{
+    "zadaci": [
+        {
+            "z": "Izdvojiti nazive predmeta koje je POLAGAO student sa indeksom 22/2017.",
+            "r": [
+                "SELECT P.NAZIV<br>FROM DA.ISPIT AS I JOIN DA.PREDMET AS P<br><tab></tab>ON I.IDPREDMETA = P.ID<br>WHERE I.INDEKS = 20170022<br><tab></tab>AND STATUS NOT IN ('p', 'n');",
+                "SELECT NAZIV<br>FROM DA.PREDMET<br>WHERE ID IN (<br><tab></tab>SELECT IDPREDMETA<br><tab></tab>FROM DA.ISPIT<br><tab></tab><tab></tab>WHERE INDEKS=20170022<br><tab></tab><tab></tab><tab></tab>AND STATUS NOT IN ('p', 'n')<br>);",
+                "SELECT NAZIV<br>FROM DA.PREDMET<br>WHERE 20170022 IN (<br><tab></tab>SELECT INDEKS<br><tab></tab>FROM DA.ISPIT<br><tab></tab><tab></tab>WHERE IDPREDMETA = ID AND STATUS NOT IN ('p', 'n')<br>);"
+            ],
+            "n": "Indeks se zapisuje u obliku GGGGBBBB, npr 22/2017 je 20170022. Ako je student polagao ispit to znaći da je status o-polagao, x-ponistio, d-diskvalifikovan, s-odustao, odnosno nije prijavljen-p ili nije izašao-n."
+        },
+        {
+            "z": "Izdvojiti ime i prezime studenta koji ima ispit položen sa ocenom 9.",
+            "r": [
+                "SELECT DISTINCT IME, PREZIME<br>FROM DA.DOSIJE AS D JOIN DA.ISPIT AS I<br><tab></tab>ON D.INDEKS = I.INDEKS AND OCENA=9 AND STATUS='o';<br>);",
+                "SELECT IME, PREZIME<br>FROM DA.DOSIJE AS D<br>WHERE 9 IN (<br><tab></tab>SELECT OCENA<br><tab></tab>FROM DA.ISPIT AS I<br><tab></tab>WHERE D.INDEKS = I.INDEKS<br><tab></tab><tab></tab>AND STATUS = 'o'<br><tab></tab>);"
+
+            ]
+        },
+        {
+            "z": "Izdvojiti indekse studenata koji su položili bar jedan predmet koji nije položio student sa indeksom 22/2017.",
+            "r": [
+                "SELECT DISTINCT INDEKS<br>FROM DA.ISPIT<br>WHERE OCENA>5 AND STATUS='o' AND<br><tab></tab>IDPREDMETA NOT IN (<br><tab></tab><tab></tab>SELECT IDPREDMETA<br><tab></tab><tab></tab>FROM DA.ISPIT<br><tab></tab><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab><tab></tab><tab></tab>AND INDEKS = 20170022<br><tab></tab>);"
+            ]
+        },
+        {
+            "z": "Korišćenjem egzistencijalnog kvantifikatora exists izdvojiti nazive predmeta koje je položio student sa indeksom 22/2017.",
+            "r": [
+                "SELECT NAZIV<br>FROM DA.PREDMET AS P<br>WHERE EXISTS (<br><tab></tab>SELECT *<br><tab></tab>FROM DA.ISPIT AS I<br><tab></tab>WHERE P.ID=I.IDPREDMETA AND<br><tab></tab><tab></tab>INDEKS=20170022 AND<br><tab></tab><tab></tab>OCENA>5 AND STATUS='o'<br>)"
+            ]
+        },
+        {
+            "z": "Izdvojiti naziv predmeta čiji je kurs organizovan u svim školskim godinama o kojima postoje podaci u bazi podataka.",
+            "r": [
+                "SELECT *<br>FROM DA.PREDMET AS P<br>WHERE NOT EXISTS (<br><tab></tab>SELECT *<br><tab></tab>FROM DA.SKOLSKAGODINA SG<br><tab></tab>WHERE NOT EXISTS (<br><tab></tab><tab></tab>SELECT *<br><tab></tab><tab></tab>FROM DA.KURS K<br><tab></tab><tab></tab>WHERE K.IDPREDMETA = P.ID<br><tab></tab><tab></tab><tab></tab>AND SG.SKGODINA = K.SKGODINA<br><tab></tab>)<br>);"
+            ],
+            "n": "Predmeti za koje NE POSTOJI školska godina u kojoj NIJE držan taj predmet."
+        },
+        {
+            "z": "Izdvojiti podatke o studentu koji je upisao sve školske godine o kojima postoje podaci u bazi podataka.",
+            "r": [
+                "SELECT *<br>FROM DA.DOSIJE AS D<br>WHERE NOT EXISTS (<br><tab></tab>SELECT *<br><tab></tab>FROM DA.SKOLSKAGODINA SG<br><tab></tab>WHERE NOT EXISTS (<br><tab></tab><tab></tab>SELECT *<br><tab></tab><tab></tab>FROM DA.UPISGODINE UG<br><tab></tab><tab></tab>WHERE D.INDEKS = UG.INDEKS<br><tab></tab><tab></tab><tab></tab>AND SG.SKGODINA = UG.SKGODINA<br><tab></tab>)<br>);"
+            ],
+            "n": "Student koji je upisao sve školske godine. <=> Student za kog NE POSTOJI školska godina koju NIJE upisao."
+        },
+        {
+            "z": "Izdvojiti indekse studenata koji su polagali u svim ispitnim rokovima.",
+            "r": [
+                "SELECT INDEKS<br>FROM DA.DOSIJE AS D<br>WHERE NOT EXISTS (<br><tab></tab>SELECT *<br><tab></tab>FROM DA.ISPITNIROK IR<br><tab></tab>WHERE NOT EXISTS (<br><tab></tab><tab></tab>SELECT *<br><tab></tab><tab></tab>FROM DA.ISPIT AS I<br><tab></tab><tab></tab>WHERE I.INDEKS = D.INDEKS AND<br><tab></tab><tab></tab><tab></tab>I.SKGODINA = IR.SKGODINA AND<br><tab></tab><tab></tab><tab></tab>I.OZNAKAROKA = IR.OZNAKAROKA AND <br><tab></tab><tab></tab><tab></tab>I.STATUS NOT IN ('p', 'n')<br><tab></tab>)<br>);"
+            ],
+            "n": "Ne postoji ispitni rok u kom taj student nije polagao. Rezultat ovog upita je prazna tabela jer ni jedan student nije polagao u baš svakom roku."
+        },
+        {
+            "z": "Izdvojiti indekse studenata koji su polagali u svim ispitnim rokovima održanim u 2018/2019. šk. godini.",
+            "r": [
+                "SELECT INDEKS<br>FROM DA.DOSIJE AS D<br>WHERE NOT EXISTS (<br><tab></tab>SELECT *<br><tab></tab>FROM DA.ISPITNIROK IR<br><tab></tab>WHERE IR.SKGODINA=2018 AND NOT EXISTS (<br><tab></tab><tab></tab>SELECT *<br><tab></tab><tab></tab>FROM DA.ISPIT AS I<br><tab></tab><tab></tab>WHERE I.INDEKS = D.INDEKS AND<br><tab></tab><tab></tab><tab></tab>I.SKGODINA = IR.SKGODINA AND<br><tab></tab><tab></tab><tab></tab>I.OZNAKAROKA = IR.OZNAKAROKA AND <br><tab></tab><tab></tab><tab></tab>I.STATUS NOT IN ('p', 'n')<br><tab></tab>)<br>);"
+            ],
+            "n": "I dalje nemamo studente koji zadovoljavaju ovaj uslov. Umesto uslova za školsku godinu možemo stavit uslov za oznaku roka, pa gledati studente koji su polagali u svim rokovima sa oznakom jan1."
+        },
+        {
+            "z": "Izdvojiti podatke o predmetima sa najvećim brojem espb bodova.",
+            "r": [
+                "SELECT *<br>FROM DA.PREDMET AS P1<br>WHERE NOT EXISTS (<br><tab></tab>SELECT *<br><tab></tab>FROM DA.PREDMET AS P2<br><tab></tab>WHERE P2.ESPB>P1.ESPB<br>);",
+                "SELECT *<br>FROM DA.PREDMET <br>WHERE ESPB >= ALL (<br><tab></tab>SELECT ESPB<br><tab></tab>FROM DA.PREDMET<br>);"
+            ]
+        },
+        {
+            "z": "Izdvojiti podatke o studentima sa najranijim datumom diplomiranja.",
+            "r": [
+                "SELECT *<br>FROM DA.DOSIJE <br>WHERE DATDIPLOMIRANJA <= ALL (<br><tab></tab>SELECT DATDIPLOMIRANJA<br><tab></tab>FROM DA.DOSIJE<br><tab></tab>WHERE DATDIPLOMIRANJA IS NOT NULL<br>);"
+            ],
+            "n": "Ovde je bitno da u podupitu stavimo da datum diplomiranja nije null jer će u suprotnom postojati poređenje datuma sa null (koji će biti false)."
+        },
+        {
+            "z": "Izdvojiti podatke o svim studentima osim onih sa najranijim datumom diplomiranja.",
+            "r": [
+                "SELECT *<br>FROM DA.DOSIJE <br>WHERE DATDIPLOMIRANJA <= ALL (<br><tab></tab>SELECT DATDIPLOMIRANJA<br><tab></tab>FROM DA.DOSIJE<br><tab></tab>WHERE DATDIPLOMIRANJA IS NOT NULL<br>) OR DATDIPLOMIRANJA IS NULL;",
+                "SELECT *<br>FROM DA.DOSIJE <br>WHERE DATDIPLOMIRANJA > SOME (<br><tab></tab>SELECT DATDIPLOMIRANJA<br><tab></tab>FROM DA.DOSIJE<br><tab></tab>WHERE DATDIPLOMIRANJA IS NOT NULL<br>) OR DATDIPLOMIRANJA IS NULL;",
+                "SELECT *<br>FROM DA.DOSIJE D1<br>WHERE EXISTS (<br><tab></tab>SELECT DATDIPLOMIRANJA<br><tab></tab>FROM DA.DOSIJE D2<br><tab></tab>WHERE D2.DATDIPLOMIRANJA < D1.DATDIPLOMIRANJA<br>) OR D1.DATDIPLOMIRANJA IS NULL;"
+            ]
+        },
+        {
+            "z": "Izdvojiti podatke o predmetima koje su upisali neki studenti.",
+            "r":[
+                "SELECT *<br>FROM DA.PREDMET AS P<br>WHERE EXISTS (<br><tab></tab>SELECT *<br><tab></tab>FROM DA.UPISANKURS UK<br><tab></tab>WHERE UK.IDPREDMETA = P.ID<br>);",
+                "SELECT *<br>FROM DA.PREDMET AS P<br>WHERE ID IN (<br><tab></tab>SELECT IDPREDMETA<br><tab></tab>FROM DA.UPISANKURS <br>);",
+                "SELECT *<br>FROM DA.PREDMET AS P<br>WHERE ID = ANY (<br><tab></tab>SELECT IDPREDMETA<br><tab></tab>FROM DA.UPISANKURS UK<br>);"
+            ]
+        },
+        {
+            "z": "Za studente koji su polagali ispit u ispitnom roku održanom u 2018/2019. šk. godini izdvojiti podatke o položenim ispitima. Izdvojiti indeks, ime, prezime studenta, naziv položenog predmeta, oznaku ispitnog roka i školsku godinu u kojoj je ispit položen.",
+            "r": [
+                "SELECT D.INDEKS, D.IME, D.PREZIME, P.NAZIV, I.OZNAKAROKA, I.SKGODINA<br>FROM DA.DOSIJE D JOIN DA.ISPIT AS I<br><tab></tab><tab></tab>ON D.INDEKS = I.INDEKS<br><tab></tab><tab></tab><tab></tab>AND OCENA>5 AND STATUS='o'<br><tab></tab>JOIN DA.PREDMET AS P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br>WHERE EXISTS (<br><tab></tab>SELECT *<br><tab></tab>FROM DA.ISPIT I1<br><tab></tab>WHERE I1.INDEKS = D.INDEKS AND SKGODINA=2018<br><tab></tab><tab></tab>AND STATUS NOT IN ('p', 'n')<br>);"
+            ]
+        },
+        {
+            "z": "Izdvojiti podatke o predmetima koje su polagali svi studenti iz Berana koji studiraju smer sa oznakom I.",
+            "r": [
+                "SELECT *<br>FROM DA.PREDMET AS P<br>WHERE NOT EXISTS (<br><tab></tab>SELECT *<br><tab></tab>FROM DA.DOSIJE D JOIN DA.STUDIJSKIPROGRAM SP<br><tab></tab><tab></tab>ON D.IDPROGRAMA = SP.ID AND OZNAKA = 'I'<br><tab></tab><tab></tab><tab></tab>AND MESTORODJENJA = 'Berane'<br><tab></tab>WHERE NOT EXISTS (<br><tab></tab><tab></tab>SELECT *<br><tab></tab><tab></tab>FROM DA.ISPIT AS I<br><tab></tab><tab></tab>WHERE I.INDEKS = D.INDEKS<br><tab></tab><tab></tab><tab></tab>AND I.IDPREDMETA = P.ID<br><tab></tab><tab></tab><tab></tab>AND STATUS NOT IN ('p', 'n')<br><tab></tab>)<br>);"
+            ]
+        }
+    ],
+    "zadaciZaVezbanje":[
+        "Izdvojiti ime i prezime studenta koji ima priznat ispit. Zadatak rešiti na tri načina.",
+        "Izdvojiti nazive predmeta koje su polagali svi studenti. (napomena: rezultat je prazna tabela)",
+        "Izdvojiti podatke o studentima koji su polagali sve predmete od 30 espb bodova.",
+        "Izdvojiti podatke o prvom održanom ispitnom roku na fakultetu. Zadatak rešiti na tri načina.",
+        "Za predmet koji je prvi polagan na fakultetu izdvojiti njegov naziv i imena i prezimena studenata koji su ga ikada upisali."
+    ]
+}

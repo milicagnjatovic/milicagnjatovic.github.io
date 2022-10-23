@@ -43,7 +43,7 @@ main {
 
 .kod {
     font-family: monospace;
-    background-color: rgba(128, 128, 128, 0.5);
+    background-color: #B2B2B2;
     padding: 2%;
 }
 
@@ -74,7 +74,7 @@ main {
 }
 
 .domaci {
-    background-color: rgba(219, 207, 101, 0.5);
+    background-color: #B4CFB0;
     padding: 2%;
 }
 
@@ -94,13 +94,21 @@ tab {
 }
 
 .resenje_btn {
-    background-color:  rgb(235, 235, 100);
+    background-color:  #FFCB42;
     width: 100%;
     font-style: italic;
 }
 
 .resenje_btn:hover  {
-    background-color:  rgb(100, 241, 84);
+    background-color:  #B6E388;
     font-style: italic;
     font-weight: bold;
+}
+
+dl {
+    margin-left: 20px;
+}
+dt {
+    margin-top: 20px;
+    text-decoration: underline;
 }

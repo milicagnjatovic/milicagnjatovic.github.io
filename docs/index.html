@@ -25,7 +25,7 @@
 
     </div>
 
-    <a href="#podesavanje_sistema" id="pocetak">POČETAK</a>
+    <a href="#left_menu" id="pocetak">POČETAK</a>
 
     <main>
         <div id="left_menu">
@@ -33,6 +33,7 @@
                 <tr><td><a href="#podesavanje_sistema">Podešavanje sistema</a></td></tr>
                 <tr><td><a href="#cas1">ČAS 1</a></td></tr>
                 <tr><td><a href="#cas2">ČAS 2</a></td></tr>
+                <tr><td><a href="#cas3">ČAS 3</a></td></tr>
             </table>
         </div>
 
@@ -201,14 +202,46 @@
             <h1 id="cas2">ČAS 2</h1>
             <h3>Vrste spajanja</h3>
 
-<!-- primeri spajanja-->
             <img src="resources/rbp/spajanje.png" width="100" style="width: 100%;">
-<!-- primeri spajanja-->
 
         <div id="cas2zadaci"></div>
         <script>
             loadClassFromJSON("cas2zadaci", "resources/rbp/cas2.json")
         </script>
+<!-- CAS2 KRAJ-->
+
+<!-- CAS3-->
+        <h1 id="cas3">ČAS 3</h1>
+        <h3>Podupiti</h3>
+        <dl>
+            <dt>X [NOT] IN (SELECT Y FROM ... WHERE ...)</dt>
+            <dd> Gledamo da li je X u nizu Y-ona koji dobijamo iz podupita. Važno je da X i Y imaju isti broj atributa. Na primer možemo imati WHERE (OZNAKAROKA, SKGODINA) IN (SELECT OZNAKA, GODINA FROM ...).  </dd>
+            
+            <dt>[NOT] EXISTS (SELECT ... FROM ...)</dt>
+            <dd>Uslov je zadovoljen ako podupit vraća bar jedan red.</dd>
+
+            <dt>X < ALL (SELECT ... FROM ...)</dt>
+            <dd>Uslov je zadovoljen ako je X manje od svake vrednosti koju vraća podupit. Mogu se koristi i ostali operatori.</dd>
+
+            <dt>X < SOME (SELECT ... FROM ...)</dt>
+            <dd>Uslov je zadovoljen ako je X manje od neke vrednosti koju vraća podupit. Mogu se koristi i ostali operatori.</dd>
+
+            <dt>X = ANY (SELECT ... FROM ...)</dt>
+            <dd>Uslov je zadovoljen ako je X jednako nekoj vrednosti koju vraća podupit. Mogu se koristi i ostali operatori.</dd>
+
+        </dl>
+
+        <p>
+        <b>SVAKI <=> NE POSTOJI NEKI KOJI NIJE</b>
+        <br>
+        Tražimo studenta koji je položio svaki ispit koji je polagao. <=> Tražimo studenta za kog NE POSTOJI ispit koji NIJE POLOŽIO.
+        </p>
+
+        <div id="cas3zadaci"></div>
+        <script>
+        loadClassFromJSON("cas3zadaci", "resources/rbp/cas3.json")
+        </script>
+<!-- CAS3 KRAJ-->
 
 <!-- levi div-->
          </div>
