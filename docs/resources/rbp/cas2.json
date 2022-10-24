@@ -25,7 +25,7 @@
             "z": "Prikazati podatke o studentima i njihovim ispitima.",
             "r": [
                 "SELECT *<br>FROM DA.DOSIJE, DA.ISPIT<br>WHERE DA.DOSIJE.INDEKS = DA.ISPIT.INDEKS;",
-                "SELECT *<br>FROM DA.DOSIJE JOIN DA.ISPIT<br><tab></tab> DA.DOSIJE.INDEKS = DA.ISPIT.INDEKS;",
+                "SELECT *<br>FROM DA.DOSIJE JOIN DA.ISPIT<br><tab></tab>ON DA.DOSIJE.INDEKS = DA.ISPIT.INDEKS;",
                 "SELECT *<br>FROM DA.DOSIJE AS D JOIN DA.ISPIT AS I<br><tab></tab>ON D.INDEKS = I.INDEKS;"
             ]
         },
