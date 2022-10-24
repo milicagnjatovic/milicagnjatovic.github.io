@@ -17,7 +17,7 @@
         },
 
         {
-            "z": "Izdvojiti podatke o svim studentima koji su rođeni u Beogradu ili Zrenjaninu.",
+            "z": "Izdvojiti podatke o svim studentima koji nisu rođeni u Beogradu.",
             "r": [
                 "SELECT *<br>FROM DA.DOSIJE<br>WHERE MESTORODJENJA <> 'Beograd';",
                 "SELECT *<br>FROM DA.DOSIJE<br>WHERE NOT MESTORODJENJA = 'Beograd';"
