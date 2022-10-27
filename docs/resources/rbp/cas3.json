@@ -74,7 +74,7 @@
         {
             "z": "Izdvojiti podatke o svim studentima osim onih sa najranijim datumom diplomiranja.",
             "r": [
-                "SELECT *<br>FROM DA.DOSIJE <br>WHERE DATDIPLOMIRANJA <= ALL (<br><tab></tab>SELECT DATDIPLOMIRANJA<br><tab></tab>FROM DA.DOSIJE<br><tab></tab>WHERE DATDIPLOMIRANJA IS NOT NULL<br>) OR DATDIPLOMIRANJA IS NULL;",
+                "SELECT *<br>FROM DA.DOSIJE <br>WHERE NOT DATDIPLOMIRANJA <= ALL (<br><tab></tab>SELECT DATDIPLOMIRANJA<br><tab></tab>FROM DA.DOSIJE<br><tab></tab>WHERE DATDIPLOMIRANJA IS NOT NULL<br>) OR DATDIPLOMIRANJA IS NULL;",
                 "SELECT *<br>FROM DA.DOSIJE <br>WHERE DATDIPLOMIRANJA > SOME (<br><tab></tab>SELECT DATDIPLOMIRANJA<br><tab></tab>FROM DA.DOSIJE<br><tab></tab>WHERE DATDIPLOMIRANJA IS NOT NULL<br>) OR DATDIPLOMIRANJA IS NULL;",
                 "SELECT *<br>FROM DA.DOSIJE D1<br>WHERE EXISTS (<br><tab></tab>SELECT DATDIPLOMIRANJA<br><tab></tab>FROM DA.DOSIJE D2<br><tab></tab>WHERE D2.DATDIPLOMIRANJA < D1.DATDIPLOMIRANJA<br>) OR D1.DATDIPLOMIRANJA IS NULL;"
             ]
