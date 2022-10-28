@@ -12,10 +12,11 @@
         {
             "z": "Izdvojiti ime i prezime studenta koji ima ispit položen sa ocenom 9.",
             "r": [
-                "SELECT DISTINCT IME, PREZIME<br>FROM DA.DOSIJE AS D JOIN DA.ISPIT AS I<br><tab></tab>ON D.INDEKS = I.INDEKS AND OCENA=9 AND STATUS='o';<br>);",
-                "SELECT IME, PREZIME<br>FROM DA.DOSIJE AS D<br>WHERE 9 IN (<br><tab></tab>SELECT OCENA<br><tab></tab>FROM DA.ISPIT AS I<br><tab></tab>WHERE D.INDEKS = I.INDEKS<br><tab></tab><tab></tab>AND STATUS = 'o'<br><tab></tab>);"
-
-            ]
+                "SELECT DISTINCT IME, PREZIME<br>FROM DA.DOSIJE AS D JOIN DA.ISPIT AS I<br><tab></tab>ON D.INDEKS = I.INDEKS AND OCENA=9 AND STATUS='o';",
+                "SELECT IME, PREZIME<br>FROM DA.DOSIJE AS D<br>WHERE 9 IN (<br><tab></tab>SELECT OCENA<br><tab></tab>FROM DA.ISPIT AS I<br><tab></tab>WHERE D.INDEKS = I.INDEKS<br><tab></tab><tab></tab>AND STATUS = 'o'<br><tab></tab>);",
+                "SELECT IME, PREZIME<br>FROM DA.DOSIJE<br>WHERE INDEKS IN (<br><tab></tab>SELECT INDEKS<br><tab></tab>FROM DA.ISPIT I<br><tab></tab>WHERE OCENA=9 AND STATUS='o'<br>);"
+            ],
+            "n": "Prvi upit daje 1813, dok druga dva upita daju 1876 redova. Razlog tome je distinct, ako bi u prvom upitu dodali da se pored imena i prezime ispisuje i indeks dobili bi 1876 redova. Ukoliko u druga dva upita dodamo disitnct dobićemo 1813 redova. To je zato što postoje studenti istog imena i prezimena koji imaju ispit sa položenom devetkom."
         },
         {
             "z": "Izdvojiti indekse studenata koji su položili bar jedan predmet koji nije položio student sa indeksom 22/2017.",

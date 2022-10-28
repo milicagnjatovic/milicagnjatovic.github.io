@@ -244,6 +244,19 @@
         <script>
         loadClassFromJSON("cas3zadaci", "resources/rbp/cas3.json")
         </script>
+
+        <h4>Napomene posle časa:</h4>
+        <ul>
+            <li>Drugom zadatku je dodata napomena uz još jedno rešenje.</li>
+            <li>
+                <p>U narednom primeru ćemo imati grešku jer se u order by ne zna da li želimo da uredimo po indeksu iz tabele dosije ili po indeksu iz tabele ispit. Možemo to rešiti tako što ćemo staviti order by D.INDEKS ili order by I.INDEKS.</p>
+                <p class="kod">
+                    SELECT *<br>FROM DA.ISPIT I JOIN DA.DOSIJE D<br><tab></tab>ON I.INDEKS = D.INDEKS<br>ORDER BY INDEKS;
+                </p>
+                <p>Međutim, u narednom primeru nemamo grešku jer se u select nalazi jedan indeks, pa se po njemu uređuje.</p>
+                <p class="kod">SELECT D.INDEKS, IME<br>FROM DA.ISPIT I JOIN DA.DOSIJE D<br><tab></tab>ON I.INDEKS = D.INDEKS<br>ORDER BY INDEKS;</p>
+            </li>
+        </ul>
 <!-- CAS3 KRAJ-->
 
 <!-- levi div-->
