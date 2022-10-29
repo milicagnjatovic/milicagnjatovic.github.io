@@ -1,0 +1,174 @@
+{
+    "zadaci": [
+        {
+            "z": "Izdvojiti indekse studenata koji su  rođeni u Beogradu ili imaju ocenu 10. Rezultat urediti u opadajućem poretku.",
+            "r": [
+                "SELECT INDEKS<br>FROM DA.DOSIJE D<br>WHERE MESTORODJENJA LIKE 'Beograd'<br><tab></tab>OR EXISTS (<br><tab></tab><tab></tab>SELECT *<br><tab></tab><tab></tab>FROM DA.ISPIT AS I<br><tab></tab><tab></tab>WHERE D.INDEKS = I.INDEKS AND I.OCENA = 10<br><tab></tab>)<br>ORDER BY INDEKS DESC;",
+                "SELECT INDEKS<br>FROM DA.DOSIJE<br>WHERE MESTORODJENJA LIKE 'Beograd%'<br>UNION <br>SELECT INDEKS<br>FROM DA.ISPIT<br>WHERE OCENA=10<br>ORDER BY INDEKS DESC;",
+                "SELECT INDEKS<br>FROM DA.DOSIJE<br>WHERE MESTORODJENJA LIKE 'Beograd%'<br>UNION ALL<br>SELECT INDEKS<br>FROM DA.ISPIT<br>WHERE OCENA=10<br>ORDER BY INDEKS DESC;"
+            ],
+            "n": "Poslednji upit vraća više redova od prva dva jer imamo duplikate. UNION ALL će imati dva reda za jednog studenta ako je on i rođen u Beogradu i ima ocenu 10. Možemo imati više redova istog studenta jer možda ima više ispita sa ocenom 10. Ako dodamo DISTINCT u drugi upit onda ćemo imati jedan red za studenta ako ima bar jednu ocenu 10, dok drugi red za istog studenta može da postoji ako je još i rođen u Beogradu."
+        },
+        {
+            "z": "Izdvojiti indekse studenata koji su  rođeni u Beogradu i imaju ocenu 10. Rezultat urediti u opadajućem poretku.",
+            "r": [
+                "SELECT INDEKS<br>FROM DA.DOSIJE D<br>WHERE MESTORODJENJA LIKE 'Beograd%'<br><tab></tab>AND EXISTS (<br><tab></tab><tab></tab>SELECT *<br><tab></tab><tab></tab>FROM DA.ISPIT AS I<br><tab></tab><tab></tab>WHERE D.INDEKS = I.INDEKS AND I.OCENA = 10<br><tab></tab>)<br>ORDER BY INDEKS DESC;",
+                "SELECT INDEKS<br>FROM DA.DOSIJE<br>WHERE MESTORODJENJA LIKE 'Beograd%'<br>INTERSECT <br>SELECT INDEKS<br>FROM DA.ISPIT<br>WHERE OCENA=10<br>ORDER BY INDEKS DESC;"
+            ]
+        },
+        {
+            "z": "Izdvojiti indekse studenata koji imaju ocenu 8 i imaju ocenu 10. Rezultat urediti u opadajućem poretku.",
+            "r": [
+                "SELECT INDEKS<br>FROM DA.ISPIT<br>WHERE OCENA=8<br>INTERSECT<br>SELECT INDEKS<br>FROM DA.ISPIT<br>WHERE OCENA=10<br>ORDER BY INDEKS DESC;",
+                "SELECT INDEKS<br>FROM DA.ISPIT<br>WHERE OCENA=8<br>INTERSECT ALL<br>SELECT INDEKS<br>FROM DA.ISPIT<br>WHERE OCENA=10<br>ORDER BY INDEKS DESC;"
+            ],
+            "n": "INTERSECT ALL nam vraća više redova, na primer ako imamo studenta koji ima dve osmice i dve (tri, četiri...) devetke za njega ćemo dobiti dva reda."
+        },
+
+        {
+            "z": "Izdvojiti indekse studenata koji su rođeni u Beogradu i nisu dobili ocenu 10 na nekom ispitu. Rezultat urediti u opadajućem poretku. ",
+            "r": [
+                "SELECT INDEKS<br>FROM DA.DOSIJE D<br>WHERE MESTORODJENJA LIKE 'Beograd%'<br><tab></tab>AND NOT EXISTS (<br><tab></tab><tab></tab>SELECT *<br><tab></tab><tab></tab>FROM DA.ISPIT AS I<br><tab></tab><tab></tab>WHERE D.INDEKS = I.INDEKS AND I.OCENA = 10<br><tab></tab>)<br>ORDER BY INDEKS DESC;",
+                "SELECT INDEKS<br>FROM DA.DOSIJE<br>WHERE MESTORODJENJA LIKE 'Beograd%'<br>EXCEPT <br>SELECT INDEKS<br>FROM DA.ISPIT<br>WHERE OCENA=10<br>ORDER BY INDEKS DESC;"
+            ]
+        },
+
+        {
+            "z": "Za svaki polagan ispit izdvojiti indeks, identifikator predmeta i dobijenu ocenu. Vrednost ocene ispisati i slovima. Ako je predmet nepoložen umesto ocene ispisati nepolozen.",
+            "r": [
+                "SELECT INDEKS, IDPREDMETA, OCENA,<br><tab></tab>CASE <br><tab></tab><tab></tab>WHEN OCENA=10 THEN 'deset'<br><tab></tab><tab></tab>WHEN OCENA=9 THEN 'devet'<br><tab></tab><tab></tab>WHEN OCENA=8 THEN 'osam'<br><tab></tab><tab></tab>WHEN OCENA=7 THEN 'sedam'<br><tab></tab><tab></tab>WHEN OCENA=6 THEN 'sest'<br><tab></tab><tab></tab>ELSE 'nepolozen'<br><tab></tab>END AS \"Ocena slovima\"<br>FROM DA.ISPIT<br>WHERE STATUS = 'o';",
+                "SELECT INDEKS, IDPREDMETA, OCENA,<br><tab></tab>CASE OCENA<br><tab></tab><tab></tab>WHEN 10 THEN 'deset'<br><tab></tab><tab></tab>WHEN 9 THEN 'devet'<br><tab></tab><tab></tab>WHEN 8 THEN 'osam'<br><tab></tab><tab></tab>WHEN 7 THEN 'sedam'<br><tab></tab><tab></tab>WHEN 6 THEN 'sest'<br><tab></tab><tab></tab>ELSE 'nepolozen'<br><tab></tab>END AS \"Ocena slovima\"<br>FROM DA.ISPIT<br>WHERE STATUS = 'o';"
+            ]
+        },
+        {
+            "z": "Klasifikovati predmete prema broju espb bodova na sledeći način: <ul><li>ako predmet ima više od 15 espb bodova tada pripada I kategoriji</li><li>ako je broj espb bodova predmeta u intervalu [10,15] tada pripada II kategoriji</li><li>inače predmet pripada III kategoriji.</li></ul> Izdvojiti naziv predmeta, espb bodove i kategoriju.",
+            "r": [
+                "SELECT NAZIV, ESPB,<br><tab></tab>CASE <br><tab></tab><tab></tab>WHEN ESPB>15 THEN 'I'<br><tab></tab><tab></tab>WHEN ESPB>=10 THEN 'II'<br><tab></tab><tab></tab>ELSE 'III'<br><tab></tab>END AS KATEGORIJA<br>FROM DA.PREDMET;"
+            ]
+        },
+        {
+            "z": "Ispisati trenutno vreme.",
+            "r": [
+                "SELECT DISTINCT CURRENT_TIME<br>FROM DA.DOSIJE;",
+                "VALUES CURRENT_TIME;",
+                "SELECT CURRENT_TIME<br>FROM SYSIBM.SYSDUMMY1;"
+            ],
+            "n": "Values je ključna reč koju koristimo da definišemo privremene redove i kolone sa eksplicitnim vrednostima. <br>SYSIBM.SYSDUMMY1 je dummy tabela, sadrži jedan red i jednu kolonu. Kolona se zove IBMREQD, dok je vrednost u jedinom redu Y."
+        },
+        {
+            "z": "Ispisati trenutnog korisnika i ime podrazumevane sheme.",
+            "r": [
+                "VALUES USER;",
+                "VALUES CURRENT SCHEMA;",
+                "VALUES (USER, CURRENT SCHEMA);",
+                "VALUES USER, CURRENT SCHEMA;"
+            ],
+            "n": "Sintaksa za values: <ul><li>Ukoliko imamo jednu vrednost zagrade nisu potrebne</li><li>Između zagrada se navode vrednosti koje će ići u jedan red</li><li>Vrednosti za redove se razdvajaju zarezima</li><li>Values (vrednosti prvog reda), (vednosti drugog reda)...</li><li>Svi redovi moraju da imaju isti broj atributa istog tipa</li></ul>"
+        },
+        {
+            "z": "Izračunati koji je dan u nedelji (njegovo ime) bio 3.11.2019.",
+            "r": [
+                "VALUES DAYNAME('3.11.2019');",
+                "VALUES DAYNAME(DATE('3.11.2019'));"
+            ]
+        },
+        {
+            "z": "Za današnji datum izračunati <ul><li>koji je dan u godini</li><li>u kojoj je nedelji u godini</li><li>koji je dan u nedelji</li><li>ime dana</li><li>ime meseca.</li></ul>",
+            "r": [
+                "VALUES (DAYOFYEAR(CURRENT_DATE),<br><tab></tab>WEEK(CURRENT_DATE),<br><tab></tab>DAYOFWEEK(CURRENT_DATE),<br><tab></tab>DAYNAME(CURRENT_DATE),<br><tab></tab>MONTHNAME(CURRENT_DATE));"
+            ]
+        },
+        {
+            "z": "Izdvojiti sekunde iz trenutnog vremena. ",
+            "r": [
+                "VALUES SECOND(CURRENT_TIME);"
+            ]
+        },
+        {
+            "z": "Izračunati koliko vremena je prošlo između 6.8.2005. i 11.11.2008. ",
+            "r":[
+                "VALUES DATE('11.11.2018') - DATE('6.8.2015');",
+                "VALUES DAYS_BETWEEN(DATE('11.11.2018'), DATE('6.8.2015'));"
+            ],
+            "n": "Ne može VALUES '11.11.2018' - '6.8.2015' jer db2 ne može da zaključi da ovi stringovi zapravo predstavljaju datume."
+        },
+        {
+            "z": "Izračunati koji će datum biti za 12 godina, 5 meseci i 25 dana. ",
+            "r":[
+                "VALUES CURRENT_DATE + 12 YEARS + 5 MONTHS + 25 DAYS;"
+            ]
+        },
+        {
+            "z": "Izdvojiti ispite koji su održani posle 28. septembra 2020. godine. ",
+            "r":[
+                "SELECT *<br>FROM DA.ISPIT<br>WHERE DATPOLAGANJA > '28.9.2020';"
+            ]
+        },
+        {
+            "z": "Pronaći ispite koji su održani u poslednjih 8 meseci. ",
+            "r":[
+                "SELECT *<br>FROM DA.ISPIT<br>WHERE DATPOLAGANJA > CURRENT_DATE - 8 MONTHS;",
+                "SELECT *<br>FROM DA.ISPIT<br>WHERE CURRENT_DATE - DATPOLAGANJA < 800;"
+            ],
+            "n": "Razlika dva datuma će biti u formatu YYYYMMDD, YYYY - koliko je godina prošlo, MM - koliko je meseci prošlo (između 0 i 12), DD - koliko je dana prošlo. Ako želimo da proverimo ovaj format možemo izvršiti upite poput VALUES DATE(CURRENT_DATE + 11 MONTHS) - DATE(CURRENT_DATE);"
+        },
+        {
+            "z": "Za sve ispite koji su održani u poslednjih 5 godina izračunati koliko je godina, meseci i dana prošlo od njihovog održavanja. Izdvojiti indeks, naziv predmeta, ocenu, broj godina, broj meseci i broj dana.",
+            "r": [
+                "SELECT INDEKS, NAZIV, OCENA, <br><tab></tab>YEARS_BETWEEN(CURRENT_DATE, DATPOLAGANJA) GODINA,<br><tab></tab>MONTHS_BETWEEN(CURRENT_DATE, DATPOLAGANJA) MESECI,<br><tab></tab>DAYS_BETWEEN(CURRENT_DATE, DATPOLAGANJA) DANA,<br><tab></tab>YEAR(CURRENT_DATE - DATPOLAGANJA) GODINA,<br><tab></tab>MONTH(CURRENT_DATE - DATPOLAGANJA) MESECI,<br><tab></tab>DAY(CURRENT_DATE - DATPOLAGANJA) DANA<br>FROM DA.ISPIT AS I JOIN DA.PREDMET AS P<br><tab></tab>ON I.IDPREDMETA = P.ID<br>WHERE CURRENT_DATE - DATPOLAGANJA <= 50000;                "
+            ]
+        },
+        {
+            "z": "Izdvojiti indeks, ime, prezime, mesto rođenja i inicijale studenata. Ime i prezime napisati u jednoj koloni, a za studente rođene u Beogradu kao mesto rođenja ispisati Bg. ",
+            "r": [
+                "SELECT INDEKS, IME || ' ' || PREZIME \"ime i prezime\",<br><tab></tab>SUBSTR(IME, 1, 1) || SUBSTR(PREZIME, 1, 1) AS INICIJALI,<br><tab></tab>REPLACE(MESTORODJENJA, 'Beograd', 'Bg') \"mesto rodjenja\"<br>FROM DA.DOSIJE;",
+                "SELECT INDEKS, IME || ' ' || PREZIME \"ime i prezime\",<br><tab></tab>CONCAT(SUBSTR(IME, 1, 1), SUBSTR(PREZIME, 1, 1)) AS INICIJALI,<br><tab></tab>CASE <br><tab></tab><tab></tab>WHEN MESTORODJENJA LIKE '%Beograd%' THEN 'Bg' <br><tab></tab><tab></tab>ELSE MESTORODJENJA<br><tab></tab>END \"mesto rodjenja\"<br>FROM DA.DOSIJE;"
+            ]
+        },
+        {
+            "z": "Za priznate ispite izdvojiti indeks, naziv predmeta i dobijenu ocenu. Ako je ocena nepoznata, umesto NULL vrednosti ispisati -1.",
+            "r":[
+                "SELECT INDEKS, NAZIVPREDMETA, <br><tab></tab>CASE<br><tab></tab><tab></tab>WHEN OCENA IS NULL THEN -1<br><tab></tab><tab></tab>ELSE OCENA<br><tab></tab>END<br>FROM DA.PRIZNATISPIT;",
+                "SELECT INDEKS, NAZIVPREDMETA, <br><tab></tab>COALESCE(OCENA, -1)<br>FROM DA.PRIZNATISPIT;"
+            ],
+            "n": "Ne bi moglo CASE OCENA WHEN NULL THEN ... , jer se za poređenje sa NULL koristi IS."
+        },
+        {
+            "z": "Prikazati trenutno vreme i trenutni datum u <ul><li>ISO formatu</li><li>USA formatu</li><li>EUR formatu.</li></ul>",
+            "r": [
+                "VALUES CHAR(CURRENT_DATE, ISO),<br><tab></tab>CHAR(CURRENT_DATE, USA),<br><tab></tab>CHAR(CURRENT_DATE, EUR),<br><tab></tab>CHAR(CURRENT_TIME, ISO),<br><tab></tab>CHAR(CURRENT_TIME, USA),<br><tab></tab>CHAR(CURRENT_TIME, EUR);"
+            ]
+        },
+        {
+            "z": "Ako je predmetima potrebno uvećati broj espb bodova za 20% <ul><li>prikazati koliko će svaki predmet imati espb bodova nakon uvećanja. Uvećani broj bodova prikazati sa dve decimale.</li><li>prikazati koliko će espb bodova imati predmeti koji nakon uvećanja imaju više od 8 bodova. Uvećani broj espb bodova zaokružiti na veću ili jednaku celobrojnu vrednost.</li></ul>  ",
+            "r":[
+                "SELECT OZNAKA, NAZIV, <br><tab></tab>DECIMAL(ESPB*1.2, 6, 2) UVECANO,<br>FROM DA.PREDMET;                "
+            ]
+        },
+        {
+            "z": "Pronaći indekse studenata koji su jedini položili ispit iz nekog predmeta sa ocenom 10. Za studenta sa brojem indeksa GGGGBBBB izdvojiti indeks u formatu BBBB/GGGG.",
+            "r":[
+                "SELECT SUBSTR(INDEKS, 5) || '/' || SUBSTR(INDEKS, 1, 4), NAZIV<br>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab>ON I.IDPREDMETA = P.ID<br>WHERE OCENA=10 AND STATUS='o' AND<br><tab></tab>NOT EXISTS (<br><tab></tab><tab></tab>SELECT *<br><tab></tab><tab></tab>FROM DA.ISPIT I1<br><tab></tab><tab></tab>WHERE I.INDEKS <> I1.INDEKS AND<br><tab></tab><tab></tab><tab></tab>I.IDPREDMETA = I1.IDPREDMETA AND<br><tab></tab><tab></tab><tab></tab>I1.OCENA=10 AND I1.STATUS='o'<br><tab></tab>);"
+            ]
+        },
+        {
+            "z": "Za svaki ispitni rok koji je održan između 2000/2001. i 2020/2021. školske godine izdvojiti imena dana u kojima su polagani ispiti u tom roku. Izdvojiti naziv ispitnog roka i ime dana. Za ispitne rokove u kojima nije polagan nijedan ispit ili je datum polaganja nepoznat umesto dana ispisati 'nije bilo ispita ili je nepoznat datum'.",
+            "r":[
+                "SELECT DISTINCT IR.NAZIV, <br><tab></tab>COALESCE(DAYNAME(DATPOLAGANJA), 'Nije bilo ispita ili nepoznat datum')<br>FROM DA.ISPITNIROK IR LEFT JOIN DA.ISPIT AS I<br><tab></tab>ON IR.OZNAKAROKA = I.OZNAKAROKA AND<br><tab></tab><tab></tab>IR.SKGODINA = I.SKGODINA<br>WHERE IR.SKGODINA BETWEEN 2000 AND 2020;"
+            ]
+        },
+        {
+            "z": "U prethodnom zadatku za nepoznat datum ispisati poruku u zavisnosti da li ispit nije održan ili je datum nepoznat.",
+            "r":[
+                "SELECT DISTINCT IR.NAZIV, <br><tab></tab>COALESCE(DAYNAME(DATPOLAGANJA), 'Nepoznat datum')<br>FROM DA.ISPITNIROK IR JOIN DA.ISPIT AS I<br><tab></tab>ON IR.OZNAKAROKA = I.OZNAKAROKA AND<br><tab></tab><tab></tab>IR.SKGODINA = I.SKGODINA<br>WHERE IR.SKGODINA BETWEEN 2000 AND 2020<br>UNION<br>SELECT DISTINCT IR.NAZIV, ('Nije bilo ispita')<br>FROM DA.ISPITNIROK IR <br>WHERE NOT EXISTS(<br><tab></tab>SELECT *<br><tab></tab>FROM DA.ISPIT I<br><tab></tab>WHERE I.OZNAKAROKA = IR.OZNAKAROKA AND<br><tab></tab><tab></tab>I.SKGODINA = IR.SKGODINA<br>);"
+            ]
+        }
+
+    ],
+    "zadaciZaVezbanje":[
+        "Izdvojiti ime i prezime studenata za koga važi da postoji student koji je rođen u istom mestu i koji je godinu dana ranije upisao fakultet.",
+        "Napisati na SQL-u upit koji za svaki predmet izdvaja studenta koji je taj predmet položio u poslednjih 5 godina i 3 meseca. Izdvojiti naziv predmeta i ime i prezime studenta. Ime i prezime studenta izdvojiti kao jednu nisku i kolonu koja sadrži ime i prezime studenta nazvati Student. Ako nijedan student nije položio predmet u zadatom periodu, umesto imena i prezimena studenta ispisati Nema studenata. Rezultat urediti prema nazivu predmeta.",
+        "Za sve studente koji su fakultet upisali u julu ili septembru kod kojih su ime i prezime iste dužine, izdvojiti informacije o polaganjima svih predmeta čiji naziv počinje slovom P. Izdvojiti indeks studenta, ime i prezime studenta u obliku prezime razmak ime (kolonu nazvati Prezime pa ime), naziv predmeta i dobijenu ocenu. U rezultatu izdvojiti i podatke o studentima koji su fakultet upisali u julu ili septembru, a nisu polagali predmet čiji naziv pocinje slovom P.",
+        "Pronaći nazive ispitnih rokova u kojima su polagali svi studenti koji imaju bar jednu ocenu 10."
+    ]
+}

@@ -9,12 +9,12 @@ function loadClassFromJSON(elId, classFile){
 
         let zadaciOL = document.createElement("ol");
         for(let zadatak of data.zadaci){
-            console.log(zadatak)
+            // console.log(zadatak)
             let item = document.createElement('li');
 
             let tekstZadatka = document.createElement('p');
             tekstZadatka.className = "zadatak";
-            tekstZadatka.textContent = zadatak.z;
+            tekstZadatka.innerHTML = zadatak.z;
             item.appendChild(tekstZadatka);
 
             let resenjaDiv = document.createElement('div');
@@ -44,9 +44,9 @@ function loadClassFromJSON(elId, classFile){
                 // item.appendChild(r);
             }
 
-            if(zadatak.n != ''){
+            if("n" in zadatak){
                 let napomena = document.createElement('p')
-                napomena.textContent = zadatak.n;
+                napomena.innerHTML = zadatak.n;
                 resenjaDiv.appendChild(napomena);
             }
             zadaciOL.appendChild(item);
