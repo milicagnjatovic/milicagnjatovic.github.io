@@ -34,6 +34,7 @@
                 <tr><td><a href="#cas1">ČAS 1</a></td></tr>
                 <tr><td><a href="#cas2">ČAS 2</a></td></tr>
                 <tr><td><a href="#cas3">ČAS 3</a></td></tr>
+                <tr><td><a href="#cas4">ČAS 4</a></td></tr>
             </table>
         </div>
 
@@ -258,6 +259,168 @@
             </li>
         </ul>
 <!-- CAS3 KRAJ-->
+
+<!-- CAS4 -->
+<h1 id="cas4">ČAS 4</h1>
+<h3>Skupovni operatori</h3>
+<dl>
+    <dt>UNION</dt>
+    <dd>
+        <i>upit1</i> UNION <i>upit2</i> nam daje sve redove iz upita1 i upita2 bez duplikata. Važno je da i prvi i drugi upit vraćaju isti broj kolona i da su te kolone istog tipa. Na primer u redu je ako prvi upit vraća ime (string), ocenu (broj), a drugi prezime (string), indkeks (broj). Nije u redu ako prvi vraca ocenu (broj), a drugi ime (string).
+    </dd>
+
+    <dt>UNION ALL</dt>
+    <dd>Identično kao UNION samo što ovde možemo imati duplikate. Efikasnije je od UNION jer ne proverava duplikate. UNION je kao da smo na UNION ALL primenili DISITNCT.</dd>
+
+    <dt>INTERSECT</dt>
+    <dd>
+        <i>upit1</i> INTERSECT <i>upit2</i> nam daje sve redove iz upita 1 koji postoje i u upitu 2 bez duplikata. Važno je da i prvi i drugi upit vraćaju isti broj kolona i da su te kolone istog tipa.
+    </dd>
+
+    <dt>INTERSECT ALL</dt>
+    <dd>Identično kao INTERSECT samo što ovde možemo imati duplikate. Efikasnije je od INTERSECT jer ne proverava duplikate. INTERSECT je kao da smo na INTERSECT ALL primenili DISITNCT.</dd>
+
+    <dt>EXCEPT / MINUS</dt>
+    <dd> <i>upit1</i> EXCEPT <i>upit2</i> nam daje sve redove iz upita 1 koji ne postoje u upitu 2 bez duplikata. Važno je da i prvi i drugi upit vraćaju isti broj kolona i da su te kolone istog tipa. EXCEPT i MINUS su sinonimi i potpuno je svejedno da li koristimo jedno ili drugo.
+    </dd>
+
+    <dt>EXCEPT ALL</dt>
+    <dd> <i>upit1</i> EXCEPT ALL <i>upit2</i> nam daje sve redove iz upita 1 koji ne postoje u upitu 2 uzimajući u obzir duplikate. Ako prvi upit vraća X za svaku ocenu 10, a drugi upit vraća X za svaku ocenu 6, i ako student ima 5 desetki i 3 šestice u rezultatu će biti 2 reda sa X. Ako bi u ovom primeru koristili samo EXCEPT dobili bi praznu tabelu kao rezultat.</dd>
+</dl>
+
+<h3>Funkcije za rad sa datumom i vremenom</h3>
+<dl>
+    <dt>CURRENT TIME, CURRENT DATE</dt>
+    <dd>specijalni registri koji sadrže vrednost trenutnog vremena, odnosno datuma</dd>
+
+    <dt>DATE(expression)</dt>
+    <dd>expression može biti string u formatu "dd.mm.yyyy"</dd>
+    
+    <dt>YEAR(date)</dt>
+    
+    <dt>MONTH(date)</dt>
+    <dd>redni broj meseca u godini</dd>
+    
+    <dt>WEEK(date)</dt>
+    <dd>redni broj nedelje u godini</dd>
+    
+    <dt>DAY(date) / DAYOFMONTH(date)</dt>
+    <dd>redni broj dana u mesecu</dd>
+
+    <dt>DAYOFYEAR(date)</dt>
+    <dd>redni broj dana u godini</dd>
+
+    <dt>DAYOFWEEK(date)</dt>
+    <dd>redni broj dana u nedelji, 1 je subota, dok je 7 nedelja</dd>
+
+    <dt>DAYNAME(date)</dt>
+    <dd>naziv dana u nedelji</dd>
+
+    <dt>MONTHNAME(date)</dt>
+    <dd>naziv meseca</dd>
+
+    <dt>DAYS(date)</dt>
+    <dd>brojevna reprezentacija datuma</dd>
+    
+    <dt>TIME(expression)</dt>
+    <dd>vraća vreme, expression može biti u formatu hh:mm</dd>
+
+    <dt>TIMESTAMP(date, time)</dt>
+    <dd>vraća format koji sadrži datum i vreme</dd>
+
+    <dt>HOUR(time), MINUTE(time), SECOND(time)</dt>
+    <dd>vraća broj sati, minuta i sekundi za vreme</dd>
+
+    <dt>YEARS_BETWEEN(date1, date2), MONTHS_BETWEEN(date1, date2), DAYS_BETWEEN(date1, date2)</dt>
+    <dd>Koliko je godina, meseci, dana prošlo između dva datuma. Ako gledamo mesece na primer a prošlo je 2 godine i 3 meseca reulatat će biti 27 meseci, a ne 3.</dd>
+
+    <dt>SECOND[S], MINUTE[S], HOUR[S], DAY[S], MONTH[S], YEAR[S]</dt>
+    <dd>
+        ključne reči koje nam omogućuju da dodajemo na neki datum ili na neko vreme <br>
+        Na primer: 
+            <ul>
+                <li>CURRENT TIME + 5 MINUTES - 5 SECONDS</li>
+                <li>DATE('1.1.2020') + 5 YEARS (u ovom slučaju nije dovoljno samo niska za datum, već je potrebno i DATE da se naglasi da je datum jer db2 ne može sam da zaključi)</li>
+            </ul>
+    </dd>
+</dl>
+
+<h3>Funkcije za rad sa karakterima</h3>
+<dl>
+    <dt>SUBSTR(str, start, len)</dt>
+    <dd>Vraća podnisku niske str, koja počinje od start a dužine je len. Indeksiranje kreće od 1. Ukoliko se ne navede len izdvaja se podniska od pozicije start do kraja niske. </dd>
+
+    <dt>CONCAT(x, y), x || y</dt>
+    <dd>Spaja niske x i y. CONCAT prima tačno dva argumenta, dok ako koristimo operator || možemo ulančati više stringova (a || b || c ...).</dd>
+
+    <dt>SPACE(x)</dt>
+    <dd>Vraća x praznih mesta.</dd>
+
+    <dt>POSSTR(x, y)</dt>
+    <dd>Vraća indeks na kom počinje niska y u niski x. Ukoliko se y ne nalazi u x vraća 0.</dd>
+
+    <dt>REPEAT(str, x)</dt>
+    <dd>Ponavlja nisku str x puta.</dd>
+
+    <dt>REPLACE(str, x, y)</dt>
+    <dd>Zamenjuje sva pojavljivanja niske x u str sa y.</dd>
+
+    <dt>LTRIM(str), TRIM(str), RTRIM(str)</dt>
+    <dd>Uklanja beline levo, desno ili sa obe strane.</dd>
+
+    <dt>LENGTH(arg)</dt>
+    <dd>Vraća dužinu argumenta, koji može biti string ili broj.</dd>
+</dl>
+
+<h3>Funkcije za nedefinisane vrednosti</h3>
+<dl>
+    <dt>COALESCE(x, y, z...)</dt>
+    <dd>Vraća prvi argument iz liste čija vrednost nije NULL. Ako su svi agumenti NULL onda se NULL i vraća.</dd>
+
+    <dt>NULLIF(x, y)</dt>
+    <dd>Vraća NULL ako su x i y jednaki. Ukoliko su argumenti različiti onda vraća prvi argumenti.</dd>
+</dl>
+
+<h3>Funkcije za konverziju</h3>
+<dl>
+    <dt>DECIMAL(x, y, z), DEC(x, y, z)</dt>
+    <dd>Vraća decimalnu reprezentaciju x, pri čemu y predstavlja ukupan broj cifara, a z broj mesta iza decimalnog zareza. X može biti broj ili string.</dd>
+
+    <dt>DOUBLE(x)</dt>
+    <dd>Vraća broj veće preciznosti. X može biti string ili broj.</dd>
+
+    <dt>DECIMAL(expression)</dt>
+    <dd>Vraća string reprezentaciju broja.</dd>
+
+    <dt>CHAR(expression)</dt>
+    <dd>Skoro sve tipove pretvara u string.</dd>
+
+    <dt>CHAR(datetime, format)</dt>
+    <dd>Datum i vreme prikazuje u datom formatu. Dostupni formati su ISO, USA, EUR, JIS, LOCAL.</dd>
+</dl>
+
+<h3>Numeričke funkcije</h3>
+<dl>
+    <dt>MOD(x, y)</dt>
+    <dt>ABS(x)</dt>
+    <dt>SIGN(x)</dt>
+    <dd>Vraća 1 za pozitivne, -1 za negativne, 0 za 0.</dd>
+    <dt>SQRT(x)</dt>
+    <dd>Vraća koren broja.</dd>
+    <dt>RAND(seed)</dt>
+    <dd>Vraća random broj. Seed argument nije obavezan, za isti seed se dobija isti 'random' broj.</dd>
+    <dt>CEIL, FLOOR</dt>
+    <dd>Zaokružuje broj na veći, odnosno manji.</dd>
+    <dt>SIN, COS, TAN, COTAN, ASIN, ACOS, ATAN, EXP...</dt>
+    <dt>ROUND(num, broj_decimala)</dt>
+</dl>
+
+<p>Na narednom linku možete naći još sklarnih funkcija i informacije o njima: <a href="https://www.ibm.com/docs/en/db2/11.5?topic=functions-scalar">dokumentacija</a>.</p>
+<div id="cas4zadaci"></div>
+    <script>
+    loadClassFromJSON("cas4zadaci", "resources/rbp/cas4.json")
+    </script>
+<!-- CAS4 KRAJ-->
 
 <!-- levi div-->
          </div>

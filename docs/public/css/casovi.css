@@ -110,5 +110,7 @@ dl {
 }
 dt {
     margin-top: 20px;
-    text-decoration: underline;
+/*    text-decoration: underline; */
+    font-weight: bold;
+    border-bottom: solid black 2px;
 }
