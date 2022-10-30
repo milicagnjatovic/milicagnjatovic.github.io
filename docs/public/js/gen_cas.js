@@ -1,4 +1,4 @@
-function loadClassFromJSON(elId, classFile){
+function loadClassFromJSON(elId, classFile, prikazi = 'block'){
     let root = document.getElementById(elId)
     fetch(classFile) // vr=1.0 da bi se video najnoviji fajl
     .then(response => response.json())
@@ -25,6 +25,9 @@ function loadClassFromJSON(elId, classFile){
             showBtn.textContent = 'rešenje';
             showBtn.className = 'resenje_btn'
             item.append(showBtn);
+
+
+            showBtn.style.display = prikazi;
 
             showBtn.onclick = function(){
                 if (resenjaDiv.style.display === 'block'){
