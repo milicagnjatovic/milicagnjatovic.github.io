@@ -140,10 +140,19 @@
             ]
         },
         {
-            "z": "Ako je predmetima potrebno uvećati broj espb bodova za 20% <ul><li>prikazati koliko će svaki predmet imati espb bodova nakon uvećanja. Uvećani broj bodova prikazati sa dve decimale.</li><li>prikazati koliko će espb bodova imati predmeti koji nakon uvećanja imaju više od 8 bodova. Uvećani broj espb bodova zaokružiti na veću ili jednaku celobrojnu vrednost.</li></ul>  ",
+            "z": "Ako je predmetima potrebno uvećati broj espb bodova za 20% prikazati koliko će svaki predmet imati espb bodova nakon uvećanja. Uvećani broj bodova prikazati sa dve decimale.",
             "r":[
                 "SELECT OZNAKA, NAZIV, <br><tab></tab>DECIMAL(ESPB*1.2, 6, 2) UVECANO,<br>FROM DA.PREDMET;                "
             ]
+        },
+        {
+            "z": "Ako je predmetima potrebno uvećati broj espb bodova za 20% prikazati koliko će espb bodova imati predmeti koji nakon uvećanja imaju više od 8 bodova. Uvećani broj espb bodova zaokružiti na veću ili jednaku celobrojnu vrednost.",
+            "r": [
+                "SELECT OZNAKA, NAZIV, <br><tab></tab>CEIL(ESPB*1.2) UVECANO<br>FROM DA.PREDMET<br>WHERE ESPB*1.2>8;                "
+            ]
+        
+        
+        
         },
         {
             "z": "Pronaći indekse studenata koji su jedini položili ispit iz nekog predmeta sa ocenom 10. Za studenta sa brojem indeksa GGGGBBBB izdvojiti indeks u formatu BBBB/GGGG.",
