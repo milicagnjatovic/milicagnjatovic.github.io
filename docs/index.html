@@ -261,7 +261,7 @@
 
     <dt>INTERSECT</dt>
     <dd>
-        <i>upit1</i> INTERSECT <i>upit2</i> nam daje sve redove iz upita 1 koji postoje i upitu 2 bez duplikata. Važno je da i prvi i drugi upit vraćaju isti broj kolona i da su te kolone istog tipa.
+        <i>upit1</i> INTERSECT <i>upit2</i> nam daje sve redove iz upita 1 koji postoje i u upitu 2 bez duplikata. Važno je da i prvi i drugi upit vraćaju isti broj kolona i da su te kolone istog tipa.
     </dd>
 
     <dt>INTERSECT ALL</dt>
@@ -272,7 +272,7 @@
     </dd>
 
     <dt>EXCEPT ALL</dt>
-    <dd> <i>upit1</i> EXCEPT ALL <i>upit2</i> nam daje sve redove iz upita 1 koji ne postoje u upitu 2 uzimajući u obzir duplikate. Ako prvi upit vraća X za svaku ocenu 10, a drugi upit vraća X za svaku ocenu 6, i ako studetn ima 5 desetki i 3 šestice u rezultatu će biti 2 reda sa X. Ako bi u ovom primeru koristili samo EXCEPT dobili bi praznu tabelu kao rezultat.</dd>
+    <dd> <i>upit1</i> EXCEPT ALL <i>upit2</i> nam daje sve redove iz upita 1 koji ne postoje u upitu 2 uzimajući u obzir duplikate. Ako prvi upit vraća X za svaku ocenu 10, a drugi upit vraća X za svaku ocenu 6, i ako student ima 5 desetki i 3 šestice u rezultatu će biti 2 reda sa X. Ako bi u ovom primeru koristili samo EXCEPT dobili bi praznu tabelu kao rezultat.</dd>
 </dl>
 
 <h3>Funkcije za rad sa datumom i vremenom</h3>
@@ -317,6 +317,9 @@
 
     <dt>HOUR(time), MINUTE(time), SECOND(time)</dt>
     <dd>vraća broj sati, minuta i sekundi za vreme</dd>
+
+    <dt>YEARS_BETWEEN(date1, date2), MONTHS_BETWEEN(date1, date2), DAYS_BETWEEN(date1, date2)</dt>
+    <dd>Koliko je godina, meseci, dana prošlo između dva datuma. Ako gledamo mesece na primer a prošlo je 2 godine i 3 meseca reulatat će biti 27 meseci, a ne 3.</dd>
 
     <dt>SECOND[S], MINUTE[S], HOUR[S], DAY[S], MONTH[S], YEAR[S]</dt>
     <dd>
@@ -380,7 +383,7 @@
     <dd>Skoro sve tipove pretvara u string.</dd>
 
     <dt>CHAR(datetime, format)</dt>
-    <dt>Datum i vreme prikazuje u datim formatu. Dostupni formati su ISO, USA, EUR, JIS, LOCAL.</dt>
+    <dd>Datum i vreme prikazuje u datom formatu. Dostupni formati su ISO, USA, EUR, JIS, LOCAL.</dd>
 </dl>
 
 <h3>Numeričke funkcije</h3>
@@ -390,9 +393,11 @@
     <dt>SIGN(x)</dt>
     <dd>Vraća 1 za pozitivne, -1 za negativne, 0 za 0.</dd>
     <dt>SQRT(x)</dt>
+    <dd>Vraća koren broja.</dd>
     <dt>RAND(seed)</dt>
     <dd>Vraća random broj. Seed argument nije obavezan, za isti seed se dobija isti 'random' broj.</dd>
     <dt>CEIL, FLOOR</dt>
+    <dd>Zaokružuje broj na veći, odnosno manji.</dd>
     <dt>SIN, COS, TAN, COTAN, ASIN, ACOS, ATAN, EXP...</dt>
     <dt>ROUND(num, broj_decimala)</dt>
 </dl>

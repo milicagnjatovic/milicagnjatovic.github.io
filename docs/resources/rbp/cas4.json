@@ -36,8 +36,8 @@
         {
             "z": "Za svaki polagan ispit izdvojiti indeks, identifikator predmeta i dobijenu ocenu. Vrednost ocene ispisati i slovima. Ako je predmet nepoložen umesto ocene ispisati nepolozen.",
             "r": [
-                "SELECT INDEKS, IDPREDMETA, OCENA,<br><tab></tab>CASE <br><tab></tab><tab></tab>WHEN OCENA=10 THEN 'deset'<br><tab></tab><tab></tab>WHEN OCENA=9 THEN 'devet'<br><tab></tab><tab></tab>WHEN OCENA=8 THEN 'osam'<br><tab></tab><tab></tab>WHEN OCENA=7 THEN 'sedam'<br><tab></tab><tab></tab>WHEN OCENA=6 THEN 'sest'<br><tab></tab><tab></tab>ELSE 'nepolozen'<br><tab></tab>END AS \"Ocena slovima\"<br>FROM DA.ISPIT<br>WHERE STATUS = 'o';",
-                "SELECT INDEKS, IDPREDMETA, OCENA,<br><tab></tab>CASE OCENA<br><tab></tab><tab></tab>WHEN 10 THEN 'deset'<br><tab></tab><tab></tab>WHEN 9 THEN 'devet'<br><tab></tab><tab></tab>WHEN 8 THEN 'osam'<br><tab></tab><tab></tab>WHEN 7 THEN 'sedam'<br><tab></tab><tab></tab>WHEN 6 THEN 'sest'<br><tab></tab><tab></tab>ELSE 'nepolozen'<br><tab></tab>END AS \"Ocena slovima\"<br>FROM DA.ISPIT<br>WHERE STATUS = 'o';"
+                "SELECT INDEKS, IDPREDMETA, OCENA,<br><tab></tab>CASE <br><tab></tab><tab></tab>WHEN OCENA=10 THEN 'deset'<br><tab></tab><tab></tab>WHEN OCENA=9 THEN 'devet'<br><tab></tab><tab></tab>WHEN OCENA=8 THEN 'osam'<br><tab></tab><tab></tab>WHEN OCENA=7 THEN 'sedam'<br><tab></tab><tab></tab>WHEN OCENA=6 THEN 'sest'<br><tab></tab><tab></tab>ELSE 'nepolozen'<br><tab></tab>END AS \"Ocena slovima\"<br>FROM DA.ISPIT<br>WHERE STATUS NOT IN ('p', 'n');",
+                "SELECT INDEKS, IDPREDMETA, OCENA,<br><tab></tab>CASE OCENA<br><tab></tab><tab></tab>WHEN 10 THEN 'deset'<br><tab></tab><tab></tab>WHEN 9 THEN 'devet'<br><tab></tab><tab></tab>WHEN 8 THEN 'osam'<br><tab></tab><tab></tab>WHEN 7 THEN 'sedam'<br><tab></tab><tab></tab>WHEN 6 THEN 'sest'<br><tab></tab><tab></tab>ELSE 'nepolozen'<br><tab></tab>END AS \"Ocena slovima\"<br>FROM DA.ISPIT<br>WHERE STATUS NOT IN ('p', 'n')"
             ]
         },
         {
