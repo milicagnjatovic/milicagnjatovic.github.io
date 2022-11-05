@@ -66,7 +66,7 @@ function loadClassFromJSON(elId, classFile, prikazi = 'block'){
         let vezbanjeOL = document.createElement("ol");
         for(let zad of data.zadaciZaVezbanje){
             let li = document.createElement("li");
-            li.textContent = zad;
+            li.innerHTML = zad;
             vezbanjeOL.appendChild(li);
         }
         vezbanjeDIV.appendChild(vezbanjeOL);
