@@ -1,0 +1,111 @@
+{
+    "zadaci":[
+        {
+            "z": "Izdvojiti ukupan broj studenata. ",
+            "r": [
+                "SELECT COUNT(*) \"Broj studenata\"<br>FROM DA.DOSIJE;"
+            ]
+        },
+        {
+            "z": "Izdvojiti ukupan broj studenata koji bar iz jednog predmeta imaju ocenu 10. ",
+            "r": [
+                "SELECT COUNT(DISTINCT INDEKS)<br>FROM DA.ISPIT<br>WHERE OCENA = 10;"
+            ]
+        },
+        {
+            "z": "Izdvojiti ukupan broj položenih predmeta i položenih espb bodova za studenta sa indeksom 25/2016. ",
+            "r": [
+                "SELECT COUNT(*) BROJ_PREDMETA, SUM(P.ESPB) BROJ_BODOVA<br>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab>ON I.IDPREDMETA = P.ID<br>WHERE I.OCENA>5 AND I.STATUS='o' AND I.INDEKS=20160025;"
+            ]
+        },
+        {
+            "z": "Izlistati ocene dobijene na ispitima i ako je ocena jednaka 5 ispisati NULL . ",
+            "r": [
+                "SELECT OCENA, NULLIF(OCENA, 5)<br>FROM DA.ISPIT;"
+            ],
+            "n": "NULLIF(arg1, arg2) je funkcija koja vraća null ukoliko su dva navedena argumenta jednaka."
+        },
+        {
+            "z": "Koliko ima različitih ocena dobijenih na ispitima, a da ocena nije 5. ",
+            "r": [
+                "SELECT COUNT(DISTINCT NULLIF(OCENA, 5))<br>FROM DA.ISPIT;"
+            ],
+            "n": "Count broji vrednosti osim null."
+        },
+        {
+            "z": "Izdvojiti oznake, nazive i espb bodove predmeta čiji je broj espb bodova veći od prosečnog broja espb bodova svih predmeta.",
+            "r": [
+                "SELECT OZNAKA, NAZIV, ESPB<br>FROM DA.PREDMET<br>WHERE ESPB > (<br><tab></tab>SELECT AVG(ESPB)<br><tab></tab>FROM DA.PREDMET<br>)<br>ORDER BY ESPB;"
+            ],
+            "n": "ESPB < (...) možemo da koristimo samo ako podupit vraća jedan red, a ovde smo sigurni da vraća samo jedan red jer imamo AVG. Kad bi vraćali više redova mogli bi da dodamo ALL ili SOME kao na nekom od prethodnih časova.<br>AVG(ESPB) će vratiti celobrojn prosek, ako hoćemo realnu vrednost onda treba da korisitmo AVG(ESPB*1.0) ili AVG(ESPB+0.0), to ovde ne pravi razliku."
+        },
+        {
+            "z": "Za svakog studenta upisanog na fakultet 2018. godine, koji ima bar jedan položen ispit, izdvojiti broj indeksa, prosečnu ocenu zaokruženu na dve decimale, najmanju ocenu i najveću ocenu iz položenih ispita. ",
+            "r": [
+                "SELECT D.INDEKS, <br><tab></tab>DECIMAL(AVG(OCENA+0.0), 4, 2) PROSEK,<br><tab></tab>MIN(OCENA) NAJMANJA_OCENA,<br><tab></tab>MAX(OCENA) AS NAJVECA_OCENA<br>FROM DA.DOSIJE D JOIN DA.ISPIT I<br><tab></tab>ON D.INDEKS = I.INDEKS<br>WHERE YEAR(DATUPISA)=2018 AND OCENA>5 AND STATUS='o'<br>GROUP BY(D.INDEKS);"
+            ],
+            "n": "Ako koristimo agregatne funkcije (sum, avg, min, max) i želimo neku kolonu van funkcije onda naziv te kolone mora biti u GROUP BY."
+        },
+        {
+            "z": "Izdvojiti naziv predmeta, školsku godinu u kojoj je održan ispit iz tog predmeta i najveću ocenu dobijenu na ispitima iz tog predmeta u toj školskoj godini. ",
+            "r": [
+                "SELECT SKGODINA, NAZIV, MAX(OCENA) NAJVECA_OCENA<br>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab>ON I.IDPREDMETA = P.ID<br>GROUP BY SKGODINA, NAZIV, ID;"
+            ]
+        },
+        {
+            "z": "Za svaki predmet izračunati koliko studenata ga je položilo. Izdvojite i predmete koje niko nije položio.",
+            "r":[
+                "SELECT NAZIV, COUNT(INDEKS) POLOZILO<br>FROM DA.PREDMET P LEFT JOIN DA.ISPIT I<br><tab></tab>ON P.ID = I.IDPREDMETA<br><tab></tab><tab></tab>AND OCENA>5 AND STATUS='o'<br>GROUP BY P.ID, P.NAZIV<br>ORDER BY POLOZILO;        ",
+                "SELECT NAZIV, (<br><tab></tab>SELECT COUNT(*)<br><tab></tab>FROM DA.ISPIT I<br><tab></tab>WHERE I.IDPREDMETA = P.ID AND <br><tab></tab><tab></tab>OCENA>5 AND STATUS='o'<br><tab></tab>) AS POLOZILO<br>FROM DA.PREDMET P<br>ORDER BY POLOZILO;"
+                ,"SELECT NAZIV, COUNT(INDEKS) POLOZILO<br>FROM DA.PREDMET P JOIN DA.ISPIT I<br><tab></tab>ON P.ID = I.IDPREDMETA<br>AND OCENA>5 AND STATUS='o'<br>GROUP BY P.ID, NAZIV<br>UNION ALL<br>SELECT NAZIV, 0<br>FROM DA.PREDMET P<br>WHERE NOT EXISTS(<br><tab></tab>SELECT *<br><tab></tab>FROM DA.ISPIT I<br><tab></tab>WHERE P.ID=I.IDPREDMETA AND<br><tab></tab><tab></tab>OCENA>5 AND STATUS='o');"
+            ],
+            "n": "U prvom rešenju moramo da spojimo sa tabelom predmetom da bi imali informacije o svim predmetima.<br>U trečem rešenju moramo union all jer se u suprotnom uklanja jedan red koji treba da ostane, jer imamo dva predmeta sa istim nazivom, a ne izdvajamo id da napravimo razliku."
+        },
+        {
+            "z": "Izdvojiti identifikatore predmeta za koje je ispit prijavilo više od 50 različitih studenata. ",
+            "r":[
+                "SELECT IDPREDMETA, COUNT(DISTINCT INDEKS)<br>FROM DA.ISPIT <br>GROUP BY IDPREDMETA<br>HAVING COUNT(DISTINCT INDEKS)>50;"
+                ,"SELECT ID<br>FROM DA.PREDMET P<br>WHERE 50<(<br><tab></tab>SELECT COUNT(DISTINCT INDEKS)<br><tab></tab>FROM DA.ISPIT I<br><tab></tab>WHERE I.IDPREDMETA=P.ID<br>);"
+            ]
+        },
+        {
+            "z": "Za ispitne rokove koji su održani u 2016. godini i u kojima su svi regularno polagani ispiti i položeni, izdvojiti oznaku roka, broj položenih ispita u tom roku i broj studenata koji su položili ispite u tom roku. ",
+            "r": [
+                "SELECT OZNAKAROKA, COUNT(*) AS BROJ_ISPITA,<br><tab></tab>COUNT(DISTINCT INDEKS) AS BROJ_STUDENATA<br>FROM DA.ISPIT<br>WHERE STATUS='o'<br>GROUP BY OZNAKAROKA, SKGODINA<br>HAVING SKGODINA=2016 AND MIN(OCENA)>5;",
+                "SELECT OZNAKAROKA, COUNT(*) AS BROJ_ISPITA,<br>COUNT(DISTINCT INDEKS) AS BROJ_STUDENATA<br>FROM DA.ISPIT<br>WHERE SKGODINA=2016 AND STATUS='o'<br>GROUP BY OZNAKAROKA<br>HAVING MIN(OCENA)>5;"
+            ]
+        },
+        {
+            "z": "Za svakog studenta izdvojiti broj indeksa i mesec u kome je položio više od dva ispita (nije važno koje godine). Izdvojiti indeks studenta, ime meseca i broj položenih predmeta. Rezultat urediti prema broju indeksa i mesecu polaganja.",
+            "r":[
+                "SELECT INDEKS, MONTHNAME(DATPOLAGANJA) MESEC,<br><tab></tab>COUNT(*)POLOZENO<br>FROM DA.ISPIT<br>WHERE OCENA>5 AND STATUS='o'<br>GROUP BY INDEKS, MONTHNAME(DATPOLAGANJA)<br>HAVING COUNT(*)>2<br>ORDER BY INDEKS, MONTHNAME(DATPOLAGANJA);"
+            ],
+            "n": "U having ne bismo mogli da umesto count(*) stavimo meseci jer se select izvršava nakon having. Order by se izvršava nakon select pa bi tu mogli da stavimo meseci."
+        },
+        {
+            "z": "Za svaki predmet koji nosi najmanje espb bodova izdvojiti studente koji su ga položili. Izdvojiti naziv predmeta i ime i prezime studenta. Ime i prezime studenta izdvojiti u jednoj koloni. Za predmete sa najmanjim brojem espb koje nije položio nijedan student umesto imena i prezimena ispisati nema.",
+            "r":[
+                "SELECT P.NAZIV, <br><tab></tab>COALESCE(IME || ' ' || PREZIME, 'nema')<br>FROM DA.PREDMET P LEFT JOIN DA.ISPIT I<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br><tab></tab>LEFT JOIN DA.DOSIJE D<br><tab></tab><tab></tab>ON D.INDEKS = I.INDEKS<br>WHERE ESPB = (<br><tab></tab>SELECT MIN(ESPB)<br><tab></tab>FROM DA.PREDMET<br><tab></tab>);"
+            ]
+        }, 
+        {
+            "z": "Za svakog studenta koji je položio između 15 i 25 bodova i čije ime sadrži malo ili veliko slovo o ili a izdvojiti indeks, ime, prezime, broj prijavljenih ispita, broj ispita koje je položio i prosečnu ocenu. Rezultat urediti prema indeksu.",
+            "r":[
+                "SELECT D.INDEKS, IME, PREZIME,<br><tab></tab>COUNT(DISTINCT I.IDPREDMETA) BROJ_PRIJAVLJENIH,<br><tab></tab>SUM(CASE WHEN STATUS NOT IN ('p', 'n') THEN 1 ELSE 0 END) BROJ_POLAGANIH,<br><tab></tab>SUM(CASE WHEN OCENA>5 AND STATUS='o' THEN 1 ELSE 0 END) BROJ_POLOZENIH,<br><tab></tab>DEC(ROUND(AVG(CASE WHEN OCENA>5 AND STATUS='o' THEN OCENA*1.0 ELSE NULL END), 2), 4, 2) PROSEK<br>FROM DA.DOSIJE D JOIN DA.ISPIT I <br><tab></tab><tab></tab>ON D.INDEKS = I.INDEKS<br><tab></tab>JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON P.ID = I.IDPREDMETA <br>WHERE LOWER(IME) LIKE '%o%' OR LOWER(PREZIME) LIKE '%a%'<br>GROUP BY D.INDEKS, IME, PREZIME<br>HAVING SUM(CASE WHEN OCENA>5 AND STATUS='o' THEN ESPB ELSE 0 END) BETWEEN 15 AND 25<br>ORDER BY D.INDEKS;"
+            ],
+            "n": "AVG računa prosek za ne-null vrednosti. Ako bi na primer računali prosek za sve ocene tu bi ušle i ocene 5 kada je student pao. "
+        },
+        {
+            "z": "Izdvojiti parove studenata čija imena počinju na slovo M i za koje važi da su bar dva ista predmeta položili u istom ispitnom roku. ",
+            "r":[
+                "SELECT DISTINCT D1.INDEKS, D1.IME, D1.PREZIME, D2.INDEKS, D2.IME, D2.PREZIME<br>FROM DA.DOSIJE D1 JOIN DA.DOSIJE D2<br><tab></tab><tab></tab>ON D1.IME LIKE 'M%' AND D2.IME LIKE 'M%'<br><tab></tab><tab></tab><tab></tab>AND D1.INDEKS < D2.INDEKS<br>WHERE 2 <= (<br><tab></tab>SELECT COUNT(*)<br><tab></tab>FROM DA.ISPIT I1 JOIN DA.ISPIT I2<br><tab></tab><tab></tab>ON I1.IDPREDMETA = I2.IDPREDMETA AND<br><tab></tab><tab></tab>I1.OZNAKAROKA=I2.OZNAKAROKA AND<br><tab></tab><tab></tab>D1.INDEKS = I1.INDEKS AND<br><tab></tab><tab></tab>D2.INDEKS = I2.INDEKS AND<br><tab></tab><tab></tab>I1.OCENA>5 AND I1.STATUS='o' AND<br><tab></tab><tab></tab>I2.OCENA>5 AND I2.STATUS='o' <br>);"
+            ]
+        }
+    ],
+    "zadaciZaVezbanje":[
+        "Korišćenjem agregatnih funkcija, pronaći podatke o predmetima sa najvećim broj espb podova.",
+        "Za svaki predmet izdvojiti naziv, prosečnu ocenu dobijenu na položenim ispitima, broj studenata koji su položili ispit iz tog predmeta i najveću ocenu dobijenu na položenim ispitima iz tog predmeta.",
+        "Za svakog studenta koji zadovoljava uslove:  <ul><li>rođen je u mestu koje u imenu sadrži malo slovo o i malo slovo a (slovo o se pojavlju pre slova a)</li><li>prijavio je bar 3 ispita</li><li>najveća ocena sa kojom je položio ispit je 9</li></ul>Izdvojiti indeks, ime, prezime, mesto rođenja i ime dana u kome je polagao prvi ispit. Rezultat urediti prema mestu rođenja i indeksu u rastućem poretku.",
+        "Za svaki ispitni rok izdvojiti predmet koji su u tom ispitnom roku studenti položili sa najvećom prosečnom ocenom. Izdvojiti naziv ispitnog roka, naziv predmeta sa najvećom prosečnom ocenom i najveću prosečnu ocenu."
+    ]
+}
