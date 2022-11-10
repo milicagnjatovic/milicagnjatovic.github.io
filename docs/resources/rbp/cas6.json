@@ -1,0 +1,22 @@
+{
+    "zadaci":[
+        {
+            "z": "Koliko ima studenata koji su položili više od 10 espb bodova.",
+            "r": [
+                "SELECT COUNT(*) BROJ_STUDENATA<br>FROM (<br><tab></tab>SELECT INDEKS<br><tab></tab>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab>GROUP BY INDEKS<br><tab></tab>HAVING SUM(ESPB) > 10);",
+                "SELECT COUNT(*) BROJ_STUDENATA<br>FROM (<br><tab></tab>SELECT INDEKS, SUM(ESPB) BODOVA<br><tab></tab>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab>GROUP BY INDEKS)<br>WHERE BODOVA>10;",
+                "WITH STUDENT_BODOVI AS (<br><tab></tab>SELECT INDEKS, SUM(ESPB) BODOVI<br><tab></tab>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab>GROUP BY INDEKS<br>) <br>SELECT COUNT(*)<br>FROM STUDENT_BODOVI<br>WHERE BODOVI>10;"
+            ]
+        },
+        {
+            "z": "Za studenta koji ima ocenu 8 ili 9 izračunati iz koliko ispita je dobio ocenu 8 i iz koliko ispita je dobio ocenu 9. Izdvojiti indeks studenta, broj ispita iz kojih je student dobio ocenu 8 i broj ispita iz kojih je student dobio ocenu 9.",
+            "r": [
+                ""
+            ]
+        }
+
+    ],
+    "zadaciZaVezbanje":[
+
+    ]
+}
