@@ -91,7 +91,7 @@
         {
             "z": "Izdvojiti parove naziva razlicitih ispitnih rokova u kojima je isti student polagao isti predmet. ",
             "r": [
-                "SELECT D.INDEKS, I1.IDPREDMETA, I1.OZNAKAROKA, I2.OZNAKAROKA<br>FROM DA.DOSIJE AS D JOIN DA.ISPIT AS I1<br><tab></tab><tab></tab>ON D.INDEKS = I1.INDEKS<br><tab></tab>JOIN DA.ISPIT AS I2<br><tab></tab><tab></tab>ON D.INDEKS=I2.INDEKS AND I1.IDPREDMETA=I2.IDPREDMETA AND I1.OZNAKAROKA < I2.OZNAKAROKA;"
+                "SELECT IR1.NAZIV, IR2.NAZIV<br>FROM DA.ISPIT I1 JOIN DA.ISPIT I2<br><tab></tab><tab></tab>ON I1.INDEKS=I2.INDEKS AND I1.IDPREDMETA=I2.IDPREDMETA AND I1.DATPOLAGANJA < I2.DATPOLAGANJA<br><tab></tab><tab></tab>AND I1.STATUS NOT IN ('p', 'n') AND I2.STATUS NOT IN ('p', 'n')<br><tab></tab>JOIN DA.ISPITNIROK IR1<br><tab></tab><tab></tab>ON IR1.SKGODINA=I1.SKGODINA AND IR1.OZNAKAROKA=I1.OZNAKAROKA<br><tab></tab>JOIN DA.ISPITNIROK IR2<br><tab></tab><tab></tab>ON IR2.SKGODINA=I2.SKGODINA AND IR2.OZNAKAROKA=I2.OZNAKAROKA;               "
             ]
         },
 
