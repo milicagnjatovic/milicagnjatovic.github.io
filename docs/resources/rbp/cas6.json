@@ -11,10 +11,39 @@
         {
             "z": "Za studenta koji ima ocenu 8 ili 9 izračunati iz koliko ispita je dobio ocenu 8 i iz koliko ispita je dobio ocenu 9. Izdvojiti indeks studenta, broj ispita iz kojih je student dobio ocenu 8 i broj ispita iz kojih je student dobio ocenu 9.",
             "r": [
-                ""
+                "SELECT INDEKS, <br><tab></tab>SUM(CASE WHEN OCENA=8 THEN 1 ELSE 0 END) OSAM,<br><tab></tab>SUM(CASE WHEN OCENA=9 THEN 1 ELSE 0 END) DEVET<br>FROM DA.ISPIT<br>WHERE OCENA=8 OR OCENA=9<br>GROUP BY INDEKS;"
+                ,"SELECT INDEKS, <br><tab></tab>SUM(CASE WHEN OCENA=8 THEN 1 ELSE 0 END) OSAM,<br><tab></tab>SUM(CASE WHEN OCENA=9 THEN 1 ELSE 0 END) DEVET<br>FROM DA.ISPIT<br>GROUP BY INDEKS<br>HAVING SUM(CASE WHEN OCENA=8 THEN 1 ELSE 0 END) > 0 OR<br><tab></tab>SUM(CASE WHEN OCENA=9 THEN 1 ELSE 0 END) > 0;"
+                ,"WITH STUDENT_OCENA AS (<br><tab></tab>SELECT INDEKS, OCENA OSAM, NULL DEVET<br><tab></tab>FROM DA.ISPIT <br><tab></tab>WHERE OCENA=8<br><tab></tab>UNION ALL<br><tab></tab>SELECT INDEKS, NULL OSAM, OCENA DEVET<br><tab></tab>FROM DA.ISPIT <br><tab></tab>WHERE OCENA=9<br>)<br>SELECT INDEKS, COUNT(OSAM) OSAM, COUNT(DEVET) DEVET<br>FROM STUDENT_OCENA<br>GROUP BY INDEKS;"
+                ,"WITH STUDENT_8 AS (<br><tab></tab>SELECT INDEKS, COUNT(*) OSAM<br><tab></tab>FROM DA.ISPIT<br><tab></tab>WHERE OCENA=8<br><tab></tab>GROUP BY INDEKS<br>),<br><tab></tab>STUDENT_9 AS (<br><tab></tab><tab></tab>SELECT INDEKS, COUNT(*) DEVET<br><tab></tab><tab></tab>FROM DA.ISPIT<br><tab></tab><tab></tab>WHERE OCENA=9<br><tab></tab><tab></tab>GROUP BY INDEKS<br><tab></tab>)<br>SELECT COALESCE(S1.INDEKS, S2.INDEKS) INDEKS, COALESCE(DEVET, 0) DEVET, COALESCE(OSAM, 0) OSAM<br>FROM STUDENT_8 S1 FULL JOIN STUDENT_9 S2<br><tab></tab>ON S1.INDEKS = S2.INDEKS;"
+            ],
+            "n": "U trećem rešenju moramo koristiti union all jer su nam potrebni duplikati, tj potrebno nam je koliko ocena je neko dobio."
+        },{
+            "z":"Studentima koji su položili neki ispit, izdvojti pored imena i prezimena, naziv predmeta koji su položili iz prvog pokušaja.",
+            "r":[
+                "SELECT IME, PREZIME, P.NAZIV<br>FROM DA.DOSIJE D JOIN DA.ISPIT I<br><tab></tab><tab></tab>ON D.INDEKS = I.INDEKS AND<br><tab></tab><tab></tab><tab></tab>STATUS='o' AND OCENA>5<br><tab></tab>JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON P.ID = I.IDPREDMETA<br>WHERE NOT EXISTS(<br><tab></tab>SELECT *<br><tab></tab>FROM DA.ISPIT I2<br><tab></tab>WHERE (I2.OZNAKAROKA <> I.OZNAKAROKA OR<br><tab></tab><tab></tab>I2.SKGODINA <> I.SKGODINA) AND <br><tab></tab><tab></tab>I2.INDEKS = I.INDEKS AND<br><tab></tab><tab></tab>I2.IDPREDMETA = I.IDPREDMETA<br>);",
+                "WITH INDEKS_PREDMET_POLAGANO AS (<br><tab></tab>SELECT INDEKS, NAZIV, COUNT(*) POLAGANO, <br><tab></tab><tab></tab>SUM(CASE WHEN OCENA>5 AND STATUS='o' THEN 1 ELSE 0 END) POLOZENO<br><tab></tab>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br><tab></tab>GROUP BY INDEKS, NAZIV, P.ID<br>)<br>SELECT *<br>FROM DA.DOSIJE D JOIN INDEKS_PREDMET_POLAGANO I<br><tab></tab>ON D.INDEKS = I.INDEKS<br>WHERE POLAGANO=1 AND POLOZENO=1;"
+            ]
+        },
+        {
+            "z":"Za studenta koji najkraće studira fakultet izdvojiti nazive predmeta koje je položio. Ukoliko student nije položio nijedan ispit umesto naziva predmeta ispisati nisku koja sadrži karakter * onoliko puta koliko ima karaktera u prezimenu studenta. ",
+            "r": [
+                "SELECT IME, PREZIME, COALESCE(P.NAZIV, REPEAT('*', LENGTH(PREZIME)))<br>FROM DA.DOSIJE D LEFT JOIN DA.ISPIT I<br><tab></tab><tab></tab>ON D.INDEKS = I.INDEKS AND OCENA>5 AND STATUS='o'<br><tab></tab>LEFT JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON P.ID = I.IDPREDMETA<br>WHERE DATUPISA = (<br><tab></tab>SELECT MAX(DATUPISA)<br><tab></tab>FROM DA.DOSIJE<br>);",
+                "SELECT IME, PREZIME, COALESCE(P.NAZIV, REPEAT('*', LENGTH(PREZIME)))<br>FROM DA.DOSIJE D LEFT JOIN DA.ISPIT I<br><tab></tab><tab></tab>ON D.INDEKS = I.INDEKS AND OCENA>5 AND STATUS='o'<br><tab></tab>LEFT JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON P.ID = I.IDPREDMETA<br>WHERE CURRENT DATE - DATUPISA <= ALL(<br><tab></tab>SELECT CURRENT DATE - DATUPISA<br><tab></tab>FROM DA.DOSIJE<br>);"
+            ]
+        },
+        {
+            "z":"Pronaći studenta koji ima najviše položenih espb bodova. Izdvojiti indeks, ime i prezime studenta i broj položenih bodova. ",
+            "r": [
+                "WITH STUDENT_POLOZENO(INDEKS, POENA) AS (<br><tab></tab>SELECT INDEKS, SUM(ESPB) <br><tab></tab>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab>GROUP BY INDEKS<br>)<br>SELECT D.INDEKS, IME, PREZIME<br>FROM DA.DOSIJE D JOIN STUDENT_POLOZENO SP<br><tab></tab>ON D.INDEKS = SP.INDEKS<br>WHERE SP.POENA = (<br><tab></tab>SELECT MAX(POENA)<br><tab></tab>FROM STUDENT_POLOZENO<br>);",
+                "SELECT D.INDEKS, IME, PREZIME<br>FROM DA.DOSIJE D JOIN DA.ISPIT I<br><tab></tab><tab></tab>ON D.INDEKS = I.INDEKS<br><tab></tab>JOIN DA.PREDMET P <br><tab></tab><tab></tab>ON P.ID = I.IDPREDMETA<br>WHERE OCENA>5 AND STATUS='o'<br>GROUP BY D.INDEKS, D.IME, D.PREZIME<br>HAVING SUM(ESPB) >= ALL(<br><tab></tab>SELECT SUM(ESPB)<br><tab></tab>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON P.ID = I.IDPREDMETA<br><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab>GROUP BY INDEKS<br>);"
+            ]
+        },
+        {
+            "z": " Izdvojiti ime i prezime studenta i naziv ispitnog roka u kome student ima svoj najmanji procenat uspešnosti na ispitima. Izdvojiti i procenat uspešnosti na ispitima u tom roku kao decimalan broj sa 2 cifre iza decimalne tačke. Procenat uspešnosti studenta u ispitnom roku se računa kao procenat broja položenih ispita u odnosu na broj prijavljenih ispita. Izdvojiti samo podatke za studente iz Aranđelovca i koji u tom roku imaju najmanji procenat uspešnosti u poređenju sa ostalim studentima. ",
+            "r": [
+
             ]
         }
-
     ],
     "zadaciZaVezbanje":[
 
