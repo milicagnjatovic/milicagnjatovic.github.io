@@ -443,15 +443,24 @@
     </script>
 <!-- CAS5 KRAJ-->
 
-<!-- CAS5-->
+<!-- CAS6-->
 
 <h1 id="cas6">ČAS 6</h1>
-
+<h3>WITH klauza</h3>
+<p>With klauzom možemo definisati privremenu tabelu koju koristimo u upitu.</p>
+<p class="kod">
+    <b>WITH</b> POMOCNA_TABELA <b>AS</b> (<br>
+        <tab></tab> SELECT ... FROM ... <br>
+    )<br>
+    SELECT ... <br> 
+    FROM POMOCNA_TABELA <br>
+    ...
+</p>
 <div id="cas6zadaci"></div>
 <script>
 loadClassFromJSON("cas6zadaci", "resources/rbp/cas6.json")
 </script>
-<!-- CAS5 KRAJ-->
+<!-- CAS6 KRAJ-->
 
 <!-- levi div-->
          </div>
