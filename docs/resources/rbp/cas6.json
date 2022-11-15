@@ -1,0 +1,78 @@
+{
+    "zadaci":[
+        {   "z": "Predmeti se kategorišu kao laki ukoliko nose manje od 6 bodova, kao teški ukoliko nose više od 8 bodova, inače su srednje teški. Prebrojati koliko predmeta pripada kojoj kategoriji. Izdvojiti kategoriju i broj predmeta iz te kategorije.",
+            "r": [
+                "SELECT <br><tab></tab> CASE <br><tab></tab><tab></tab>WHEN ESPB < 6 THEN 'LAK'<br><tab></tab><tab></tab>WHEN ESPB > 8 THEN 'SREDNJE TEZAK'<br><tab></tab><tab></tab>ELSE 'TEZAK' <br><tab></tab>END AS TEZINA, COUNT(*)<br>FROM DA.PREDMET <br>GROUP BY (CASE <br><tab></tab><tab></tab>WHEN ESPB < 6 THEN 'LAK'<br><tab></tab><tab></tab>WHEN ESPB > 8 THEN 'SREDNJE TEZAK'<br><tab></tab><tab></tab>ELSE 'TEZAK' <br><tab></tab>END);",
+                "WITH PREDMET_KATEGORIJA AS (<br><tab></tab>SELECT ID,<br><tab></tab><tab></tab> CASE <br><tab></tab><tab></tab><tab></tab>WHEN ESPB < 6 THEN 'LAK'<br><tab></tab><tab></tab><tab></tab>WHEN ESPB > 8 THEN 'SREDNJE TEZAK'<br><tab></tab><tab></tab><tab></tab>ELSE 'TEZAK' <br><tab></tab><tab></tab>END AS TEZINA<br><tab></tab>FROM DA.PREDMET <tab></tab><br>)<br>SELECT TEZINA, COUNT(*)<br>FROM PREDMET_KATEGORIJA<br>GROUP BY TEZINA;"
+            ],
+            "n": "U prvom rešenju ne možemo pisati group by tezina zbog redosleda izvršavanja."
+        },{
+            "z":" Izračunati koliko studenata je položilo više od 20 bodova.",
+            "r": [
+                "WITH STUDENT_POLOZENO(INDEKS, POENI) AS (<br><tab></tab>SELECT INDEKS, SUM(ESPB) <br><tab></tab>FROM DA.PREDMET P JOIN DA.ISPIT I<br><tab></tab><tab></tab>ON P.ID = I.IDPREDMETA<br><tab></tab>WHERE STATUS='o' AND OCENA>5<br><tab></tab>GROUP BY INDEKS<br>)<br>SELECT COUNT(*)<br>FROM STUDENT_POLOZENO<br>WHERE POENI > 20;"
+            ]
+        },{
+            "z": "Naći broj ispitnih rokova u kojima su studenti položili bar 2 različita predmeta.  ",
+            "r": [
+                "WITH STUDENT_ROK_POLOZENO AS (<br><tab></tab>SELECT INDEKS, OZNAKAROKA, SKGODINA, COUNT(*) POLOZENO<br><tab></tab>FROM DA.ISPIT<br><tab></tab>WHERE STATUS='o' AND OCENA>5<br><tab></tab>GROUP BY INDEKS, OZNAKAROKA, SKGODINA<br><tab></tab>HAVING COUNT(*)>2<br>)<br>SELECT COUNT(*)<br>FROM STUDENT_ROK_POLOZENO;",
+                "WITH STUDENT_ROK_POLOZENO AS (<br><tab></tab>SELECT INDEKS, OZNAKAROKA, SKGODINA, COUNT(*) POLOZENO<br><tab></tab>FROM DA.ISPIT<br><tab></tab>WHERE STATUS='o' AND OCENA>5<br><tab></tab>GROUP BY INDEKS, OZNAKAROKA, SKGODINA<br>)<br>SELECT COUNT(*)<br>FROM STUDENT_ROK_POLOZENO<br>WHERE POLOZENO>2;"
+            ]
+        },{
+            "z": "Za svaki predmet izdvojiti identifikator i broj različitih studenata koji su ga polagali. Uz identifikatore predmeta koje niko nije polagao izdvojiti 0.",
+            "r": [
+                "SELECT IDPREDMETA, COUNT(DISTINCT INDEKS) \"BROJ STUDENATA\"<br>FROM DA.ISPIT<br>WHERE STATUS NOT IN ('p', 'n')<br>GROUP BY IDPREDMETA<br>UNION<br>SELECT ID, 0<br>FROM DA.PREDMET<br>WHERE NOT EXISTS(<br><tab></tab>SELECT *<br><tab></tab>FROM DA.ISPIT I<br><tab></tab>WHERE ID = IDPREDMETA AND STATUS NOT IN ('p', 'n')<br><tab></tab>)<br>ORDER BY 2;",
+                "SELECT P.ID, COUNT(DISTINCT INDEKS) \"BROJ STUDENATA\"<br>FROM DA.ISPIT I RIGHT JOIN DA.PREDMET P<br><tab></tab>ON I.IDPREDMETA = P.ID AND STATUS NOT IN ('p', 'n')<br>GROUP BY P.ID<br>ORDER BY 2;",
+                "WITH POLAGANI AS (<br><tab></tab>SELECT IDPREDMETA, COUNT(DISTINCT INDEKS) STUDENATA<br><tab></tab>FROM DA.ISPIT<br><tab></tab>WHERE STATUS NOT IN('p', 'n')<br><tab></tab>GROUP BY IDPREDMETA<br>)<br>SELECT ID, <br><tab></tab>CASE<br><tab></tab><tab></tab>WHEN ID IN (SELECT IDPREDMETA FROM POLAGANI) <br><tab></tab><tab></tab><tab></tab>THEN (SELECT STUDENATA FROM POLAGANI P WHERE P.IDPREDMETA=ID)<br><tab></tab><tab></tab>ELSE 0<br><tab></tab>END POLAGALO<br>FROM DA.PREDMET<br>ORDER BY 2;",
+                "WITH POLAGANI AS (<br><tab></tab>SELECT IDPREDMETA, COUNT(DISTINCT INDEKS) STUDENATA<br><tab></tab>FROM DA.ISPIT<br><tab></tab>WHERE STATUS NOT IN('p', 'n')<br><tab></tab>GROUP BY IDPREDMETA<br>)<br>SELECT ID, COALESCE(STUDENATA, 0) POLAGALO<br>FROM DA.PREDMET PR LEFT JOIN POLAGANI PO<br><tab></tab>ON PR.ID = PO.IDPREDMETA<br>ORDER BY 2;"
+            ]
+        },
+        {
+            "z": "Koliko ima studenata koji su položili više od 10 espb bodova.",
+            "r": [
+                "SELECT COUNT(*) BROJ_STUDENATA<br>FROM (<br><tab></tab>SELECT INDEKS<br><tab></tab>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab>GROUP BY INDEKS<br><tab></tab>HAVING SUM(ESPB) > 10);",
+                "SELECT COUNT(*) BROJ_STUDENATA<br>FROM (<br><tab></tab>SELECT INDEKS, SUM(ESPB) BODOVA<br><tab></tab>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab>GROUP BY INDEKS)<br>WHERE BODOVA>10;",
+                "WITH STUDENT_BODOVI AS (<br><tab></tab>SELECT INDEKS, SUM(ESPB) BODOVI<br><tab></tab>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab>GROUP BY INDEKS<br>) <br>SELECT COUNT(*)<br>FROM STUDENT_BODOVI<br>WHERE BODOVI>10;"
+            ]
+        },
+        {
+            "z": "Za studenta koji ima ocenu 8 ili 9 izračunati iz koliko ispita je dobio ocenu 8 i iz koliko ispita je dobio ocenu 9. Izdvojiti indeks studenta, broj ispita iz kojih je student dobio ocenu 8 i broj ispita iz kojih je student dobio ocenu 9.",
+            "r": [
+                "SELECT INDEKS, <br><tab></tab>SUM(CASE WHEN OCENA=8 THEN 1 ELSE 0 END) OSAM,<br><tab></tab>SUM(CASE WHEN OCENA=9 THEN 1 ELSE 0 END) DEVET<br>FROM DA.ISPIT<br>WHERE OCENA=8 OR OCENA=9<br>GROUP BY INDEKS;"
+                ,"SELECT INDEKS, <br><tab></tab>SUM(CASE WHEN OCENA=8 THEN 1 ELSE 0 END) OSAM,<br><tab></tab>SUM(CASE WHEN OCENA=9 THEN 1 ELSE 0 END) DEVET<br>FROM DA.ISPIT<br>GROUP BY INDEKS<br>HAVING SUM(CASE WHEN OCENA=8 THEN 1 ELSE 0 END) > 0 OR<br><tab></tab>SUM(CASE WHEN OCENA=9 THEN 1 ELSE 0 END) > 0;"
+                ,"WITH STUDENT_OCENA AS (<br><tab></tab>SELECT INDEKS, OCENA OSAM, NULL DEVET<br><tab></tab>FROM DA.ISPIT <br><tab></tab>WHERE OCENA=8<br><tab></tab>UNION ALL<br><tab></tab>SELECT INDEKS, NULL OSAM, OCENA DEVET<br><tab></tab>FROM DA.ISPIT <br><tab></tab>WHERE OCENA=9<br>)<br>SELECT INDEKS, COUNT(OSAM) OSAM, COUNT(DEVET) DEVET<br>FROM STUDENT_OCENA<br>GROUP BY INDEKS;"
+                ,"WITH STUDENT_8 AS (<br><tab></tab>SELECT INDEKS, COUNT(*) OSAM<br><tab></tab>FROM DA.ISPIT<br><tab></tab>WHERE OCENA=8<br><tab></tab>GROUP BY INDEKS<br>),<br><tab></tab>STUDENT_9 AS (<br><tab></tab><tab></tab>SELECT INDEKS, COUNT(*) DEVET<br><tab></tab><tab></tab>FROM DA.ISPIT<br><tab></tab><tab></tab>WHERE OCENA=9<br><tab></tab><tab></tab>GROUP BY INDEKS<br><tab></tab>)<br>SELECT COALESCE(S1.INDEKS, S2.INDEKS) INDEKS, COALESCE(DEVET, 0) DEVET, COALESCE(OSAM, 0) OSAM<br>FROM STUDENT_8 S1 FULL JOIN STUDENT_9 S2<br><tab></tab>ON S1.INDEKS = S2.INDEKS;"
+            ],
+            "n": "U trećem rešenju moramo koristiti union all jer su nam potrebni duplikati, tj potrebno nam je koliko ocena je neko dobio."
+        },{
+            "z":"Studentima koji su položili neki ispit, izdvojti pored imena i prezimena, naziv predmeta koji su položili iz prvog pokušaja.",
+            "r":[
+                "SELECT IME, PREZIME, P.NAZIV<br>FROM DA.DOSIJE D JOIN DA.ISPIT I<br><tab></tab><tab></tab>ON D.INDEKS = I.INDEKS AND<br><tab></tab><tab></tab><tab></tab>STATUS='o' AND OCENA>5<br><tab></tab>JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON P.ID = I.IDPREDMETA<br>WHERE NOT EXISTS(<br><tab></tab>SELECT *<br><tab></tab>FROM DA.ISPIT I2<br><tab></tab>WHERE (I2.OZNAKAROKA <> I.OZNAKAROKA OR<br><tab></tab><tab></tab>I2.SKGODINA <> I.SKGODINA) AND <br><tab></tab><tab></tab>I2.INDEKS = I.INDEKS AND<br><tab></tab><tab></tab>I2.IDPREDMETA = I.IDPREDMETA<br>);",
+                "WITH INDEKS_PREDMET_POLAGANO AS (<br><tab></tab>SELECT INDEKS, NAZIV, COUNT(*) POLAGANO, <br><tab></tab><tab></tab>SUM(CASE WHEN OCENA>5 AND STATUS='o' THEN 1 ELSE 0 END) POLOZENO<br><tab></tab>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br><tab></tab>GROUP BY INDEKS, NAZIV, P.ID<br>)<br>SELECT *<br>FROM DA.DOSIJE D JOIN INDEKS_PREDMET_POLAGANO I<br><tab></tab>ON D.INDEKS = I.INDEKS<br>WHERE POLAGANO=1 AND POLOZENO=1;"
+            ]
+        },
+        {
+            "z": " Izdvojiti ime i prezime studenta i naziv ispitnog roka u kome student ima svoj najmanji procenat uspešnosti na ispitima. Izdvojiti i procenat uspešnosti na ispitima u tom roku kao decimalan broj sa 2 cifre iza decimalne tačke. Procenat uspešnosti studenta u ispitnom roku se računa kao procenat broja položenih ispita u odnosu na broj prijavljenih ispita. Izdvojiti samo podatke za studente iz Aranđelovca i koji u tom roku imaju najmanji procenat uspešnosti u poređenju sa ostalim studentima. ",
+            "r": [
+                "WITH TMP AS (<br><tab></tab>SELECT INDEKS, OZNAKAROKA, SKGODINA , <br><tab></tab><tab></tab>DECIMAL(COUNT(CASE WHEN OCENA>5 AND STATUS='o' THEN 1 ELSE NULL END) * 1.0/COUNT(*), 5, 2) PROLAZNOST<br><tab></tab>FROM DA.ISPIT<br><tab></tab>GROUP BY SKGODINA, OZNAKAROKA, INDEKS<br>)<br>SELECT IME, PREZIME, NAZIV, P.PROLAZNOST<br>FROM TMP P JOIN DA.DOSIJE D<br><tab></tab><tab></tab>ON P.INDEKS = D.INDEKS<br><tab></tab>JOIN DA.ISPITNIROK IR<br><tab></tab><tab></tab>ON IR.SKGODINA = P.SKGODINA AND IR.OZNAKAROKA = P.OZNAKAROKA<br>WHERE MESTORODJENJA = 'Arandjelovac'<br><tab></tab>AND NOT EXISTS(<br><tab></tab><tab></tab>SELECT *<br><tab></tab><tab></tab>FROM TMP P1<br><tab></tab><tab></tab>WHERE P1.INDEKS<>D.INDEKS AND <br><tab></tab><tab></tab><tab></tab>P.OZNAKAROKA=P1.OZNAKAROKA AND P.SKGODINA=P1.SKGODINA AND <br><tab></tab><tab></tab><tab></tab>P1.PROLAZNOST < P.PROLAZNOST<br><tab></tab>)<br><tab></tab>AND PROLAZNOST = (<br><tab></tab><tab></tab>SELECT MIN(PROLAZNOST)<br><tab></tab><tab></tab>FROM TMP P1<br><tab></tab><tab></tab>WHERE P.INDEKS = P1.INDEKS<br><tab></tab>);                "
+            ]
+        },
+        {
+            "z":"Za sva imena studenata izdvojiti predmete na kojima su studenti sa tim imenom dobili najveću ocenu. Ukoliko su za neko ime studenti sa tim imenom iz više predmeta dobili maksimalnu ocenu, izdvojiti sve takve predmete. Izdvojiti ime, naziv predmeta i dobijenu ocenu. Pored toga, izdvojiti takozvani dugi kod imena. Dugi kod imena dobija se na sledeći način:<ul><li>        ukoliko je ocena koja je izdvojena uz ime nepoznata, dugi kod jeste niska 'NULL'; </li><li>        ukoliko je ocena koja je izdvojena uz ime manja od deset, dugi kod jeste niska koja se dobija prema forumli inicijale iz imena i naziva predmeta * ocena    <br>        Npr. ako je Mirko položio Analizu 3 sa ocenom 6, kod je 'MAMAMAMAMAMA'. </li>    <li>        ukoliko je dobijena ocena deset, kod predstavlja poslednje slovo imena ponovljeno 10 puta. <bt>Kolonu nazvati dugi kod. </li></ul>                Rezultat urediti prema imenu u opadajućem poretku.",
+            "r":[
+                "SELECT D.IME, P.NAZIV, I.OCENA, <br><tab></tab>CASE <br><tab></tab><tab></tab>WHEN OCENA IS NULL THEN 'NULL'<br><tab></tab><tab></tab>WHEN OCENA<10 THEN REPEAT( SUBSTRING(IME, 1, 1) || SUBSTRING(NAZIV, 1, 1) ,6)<br><tab></tab><tab></tab>ELSE REPEAT(SUBSTRING(IME, LENGTH(IME)), 10)<br><tab></tab>END DUGI_KOD<br>FROM DA.DOSIJE D LEFT JOIN DA.ISPIT I<br><tab></tab><tab></tab>ON D.INDEKS = I.INDEKS AND OCENA>5 AND STATUS='o'<br><tab></tab>LEFT JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON P.ID = I.IDPREDMETA<br>WHERE NOT EXISTS (<br><tab></tab>SELECT *<br><tab></tab>FROM DA.ISPIT I1 JOIN DA.DOSIJE D1<br><tab></tab><tab></tab>ON I1.INDEKS = D1.INDEKS<br><tab></tab>WHERE D1.IME = D.IME AND I1.OCENA>I.OCENA AND STATUS='o'<br>)<br>ORDER BY IME DESC;"
+            ]
+        }
+    ],
+    "zadaciZaVezbanje":[
+        "Za svaki smer na kome studiraju studenti pronaći studenta koji ima najviše položenih espb bodova. Izdvojiti naziv smera, indeks, ime i prezime studenta i broj položenih bodova.", 
+        "Izdvojiti podatke o studentu koji je predmet, koji u nazivu na 4. i 5. poziciji sadrži nisku 'gr' i koji ima između 5 i 10 espb bodova, polagao dva puta u roku od 20 dana. Izdvojiti naziv predmeta, indeks studenta koji je polagao predmet i broj dana između ispita. Kolonu sa brojem dana između ispita nazvati 'Broj dana'.",
+        "Izdvojiti predmet koji je polagan u samo jednom ispitnom roku. Izdvojiti naziv ispitnog roka, naziv predmeta, indeks, ime i prezime studenta koji je polagao taj predmet u tom ispitnom roku.", 
+        "Izdvojiti podatke o parovima studenata koji su fakultet upisali 2012, 2015. ili 2018. godine i koji su rođeni u istom mestu koje u svom nazivu sadrži podnisku 'evo' počevši od 6. pozicije. Izdvojiti indekse studenata i mesto rođenja.", 
+        "Izdvojiti podatke o ispitima za koje važi da je broj dobijenih bodova na ispitu 6 puta veći od broja bodova koje nosi predmet koji je polagan na ispitu. Izdvojiti indeks, ime i prezime studenta koji je polagao ispit, naziv polaganog predmeta, bodove polaganog predmeta, naziv ispitnog roka u kome je polagan ispit i dobijenu ocenu.",
+        "Za svaki predmet koji je položio bar jedan student, izdvojiti naziv predmeta i indeks najboljeg studenta sa tog predmeta. Za određivanje najboljeg studenta koristiti broj bodova sa kojima je ispit položen.",
+        "Za studenta koji najkraće studira fakultet izdvojiti nazive predmeta koje je položio. Ukoliko student nije položio nijedan ispit umesto naziva predmeta ispisati nisku koja sadrži karakter * onoliko puta koliko ima karaktera u prezimenu studenta. ",
+        "Pronaći studenta koji ima najviše položenih espb bodova. Izdvojiti indeks, ime i prezime studenta i broj položenih bodova. ",
+        "Izdvojiti nazive ispitnih rokova u kojima su svi predmeti iz kojih su ispite u tom roku prijavili studenti koji su fakultet upisali u novembru ili decembru položili studenti koji su fakultet upisali u septembru ili oktobru.",
+        "Za svaki nivo kvalifikacije i smer sa tog nivoa izdvojiti:  <ul><li>naziv nivoa kvalifikacija</li><li>stepen studija</li><li>naziv smera</li><li>potreban broj položenih espb bodova da bi student diplomirao na smeru</li><li>broj studenata koji su ikada upisali taj smer</li><li>procenat studenata koji su diplomirali na tom smeru u odnosu na broj upisanih</li><li>procenat studenata koji su se ispisali tog smera u odnosu na broj upisanih</li><li>procenat studenata tog smera koji su položili bar pola espb bodova predviđenih njihovim smerom.</li> </ul>        "
+    ]
+}
