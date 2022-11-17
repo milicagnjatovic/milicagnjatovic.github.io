@@ -7,9 +7,11 @@
             ],
             "n": "U prvom rešenju ne možemo pisati group by tezina zbog redosleda izvršavanja."
         },{
-            "z":" Izračunati koliko studenata je položilo više od 20 bodova.",
+            "z":" Izračunati koliko studenata je položilo više od 10 bodova.",
             "r": [
-                "WITH STUDENT_POLOZENO(INDEKS, POENI) AS (<br><tab></tab>SELECT INDEKS, SUM(ESPB) <br><tab></tab>FROM DA.PREDMET P JOIN DA.ISPIT I<br><tab></tab><tab></tab>ON P.ID = I.IDPREDMETA<br><tab></tab>WHERE STATUS='o' AND OCENA>5<br><tab></tab>GROUP BY INDEKS<br>)<br>SELECT COUNT(*)<br>FROM STUDENT_POLOZENO<br>WHERE POENI > 20;"
+                "SELECT COUNT(*) BROJ_STUDENATA<br>FROM (<br><tab></tab>SELECT INDEKS<br><tab></tab>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab>GROUP BY INDEKS<br><tab></tab>HAVING SUM(ESPB) > 10);",
+                "SELECT COUNT(*) BROJ_STUDENATA<br>FROM (<br><tab></tab>SELECT INDEKS, SUM(ESPB) BODOVA<br><tab></tab>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab>GROUP BY INDEKS)<br>WHERE BODOVA>10;",
+                "WITH STUDENT_BODOVI AS (<br><tab></tab>SELECT INDEKS, SUM(ESPB) BODOVI<br><tab></tab>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab>GROUP BY INDEKS<br>) <br>SELECT COUNT(*)<br>FROM STUDENT_BODOVI<br>WHERE BODOVI>10;"
             ]
         },{
             "z": "Naći broj ispitnih rokova u kojima su studenti položili bar 2 različita predmeta.  ",
@@ -24,14 +26,6 @@
                 "SELECT P.ID, COUNT(DISTINCT INDEKS) \"BROJ STUDENATA\"<br>FROM DA.ISPIT I RIGHT JOIN DA.PREDMET P<br><tab></tab>ON I.IDPREDMETA = P.ID AND STATUS NOT IN ('p', 'n')<br>GROUP BY P.ID<br>ORDER BY 2;",
                 "WITH POLAGANI AS (<br><tab></tab>SELECT IDPREDMETA, COUNT(DISTINCT INDEKS) STUDENATA<br><tab></tab>FROM DA.ISPIT<br><tab></tab>WHERE STATUS NOT IN('p', 'n')<br><tab></tab>GROUP BY IDPREDMETA<br>)<br>SELECT ID, <br><tab></tab>CASE<br><tab></tab><tab></tab>WHEN ID IN (SELECT IDPREDMETA FROM POLAGANI) <br><tab></tab><tab></tab><tab></tab>THEN (SELECT STUDENATA FROM POLAGANI P WHERE P.IDPREDMETA=ID)<br><tab></tab><tab></tab>ELSE 0<br><tab></tab>END POLAGALO<br>FROM DA.PREDMET<br>ORDER BY 2;",
                 "WITH POLAGANI AS (<br><tab></tab>SELECT IDPREDMETA, COUNT(DISTINCT INDEKS) STUDENATA<br><tab></tab>FROM DA.ISPIT<br><tab></tab>WHERE STATUS NOT IN('p', 'n')<br><tab></tab>GROUP BY IDPREDMETA<br>)<br>SELECT ID, COALESCE(STUDENATA, 0) POLAGALO<br>FROM DA.PREDMET PR LEFT JOIN POLAGANI PO<br><tab></tab>ON PR.ID = PO.IDPREDMETA<br>ORDER BY 2;"
-            ]
-        },
-        {
-            "z": "Koliko ima studenata koji su položili više od 10 espb bodova.",
-            "r": [
-                "SELECT COUNT(*) BROJ_STUDENATA<br>FROM (<br><tab></tab>SELECT INDEKS<br><tab></tab>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab>GROUP BY INDEKS<br><tab></tab>HAVING SUM(ESPB) > 10);",
-                "SELECT COUNT(*) BROJ_STUDENATA<br>FROM (<br><tab></tab>SELECT INDEKS, SUM(ESPB) BODOVA<br><tab></tab>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab>GROUP BY INDEKS)<br>WHERE BODOVA>10;",
-                "WITH STUDENT_BODOVI AS (<br><tab></tab>SELECT INDEKS, SUM(ESPB) BODOVI<br><tab></tab>FROM DA.ISPIT I JOIN DA.PREDMET P<br><tab></tab><tab></tab>ON I.IDPREDMETA = P.ID<br><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab>GROUP BY INDEKS<br>) <br>SELECT COUNT(*)<br>FROM STUDENT_BODOVI<br>WHERE BODOVI>10;"
             ]
         },
         {

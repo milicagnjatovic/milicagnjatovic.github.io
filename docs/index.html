@@ -43,6 +43,8 @@
         <div id="right_menu">
             <p> Kontakt: milica_gnjatovic[at]matf.bg.ac.rs</p>
             
+            <h3><a href="http://www.bazepodataka.matf.bg.ac.rs/RelacioneBazePodataka.html#0_tab">Zvanična stranica predmeta</a></h3>
+
             <h3>Snimak nadoknade</h3>
             <a href="https://matf.webex.com/matf/ldr.php?RCID=1dacaf5a68580844cb3d203555433195">Snimak</a> <br>
             Šifra: RBP5petak
@@ -456,6 +458,29 @@
     FROM POMOCNA_TABELA <br>
     ...
 </p>
+
+<p class="kod">
+    <b>WITH</b> POMOCNA_TABELA(kolona1, kolona2 ...) <b>AS</b> (<br>
+        <tab></tab> SELECT ... FROM ... <br>
+    )<br>
+    SELECT ... <br> 
+    FROM POMOCNA_TABELA <br>
+    ...
+</p>
+
+<p>Pomoćnu tabelu možemo koristiti kao i bilo koju drugu tabelu iz baze, možemo je spajati sa drugim tabelama, grupisati... <br>
+    Možemo definisati više pomoćnih tabela:
+    
+    <p class="kod">
+        <b>WITH</b> POMOCNA_TABELA <b>AS</b> (...), <br>
+        <tab></tab> DRUGA_POMOCNA_TABELA <b>AS</b> (...), <br>
+        <tab></tab> ... <br>
+        SELECT ... <br> 
+        FROM ... <br>
+        WHERE ...
+    </p>
+
+    Važno je da pri definisanju pomoćne tabele svakoj koloni damo ime.</p>
 <div id="cas6zadaci"></div>
 <script>
 loadClassFromJSON("cas6zadaci", "resources/rbp/cas6.json", "none")
