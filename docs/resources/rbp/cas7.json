@@ -1,0 +1,88 @@
+{
+    "zadaci":[
+        {   
+            "z": "Napraviti tabelu kandidati_za_upis u kojoj će se nalaziti podaci o prijavama za upis na fakultet. Tabela ima kolone: <ul><li>id - identifikator prijave, ceo broj</li><li>idprograma - identifikator željenog studijskog programa</li><li>ime - ime kandidata, niska maksimalne dužine 50 karaktera</li><li>prezime -prezime kandidata, niska maksimalne dužine 50 karaktera</li><li>pol - pol kandidata; moguće vrednosti su m i z</li><li>mestorodjenja -mesto rođenja kandidata, niska maksimalne dužine 50 karaktera</li><li>datumprijave - datum prijave kandidata</li><li>bodovi - bodovi za upis</li> </ul>Definisati primarni ključ u tabeli kandidati_za_upis i strani ključ na tabelu studijskiprogram. Postaviti ograničenje za moguće vrednosti kolone pol.", 
+            "r": [
+                "CREATE TABLE KANDIDAT_ZA_UPIS (<br><tab></tab>ID  INTEGER NOT NULL ,<br><tab></tab>IDPROGRAMA INTEGER NOT NULL,<br><tab></tab>IME VARCHAR(50) NOT NULL,<br><tab></tab>PREZIME VARCHAR(50) NOT NULL,<br><tab></tab>POL CHAR,<br><tab></tab>MESTORODJENJA VARCHAR(50),<br><tab></tab>DATUMPRIJAVE DATE,<br><tab></tab>BODOVI FLOAT(4),<br><tab></tab>PRIMARY KEY (ID),<br><tab></tab>FOREIGN KEY FK_SMER (IDPROGRAMA) REFERENCES DA.STUDIJSKIPROGRAM,<br><tab></tab>CONSTRAINT VREDNOST_POL CHECK (POL IN ('m', 'z'))<br>);",
+                "CREATE TABLE KANDIDAT_ZA_UPIS (<br><tab></tab>ID  INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (MINVALUE 1),<br><tab></tab>IDPROGRAMA INTEGER NOT NULL,<br><tab></tab>IME VARCHAR(50) NOT NULL,<br><tab></tab>PREZIME VARCHAR(50) NOT NULL,<br><tab></tab>POL CHAR,<br><tab></tab>MESTORODJENJA VARCHAR(50),<br><tab></tab>DATUMPRIJAVE DATE,<br><tab></tab>BODOVI FLOAT(4),<br><tab></tab>PRIMARY KEY (ID),<br><tab></tab>FOREIGN KEY FK_SMER (IDPROGRAMA) REFERENCES DA.STUDIJSKIPROGRAM,<br><tab></tab>CONSTRAINT VREDNOST_POL CHECK (POL IN ('m', 'z'))<br>);"
+            ], 
+            "n": "U prvom slučaju pri unosu redova moramo da navedemo ID, dok u drugom slučaju ne možemo da ga navedemo."
+        },
+        {
+            "z": "U tabelu kandidati_za_upis uneti novog kandidata Marka Markovića, muškog pola , koji je rođen u Kragujevcu, a prijavio se 12.11.2020. za studjski program Informatika (id 103). ",
+            "r":[
+                "INSERT INTO KANDIDAT_ZA_UPIS (ID, IME, PREZIME, POL, MESTORODJENJA, DATUMPRIJAVE, IDPROGRAMA) VALUES <br><tab></tab>(1, 'Marko', 'Markovic', 'm', 'Kragujevac', '12.11.2020', 103);"
+            ]
+        },
+        {
+            "z": "Iz tabele kandidati_za_upis ukloniti kolonu mestorodjenja. ",
+            "r":[
+                "ALTER TABLE KANDIDAT_ZA_UPIS<br>DROP MESTORODJENJA;"
+            ]
+        },
+        {
+            "z": "Postaviti uslov u tabeli kandidati_za_upis da bodovi za upis mogu biti samo između 0 i 100 i da je podrazumevan datum prijave datum izvršavanja naredbe.",
+            "r":[
+                "ALTER TABLE KANDIDAT_ZA_UPIS<br><tab></tab>ADD CONSTRAINT VREDNOST_BODOVA CHECK (BODOVI BETWEEN 0 AND 100)<br><tab></tab>ALTER COLUMN DATUMPRIJAVE SET DEFAULT CURRENT DATE;"
+            ],
+            "n": "Kada probamo da unesemo podatke u bazu nakon ovoga javiće se greška \" Operation not allowed for reason code \"7\" on table...\". Ovo se rešava tako što odemo u terminal, povežemo se na bazu stud2020 i izvršimo db2 reorg table kandidat_za_upis."
+        },
+        {
+            "z": "U tabelu kandidati_za_upis uneti nove kandidate sa podacima <ul><li>Snezana Peric, pol ženski, željeni smer Informatika (id 103)</li><li>Marija Peric, pol ženski, željeni smer Matematika (id 101)</li> </ul>",
+            "r":[
+                "INSERT INTO KANDIDAT_ZA_UPIS (IME, PREZIME, POL, IDPROGRAMA) VALUES<br><tab></tab>('Snezana', 'Peric', 'z', 103),<br><tab></tab>('Marija', 'Peric', 'z', 101);"
+            ]
+        }, 
+        {
+            "z": "U tabelu kandidati_za_upis uneti kao kandidate studente koji imaju status Ispisan u tabeli dosije. Kao željeni studijski program navesti studijski program koji su studirali kada su se ispisali. Kao broj ostvarenih bodova za upis uneti vrednost 90. ",
+            "r":[
+                "INSERT INTO KANDIDAT_ZA_UPIS (IME, PREZIME, IDPROGRAMA, POL, BODOVI)<br>SELECT IME, PREZIME, IDPROGRAMA, POL, 90<br>FROM DA.DOSIJE D JOIN DA.STUDENTSKISTATUS S<br><tab></tab>ON D.IDSTATUSA = S.ID<br>WHERE S.NAZIV='Ispisan';"
+            ]
+        },
+        {
+            "z": "Iz tabele kandidati_za_upis obrisati podatke o kandidatima za koje je nepoznat broj bodova za upis.",
+            "r":[
+                "DELETE FROM KANDIDAT_ZA_UPIS<br>WHERE BODOVI IS NULL;"
+            ]
+        },
+        {
+            "z": "Iz tabele kandidati_za_upis obrisati podatke o kandidatima koji se zovu kao neki student koji ima položen ispit.",
+            "r":[
+                "DELETE FROM KANDIDAT_ZA_UPIS<br>WHERE (IME, PREZIME) IN (<br><tab></tab>SELECT DISTINCT IME, PREZIME<br><tab></tab>FROM DA.ISPIT I JOIN DA.DOSIJE D<br><tab></tab><tab></tab>ON I.INDEKS = D.INDEKS<br><tab></tab>WHERE STATUS='o' AND OCENA>5<br>);"
+            ]
+        },
+        {
+            "z": "Svim kandidatima za upis na fakultet koji su se prijavili u poslednja dva dana i imaju unet broj bodova za upis povećati broj bodova za upis za 20%. ",
+            "r":[
+                "UPDATE KANDIDAT_ZA_UPIS<br>SET BODOVI = <br><tab></tab>CASE <br><tab></tab><tab></tab>WHEN BODOVI*1.2<=100 THEN BODOVI*1.2<br><tab></tab><tab></tab>WHEN BODOVI IS NOT NULL THEN 100<br><tab></tab>END<br>WHERE DATUMPRIJAVE >= CURRENT DATE - 2 DAYS;"
+            ],
+            "n": "Ovde treba obratiti pažnju da postoji ograničenje da bodovi mogu da budu od 0 do 100. "
+        },
+        {
+            "z": "Ukloniti tabelu kandidati_za_upis .",
+            "r":[
+                "DROP TABLE KANDIDAT_ZA_UPIS;"
+            ]
+        },
+        {
+            "z": "Na svim ispitima na kojima su u ispitnom roku jun1 2015. godine studenti polagali Analizu 1 promeniti rok u jan1 2015. Za datum polaganja staviti da je nepoznat. ",
+            "r":[
+                "UPDATE ISPIT1<br>SET (OZNAKAROKA, DATPOLAGANJA) = ('jan1', null)<br>WHERE IDPREDMETA IN (<br><tab></tab>SELECT ID<br><tab></tab>FROM DA.PREDMET<br><tab></tab>WHERE NAZIV='Analiza 1'<br>) AND SKGODINA=2015 AND OZNAKAROKA='jun1';"
+            ],
+            "n": "Upit je izvršen nad kopijom tabele ispit da ne bi menjali originalnu tabelu. Kopija je kreirana upitom: <p class=\"kod\">CREATE TABLE ISPIT1 AS (<br><tab></tab>SELECT *<br><tab></tab>FROM DA.ISPIT<br>) WITH DATA;</p>"
+        },
+        {
+            "z": "Predmetima koje su polagali studenti iz Beograda postaviti broj bodova na najveći broj bodova koji postoji u tabeli predmet. ",
+            "r":[
+                "UPDATE PREDMET1 P<br>SET ESPB = (<br><tab></tab>SELECT MAX(ESPB)<br><tab></tab>FROM DA.PREDMET<br>)<br>WHERE EXISTS (<br><tab></tab>SELECT *<br><tab></tab>FROM ISPIT1 I JOIN DA.DOSIJE D<br><tab></tab><tab></tab>ON D.INDEKS = I.INDEKS<br><tab></tab>WHERE MESTORODJENJA LIKE 'Beograd%'<br><tab></tab><tab></tab>AND I.IDPREDMETA=P.ID<br>);"
+            ],
+            "n": "Radimo nad kopijom tabele predmet, identično prethodnom zadatku."
+        }
+    ],
+    "zadaciZaVezbanje":[
+        "Napraviti tabelu student_ispiti koja ima kolone:<ul>        <li>indeks – indeks studenta;</li>        <li>broj_polozenih_ispita – broj položenih ispita;</li>        <li>prosek – prosek studenta.</li>      </ul> Definisati primarni ključ i strani ključ na tabelu dosije. ",
+        "Tabeli student_ispiti dodati kolonu broj_prijavljenih_ispita koja predstavlja broj polaganih ispita. Dodati i ograničenje da broj polaganih ispita mora biti veći ili jednak broju položenih ispita. ",
+        "U tabelu student_ispiti uneti podatke za studente koji su polagali ispite. ",
+        "Obrisati tabelu student_ispiti. "
+     ]
+}

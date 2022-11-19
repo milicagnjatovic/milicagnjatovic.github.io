@@ -37,6 +37,7 @@
                 <tr><td><a href="#cas4">ČAS 4</a></td></tr>
                 <tr><td><a href="#cas5">ČAS 5</a></td></tr>
                 <tr><td><a href="#cas6">ČAS 6</a></td></tr>
+                <tr><td><a href="#cas7">ČAS 7</a></td></tr>
             </table>
         </div>
 
@@ -486,6 +487,128 @@
 loadClassFromJSON("cas6zadaci", "resources/rbp/cas6.json", "none")
 </script>
 <!-- CAS6 KRAJ-->
+
+
+<!-- CAS7-->
+
+<h1 id="cas7">ČAS 7</h1>
+<h2>Kreiranje tabela</h2>
+<p class="kod">
+    <b>CREATE TABLE</b> NAZIV_TABELE (<br>
+    <tab></tab>NAZIV_KOLONE1 TIP_KOLONE1 <br>
+    <tab></tab>NAZIV_KOLONE2 TIP_KOLONE2 <b>NOT NULL</b> <br>
+    <tab></tab>NAZIV_KOLONE3 TIP_KOLONE2 <b>DEFAULT ... </b> <br>
+    <tab></tab>...<br>
+    <tab></tab>NAZIV_KOLONEN TIP_KOLONEN <br>
+    <tab></tab><b>PRIMARY KEY</b> (KOLONA_KLJUC1, KOLONA_KLJUC2...) <br>
+    <tab></tab><b>FOREIGN KEY</b> FK_NAZIV_KLJUCA (NAZIV_KOLONE_OVE_TABELE) <b>REFERENCES</b> NAZIV_TABELE_KOJU_REFERISE <br>
+    <tab></tab><b>CONSTRAINT</b> NAZIV_OGGRANICENJA <b>CHECK</b> ( ... )<br>
+    ) 
+</p>
+
+<p>
+    Primarni ključ može činiti više kolona. Važno je da svaka kolona bude definisana sa NOT NULL. Primarni ključ se još može definisati tako što u nazivu kolone dodamo primary key, npr ID INTEGER NOT NULL PRIMARY KEY.<br>
+    Umesto komande CREATE TABLE ... , možemo korisiti CREATE TABLE IF NOT EXISTS ... kojom kreiramo tabelu samo ukoliko ona već ne postoji. <br>
+    Primarni ključ može automatski da se generiše i onda ne mora da se unosi pri ubacivanju podataka, npr 
+    <p class="kod">NAZIV_KOLONE INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (MINVALUE 1)</p>
+    Ukoliko je primarni ključ definisan na ovaj način njegova vrednost ne može da se unosi.
+</p>
+Neki od dozvoljenih tipova za kolone su:
+<ul>
+    <li>SMALLINT, INTEGER/INT, BIGINT, DECIMAL/DEC, FLOAT(BROJ DECIMALA), REAL, DOBULE</li>
+    <li>CHARACTER/CHAR</li>
+    <li>CHARACTER/CHAR[max broj karaktera u niski]</li>
+    <li>VARCHAR[max broj karaktera u niski]</li>
+    <li>DATE, TIME, TIMESTAMP</li>
+    <li>BOOLEAN</li>
+</ul>
+
+<p>Lista tabela u bazi se može videti sa nekom od narednih komandi iz terminala:</p>
+<ul>
+    <li class="kod">db2 lista tables</li>
+    <li class="kod">db2 lista tables for naziv_sheme</li>
+</ul>
+<p>Treba obratiti pažnju gde je kreirana baza, tj. da li u nekoj shemi.</p>
+
+<h2>Kopiranje tabele </h2>
+<p class="kod">
+    <b>CREATE TABLE</b> NAZIV_KOPIJE_SA_PODACIMA <b>AS</b> (<br>
+	<tab></tab>SELECT *<br>
+	<tab></tab>FROM ORIGINALNA_TABELA<br>
+) <b>WITH DATA</b>;
+</p>
+<p class="kod">
+    <b>CREATE TABLE</b> NAZIV_KOPIJE_BEZ_PODATAKA <b>AS</b> (<br>
+	<tab></tab>SELECT *<br>
+	<tab></tab>FROM ORIGINALNA_TABELA<br>
+) <b>WITH NO DATA</b>;
+
+<p>Ovo je korisno ako želite da vežbate izmenu i brisanje redova, a da pri tom ne menjate originalnu tabelu.</p>
+
+<h2>Promena strukture tabele</h2>
+<p class="kod"> <b>ALTER TABLE</b> NAZIV_TABELE ... </p>
+Moguće su naredne izmene:
+<ul>
+    <li class="kod"> DROP NAZIV_KOLONE </li>
+    <li class="kod"> ADD CONSTRAINT NAZIV_OGRANICENJA CHECK (...) </li>
+    <li class="kod"> ALTER COLUMN NAZIV_KOLONE SET DEFAULT .... </li>
+</ul>
+
+Nakon promene strukture tabele u nekim slučajevima je neophodno reorganizovati tabelu komandom iz terminala:
+<p class="kod">
+    db2 connect to naziv_baze <br>
+    db2 reorg table naziv_tabele
+</p>
+
+<h2>Brisanje tabele iz baze</h2>
+<p class="kod"><b>DROP TABLE</b> NAZIV_TABELE;</p>
+<p class="kod"><b>DROP TABLE IF EXISTS</b> NAZIV_TABELE;</p>
+Ukoliko pokušamo da obrišemo tabelu koja ne postoji prva verzija će izbaciti grešku, dok druga neće.
+
+<h2>Dodavanje redova u bazu</h2>
+<p class="kod">
+    <b>INSERT INTO </b> NAZIV_TABELE(KOL1, KOL2, ... , KOLN) <b>VALUES</b> <br>
+    <tab></tab> (VREDNOST_KOL1, VREDNOST_KOL2, ... , VREDNOST_KOLN), <br>
+    <tab></tab> (VREDNOST_KOL1, VREDNOST_KOL2, ... , VREDNOST_KOLN), <br>
+    <tab></tab>...
+</p>
+<p class="kod">
+    <b>INSERT INTO </b> NAZIV_TABELE(KOL1, KOL2, ... , KOLN)<br>
+    SELECT ... <br>
+    FROM ...
+</p>
+<p>Ukoliko se ubacuje vrednost za svaku kolonu redom onda nije neophodno navoditi nazive kolona. Vrednosti koje se ne unesu će biti NULL.</p>
+
+<h2>Izmena podataka u bazi</h2>
+<p class="kod">
+    <b>UPDATE</b> NAZIV_TABELE <br>
+    <b>SET</b> KOL1 = VREDNOST,<br>
+    <tab></tab>KOL2 = CASE WHEN ... THEN ... ... END<br>
+    <tab></tab>KOL3 = (SELECT ... FROM ... WHERE)<br>
+    <tab></tab>KOL4 = ... <br>
+    WHERE ... 
+</p>
+<p class="kod">
+    <b>UPDATE</b> NAZIV_TABELE <br>
+    <b>SET</b> (KOL1, KOL2 ...) = (VREDNOST1, VREDNOST2, ...) <br>
+    WHERE ... 
+</p>
+
+Ako ne navedemo WHERE izmeniće se svi redovi.
+
+<h2>Brisanje redova iz baze</h2>
+<p class="kod">
+    <b>DELETE FROM</b> NAZIV_TABELE <br>
+    WHERE ...
+</p>
+Ukoliko ne navedemo where biće obrisani svi redovi iz navedene tabele.
+
+<div id="cas7zadaci"></div>
+<script>
+loadClassFromJSON("cas7zadaci", "resources/rbp/cas7.json", "none")
+</script>
+<!-- CAS7 KRAJ-->
+
 
 <!-- levi div-->
          </div>
