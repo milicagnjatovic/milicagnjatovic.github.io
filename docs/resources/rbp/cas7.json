@@ -65,6 +65,14 @@
             ]
         },
         {
+            "z": "Promeniti broj indeksa studenta sa indeksom 20171063 i indeks 20172063 u tabeli dosije.",
+            "r":[
+                "INSERT INTO DA.DOSIJE<br>SELECT 20172063, IDPROGRAMA, IME, PREZIME, POL, MESTORODJENJA, IDSTATUSA, DATUPISA, DATDIPLOMIRANJA<br>FROM DA.DOSIJE<br>WHERE INDEKS = 20171063;",
+                "UPDATE DA.UPISGODINE<br>SET INDEKS = 20172063<br>WHERE INDEKS=20171063;"                
+            ],
+            "n": "Naredni upit će javiti grešku: <p class=\"kod\">UPDATE DA.DOSIJE<br>SET INDEKS = 20172063<br>WHERE INDEKS=20171063;</p> Greška se javlja jer u tabeli UPISGODINE postoji strani ključ ka tabeli DOSIJE. U tabeli UPISGODINE ne može da postoji red sa indeksom koji ne postoji u tabeli DOSIJE. Ne možemo da promenimo ni jednu ni drugu vredonst, ali možemo da dodamo identičnog studenta sa novim brojem indeksa u DOSIJE. Identično se dešava i kada pokušamo da promenimo indeks u tabeli ISPIT. Tabela ispit je povezana sa tabelom UPISANKURS. Potrebno je dodati kopiju reada u UPISANKURS, a zatim promeniti indekse u tabeli ISPIT."
+        },
+        {
             "z": "Na svim ispitima na kojima su u ispitnom roku jun1 2015. godine studenti polagali Analizu 1 promeniti rok u jan1 2015. Za datum polaganja staviti da je nepoznat. ",
             "r":[
                 "UPDATE ISPIT1<br>SET (OZNAKAROKA, DATPOLAGANJA) = ('jan1', null)<br>WHERE IDPREDMETA IN (<br><tab></tab>SELECT ID<br><tab></tab>FROM DA.PREDMET<br><tab></tab>WHERE NAZIV='Analiza 1'<br>) AND SKGODINA=2015 AND OZNAKAROKA='jun1';"
@@ -77,12 +85,21 @@
                 "UPDATE PREDMET1 P<br>SET ESPB = (<br><tab></tab>SELECT MAX(ESPB)<br><tab></tab>FROM DA.PREDMET<br>)<br>WHERE EXISTS (<br><tab></tab>SELECT *<br><tab></tab>FROM ISPIT1 I JOIN DA.DOSIJE D<br><tab></tab><tab></tab>ON D.INDEKS = I.INDEKS<br><tab></tab>WHERE MESTORODJENJA LIKE 'Beograd%'<br><tab></tab><tab></tab>AND I.IDPREDMETA=P.ID<br>);"
             ],
             "n": "Radimo nad kopijom tabele predmet, identično prethodnom zadatku."
+        }, 
+        {
+            "z": "Promeniti sve padove iz predmeta Programiranje 1 na polaganja sa ocenom 6.",
+            "r":[
+                "UPDATE ISPIT1<br>SET OCENA=6 ,<br><tab></tab>STATUS='o'<br>WHERE STATUS='o' AND OCENA=5 AND IDPREDMETA IN (<br><tab></tab>SELECT ID <br><tab></tab>FROM DA.PREDMET <br><tab></tab>WHERE NAZIV='Programiranje 1');",
+                "UPDATE ISPIT1<br>SET (OCENA, STATUS) = (6, 'o')<br>WHERE STATUS='o' AND OCENA=5 AND IDPREDMETA IN (<br><tab></tab>SELECT ID <br><tab></tab>FROM DA.PREDMET <br><tab></tab>WHERE NAZIV='Programiranje 1');"
+            ]
         }
     ],
     "zadaciZaVezbanje":[
         "Napraviti tabelu student_ispiti koja ima kolone:<ul>        <li>indeks – indeks studenta;</li>        <li>broj_polozenih_ispita – broj položenih ispita;</li>        <li>prosek – prosek studenta.</li>      </ul> Definisati primarni ključ i strani ključ na tabelu dosije. ",
         "Tabeli student_ispiti dodati kolonu broj_prijavljenih_ispita koja predstavlja broj polaganih ispita. Dodati i ograničenje da broj polaganih ispita mora biti veći ili jednak broju položenih ispita. ",
-        "U tabelu student_ispiti uneti podatke za studente koji su polagali ispite. ",
-        "Obrisati tabelu student_ispiti. "
+        "U tabelu student_ispiti uneti podatke za studente koji su polagali ispite.",
+        "U tabelu student_ispiti uneti podatke za studente koji nisu ništa polagali. U odgovarajuće kolone uneti NULL.",
+        "Obrisati tabelu student_ispiti. ",
+        "Za sve polagane ispite u roku jan2 2016 promeniti datum polaganja ispita na datum poslednjeg položenog ispita, a ocenu na 10."
      ]
 }
