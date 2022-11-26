@@ -613,7 +613,28 @@ loadClassFromJSON("cas7zadaci", "resources/rbp/cas7.json", "none")
 <!-- CAS8-->
 <h1 id="cas8">ČAS 8</h1>
 <h2>Pogled</h2>
+<p class="kod">
+    <b>CREATE VIEW</b> IME_POGLEDA <b>AS</b><br>
+    SELECT ... <br>
+    FROM ... <br>
+    WHERE ...
+</p>
 
+<p class="kod">DROP VIEW IME_POGLEDA;</p>
+
+<h2>Indeksi</h2>
+<img src="./resources/rbp/index.gif" alt="index" style="width: 80%;">
+
+<h2>Korisnički definisane funkcije</h2>
+<p class="kod">
+    <b>CREATE FUNCTION</b> IME_FUNKCIJE (ARG1 ARG1_TIP, ARG2 ARG2_TIP...)<br>
+    <b>RETURNS</b> TIP_POVRATNE_VREDNOSTI<br>
+    <b>RETURN</b> IZRAZ_KOJI_RAČUNA_REZULTAT
+
+</p>
+<p class="kod">DROP FUNCTION IME_FUNKCIJE;</p>
+
+<h2>Gde naći šta sve ima u bazi?</h2>
 <p>Sve tabele se nalaze u tabeli SYSCAT.TABLES. Ako želimo samo tabele neke scheme možemo iskorisiti naredni upit:</p>
 <p class="kod">
 SELECT *<br>
@@ -627,8 +648,18 @@ SELECT *<br>
 FROM SYSCAT.VIEWS <br>
 WHERE OWNERTYPE = 'U';
 </p>
+<p>Indeksi se mogu naći u tabeli SYSCAT.INDEXES.</p>
+<p class="kod">
+    SELECT *<br>
+    FROM SYSCAT.INDEXES <br>
+    WHERE OWNERTYPE = 'U';
+    </p>
+<p>Sve funkcije se nalaze u tabeli SYSCAT.FUNCTIONS.</p>
+<p class="kod">
+    SELECT *<br>
+    FROM SYSCAT.FUNCTIONS;
+</p>
 
-<p></p>
 <div id="cas8zadaci"></div>
 <script>
 loadClassFromJSON("cas8zadaci", "resources/rbp/cas8.json")

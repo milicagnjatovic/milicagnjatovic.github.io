@@ -29,12 +29,72 @@
             "n": "Napomene: <br>Da bi mogli da ubacimo ispitni rok 2022 potrebno je da prvo u tabelu skolskih godina ubacimo tu skolsku godinu (zbog restrikcija stranog ključa): <p class=\"kod\">INSERT INTO DA.SKOLSKAGODINA<br>VALUES(2022, '1.10.2022', '30.9.2023');</p> Kada unesemo isitni rok 2022 u pogled on će biti unet u tabelu nad kojom je pogled. <br>Kada unesemo ispitni rok u tabelu on će se videti i iz pogleda.<br>Ako u pogled unesemo rok iz 2015 on se neće videti u pogledu, dok će biti unet u tabelu. <br>Brisanje ili menjanje roka iz 2015 preko pogleda neće uspeti jer ti rokovi nisu u pogledu već samo u tabeli.<br>Brisanje rokova iz pogleda ih briše i iz tabele."
         },
         {
-            "z": "Napraviti pogled sa svim prijavljenim ispitima Marka Petrovića.",
+            "z": "Napraviti pogled sa svim prijavljenim ispitima Marka Petrovića. A zatim svim ispitima iz pogleda staviti datum polaganja na null.",
             "r":[
-                
+                "CREATE VIEW ISPITI_MP AS<br>SELECT I.*<br>FROM DA.DOSIJE D JOIN ISPIT1 I<br><tab></tab>ON D.INDEKS=I.INDEKS<br>WHERE D.IME='Marko' AND D.PREZIME='Petrovic';",
+                "UPDATE ISPITI_MP<br>SET DATPOLAGANJA=NULL;",
+                "CREATE VIEW ISPITI_MP1 AS<br>SELECT *<br>FROM ISPIT1 I<br>WHERE EXISTS (<br><tab></tab>SELECT *<br><tab></tab>FROM DA.DOSIJE D<br><tab></tab>WHERE I.INDEKS=D.INDEKS AND<br><tab></tab><tab></tab>D.IME='Marko' AND D.PREZIME='Petrovic'<br>);",
+                "UPDATE ISPITI_MP1<br>SET DATPOLAGANJA=NULL;"
+            ],
+            "n": "Radimo nad kopijom tabele ispit da ne bi menjali originalnu. <br>Pogled može da se menja jedino ako je nad samo jednom tabelom, nema spajanja. Zbog toga će pokušaj izmene prvog pogleda javiti grešku, dok će drugi da prođe."
+        },
+        {
+            "z": "Napraviti pogled kojim se izdvajaju svi prijavljeni ispiti studenata koji se zovu Marko ili Marija, a u ispitnom roku jan1 2018/2019. šk. godine su položili barem jedan ispit. Pogled napisati tako da je kroz njega moguće dodavanje novih ispita koji zadovoljavaju uslove pogleda. Pokušati dodati sledeća dva reda:<ul><li>Marko: indeks 20150013, idpredmeta 2027, skgodina 2018, oznakaroka sep2, status o, 40 poena, ocena 5</li><li>Jovana: indeks 20150001, idpredmeta 2027, skgodina 2018, oznakaroka sep2, status o, 40 poena, ocena 5.</li></ul>Ukoliko neko ubacivanje ne uspe pokušati uneti red direktno u tabelu ispit. Za dva uneta reda pokušati izmenu datuma polaganja nad pogledom na današnji datum. Ukoliko izmena nad pogledom ne uspe odraditi je direktno na tabeli. Na kraju pokuati brisanje ova dva reda preko pogleda.",
+            "r":[
+                "CREATE VIEW ISPITI_M AS<br>SELECT I.*<br>FROM ISPIT1 I<br>WHERE INDEKS IN (<br><tab></tab><tab></tab>SELECT INDEKS<br><tab></tab><tab></tab>FROM DA.DOSIJE<br><tab></tab><tab></tab>WHERE IME IN ('Marko', 'Marija')<br><tab></tab>) <br><tab></tab>AND EXISTS(<br><tab></tab><tab></tab>SELECT *<br><tab></tab><tab></tab>FROM ISPIT1 I1<br><tab></tab><tab></tab>WHERE I.INDEKS=I1.INDEKS AND<br><tab></tab><tab></tab><tab></tab>SKGODINA=2018 AND<br><tab></tab><tab></tab><tab></tab>OZNAKAROKA='jan1' AND<br><tab></tab><tab></tab><tab></tab>OCENA>5 AND STATUS='o'<br><tab></tab>) WITH CHECK OPTION;",
+                "INSERT INTO ISPITI_M(INDEKS, IDPREDMETA, SKGODINA, OZNAKAROKA, STATUS, POENI, OCENA)<br><tab></tab>VALUES(20150013, 2027, 2018, 'sep2', 'o', 40, 5);",
+                "INSERT INTO ISPITI_M(INDEKS, IDPREDMETA, SKGODINA, OZNAKAROKA, STATUS, POENI, OCENA)<br><tab></tab>VALUES(20150001, 2027, 2018, 'sep2', 'o', 40, 5);",
+                "INSERT INTO ISPIT1(INDEKS, IDPREDMETA, SKGODINA, OZNAKAROKA, STATUS, POENI, OCENA)<br><tab></tab>VALUES(20150001, 2027, 2018, 'sep2', 'o', 40, 5);",
+                "UPDATE ISPITI_M<br>SET DATPOLAGANJA = CURRENT DATE<br>WHERE INDEKS=20150013 AND<br><tab></tab>IDPREDMETA=2027 AND<br><tab></tab>SKGODINA=2018 AND<br><tab></tab>OZNAKAROKA='sep2'",
+                "UPDATE ISPITI_M<br>SET DATPOLAGANJA = CURRENT DATE<br>WHERE INDEKS=20150001 AND<br><tab></tab>IDPREDMETA=2027 AND<br><tab></tab>SKGODINA=2018 AND<br><tab></tab>OZNAKAROKA='sep2'",
+                "UPDATE ISPIT1<br>SET DATPOLAGANJA = CURRENT DATE<br>WHERE INDEKS=20150001 AND<br><tab></tab>IDPREDMETA=2027 AND<br><tab></tab>SKGODINA=2018 AND<br><tab></tab>OZNAKAROKA='sep2';",
+                "DELETE FROM ISPITI_M<br>WHERE INDEKS=20150013 AND<br><tab></tab>IDPREDMETA=2027 AND<br><tab></tab>SKGODINA=2018 AND<br><tab></tab>OZNAKAROKA='sep2';<br><tab></tab>",
+                "DELETE FROM ISPITI_M<br>WHERE INDEKS=20150001 AND<br><tab></tab>IDPREDMETA=2027 AND<br><tab></tab>SKGODINA=2018 AND<br><tab></tab>OZNAKAROKA='sep2';",
+                "DELETE FROM ISPIT1<br>WHERE INDEKS=20150001 AND<br><tab></tab>IDPREDMETA=2027 AND<br><tab></tab>SKGODINA=2018 AND<br><tab></tab>OZNAKAROKA='sep2';"
+            ],
+            "n": "Ukoliko pri pravljneju pogleda stavimo WITH CHECK opciju onda će preko pogleda biti moguće ubacivanje, menjanje i brisanje redova koji zadovoljavaju uslov pogleda."
+        },
+        {
+            "z": " Napraviti indeks tabele dosije po imenu i prezimenu u opadajućem redosledu. Zatim ga obrisati. ",
+            "r":[
+                "CREATE INDEX DOSIJE_IME_PREZIME ON DA.DOSIJE<br><tab></tab>(IME DESC, PREZIME DESC);<br><tab></tab>",
+                "DROP INDEX DOSIJE_IME_PREZIME;"
+            ]
+        } , 
+        {
+            "z": "Napisati korisnički definisanu funkciju koja vraća cenu predmeta za samofinansirajuće studente. Kao argument se zadaje broj espb. Cena jednog espb boda je 2000 dinara.",
+            "r":[
+                "CREATE FUNCTION CENA(ESPB SMALLINT)<br>RETURNS FLOAT<br>RETURN ESPB*2000.0;",
+                "SELECT NAZIV, ESPB, CENA(ESPB)<br>FROM DA.PREDMET;"
+            ]
+        },
+        {
+            "z": "Napisati korisnički definisanu funkciju koja vraća cenu predmeta za samofinansirajuće studente. Kao argument se zadaje id predmeta. Cena jednog espb boda je 2000 dinara.",
+            "r":[
+                "CREATE FUNCTION CENA(IDPREDMETA SMALLINT)<br>RETURNS FLOAT<br>RETURN <br><tab></tab>SELECT ESPB*2000.0<br><tab></tab>FROM DA.PREDMET <br><tab></tab>WHERE ID = IDPREDMETA;",
+                "VALUES CENA(1578);"
+            ]
+        },
+        {
+            "z": "Napisati korisnički definisnu funkciju koja vraća prosek studenta sa zadatim indekom. Zaokružiti prosek na dve decimale.",
+            "r":[
+                "CREATE FUNCTION PROSEK(INDEKS INTEGER)<br>RETURNS FLOAT<br>RETURN <br><tab></tab>SELECT DECIMAL(AVG(OCENA*1.0), 4, 2)<br><tab></tab>FROM DA.ISPIT I<br><tab></tab>WHERE I.INDEKS=INDEKS<br><tab></tab><tab></tab>AND OCENA>5 AND STATUS='o';",
+                "SELECT INDEKS, IME, PREZIME, PROSEK(INDEKS)<br>FROM DA.DOSIJE;"
+            ]
+        },
+        {
+            "z": "Napisati korisnički definisanu funkciju koja vraća koji je danas dan. Vraća naziv dana u nedelju ukoliko je radni dan, inače vraća 'WEEKEND'.",
+            "r":[
+                "CREATE FUNCTION DANAS()<br>RETURNS VARCHAR(10)<br>RETURN <br><tab></tab>CASE <br><tab></tab><tab></tab>WHEN DAYOFWEEK(CURRENT DATE) IN (7, 1) THEN 'WEEKEND'<br><tab></tab><tab></tab>ELSE DAYNAME(CURRENT DATE)<br><tab></tab>END;",
+                "SELECT DANAS()<br>FROM SYSIBM.SYSDUMMY1;"
             ]
         }
     ],
     "zadaciZaVezbanje":[
+        "Napisati pogled koji izdvaja poslednji položeni ispit za svakog studenta koji ima prosek iznad 8. Izdvojiti indeks, ime i prezime studenta i datum polaganja poslednjeg ispita.",
+        "Napisati pogled koji izdvaja podatke o studntima koji su bar jedan ispit položili sa ocenom 10. Pogled napisati tako da je kroz njega moguće dodavanje novih studenata. Izdvojiti samo kolone iz tabele dosije koje su neophodne da bi mogao da se izvrši unos podataka o novom studentu preko pogleda.",
+        "Napisati korisnički definisanu funkciju koja za prosleđen indeks vraća inicijale studenta. Ukoliko ne postoji stuedent vratiti 'XX'.",
+        "Napisati korisnički definisanu funkciju koja vraća broj različitih rokova u kojim je student sa prosleđenim indeksom položio neki ispit.",
+        "Napisati korisnički definisanu funkciju koja vraća broj dana studiranja ako je student sa prosleđenim indeksom diplomirao, inače 0."
     ]
 }
