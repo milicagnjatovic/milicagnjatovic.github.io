@@ -39,6 +39,7 @@
                 <tr><td><a href="#cas6">ČAS 6</a></td></tr>
                 <tr><td><a href="#cas7">ČAS 7</a></td></tr>
                 <tr><td><a href="#cas8">ČAS 8</a></td></tr>
+                <tr><td><a href="#cas9">ČAS 9</a></td></tr>
             </table>
         </div>
 
@@ -690,6 +691,56 @@ WHERE OWNERTYPE = 'U';
 loadClassFromJSON("cas8zadaci", "resources/rbp/cas8.json")
 </script>
 <!-- CAS8 KRAJ-->
+
+<!-- CAS9-->
+<h1 id="cas9">ČAS 9</h1>
+<h2>MERGE</h2>
+<p class="kod">
+    <b>MERGE INTO</b> IME_TABELE <br>
+    <b>USING</b> (NEKI_UPIT) <br>
+    <b>ON</b> USLOV_POKLAPANJA <br>
+    <b>WHEN MATCHED THEN</b> <br>
+    <tab></tab>... <br>
+    <b>WHEN MATCHED AND ... THEN</b> <br>
+    <tab></tab>... <br>
+    <b>WHEN NOT MATCHED THEN</b><br>
+    <tab></tab>... <br>
+    <b>WHEN NOT MATCHED AND ... THEN</b><br>
+    <tab></tab>... <br>
+
+</p>
+
+<h2>Okidači</h2>
+<p class="kod">
+    <b>CREATE TRIGGER</b> NAZIV_TRIGERA<br>
+    <b>BEFORE/AFTER DELETE/UPDATE/CREATE</b><br>
+    <b>ON</b> NAZIV_TABELE<br>
+    <b>REFERENCING</b><br>
+    <tab></tab> OLD AS STARI<br>
+    <tab></tab> NEW AS NOVI<br>
+    <b>FOR EACH ROW</b><br>
+    <b>WHEN</b>(USLOV_KOJI_ISPUNJAVAJU_REDOVI_NA_KOJE_CE_SE_PRIMENITI_TRIGGER)<br>
+    <b>BEGIN ATOMIC</b><br>
+    <tab></tab>    ... ; <br>
+    <tab></tab>    ... ; <br>
+    <tab></tab>    ... ; <br>
+    <b>END</b> @
+</p>
+<p>Kada radimo sa triggerima u većini slučajva ćemo imati više naredbi u telu i te naredbe treba razdvojiti sa ";". Ali ako ";" iskoistimo unutar kreiranja triggera (koji je jedna komanda), onda ne možemo to iskoristiti za kraj naredbe.
+    Zbog toga uvodimo novi terminator, tipično @. 
+</p>
+<p class="kod">--#SET TERMINATOR @</p>
+<p>Komanda ide baš ovako, -- u ovom slučaju ne gledaju ovo kao komentar. <br>
+Ukoliko izvršavamo komande preko terminala koristimo narednu komandu:</p>
+<p class="kod">db2 -td@ -f putanja_do_fajla</p>
+<p>Ukoliko želimo da trigger javi grešku i zaustavi operaciju:</p>
+<p class="kod">SIGNAL SQLSTATE '75000' ('Poruka o grešci koja će se ispisati korisniku.')</p>
+<p>Sve triggere možemo videti u tabeli SYSCAT.TRIGGERS.</p>
+<div id="cas9zadaci"></div>
+<script>
+loadClassFromJSON("cas9zadaci", "resources/rbp/cas9.json")
+</script>
+<!-- CAS9 KRAJ-->
 
 <!-- levi div-->
          </div>
