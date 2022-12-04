@@ -694,6 +694,17 @@ loadClassFromJSON("cas8zadaci", "resources/rbp/cas8.json")
 
 <!-- CAS9-->
 <h1 id="cas9">ČAS 9</h1>
+<h2>LISTAGG</h2>
+<p>Listagg je agregatna funkcija koja spaja stringove iz grupe u jedan.</p>
+<p class="kod">
+    SELECT LISTAGG(STRING, SEPARATOR) WITHIN GROUP(ORDER BY ...)<br>
+    FROM ... <br>
+    GROUP BY ...; 
+</p>
+Withing group (order by) je opcioni argument.<br>
+Ukupna dužina teksta ne može biti veća od 4000 karaktera.
+STRING može biti neka kolona, kol1 || kol2, DISTINCT kol...
+
 <h2>MERGE</h2>
 <p class="kod">
     <b>MERGE INTO</b> IME_TABELE <br>

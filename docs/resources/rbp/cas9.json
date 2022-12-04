@@ -1,6 +1,21 @@
 {
     "zadaci":[
         {
+            "z":"Napisati korisnički definisanu funkciju koja vraća nisku sa imenima. Kao arguemtn se prosleđuje karakter za pol. Ako pol nije m ili z vratiti nisku 'Pol ne moze biti *prosledjen_argument*'. Sortirati po imenu. ",
+            "r":[
+                "CREATE FUNCTION STUDENTI(POLARG CHAR) <br>RETURNS VARCHAR(4000)<br>RETURN <br><tab></tab>CASE<br><tab></tab><tab></tab>WHEN LOWER(POLARG) IN ('z', 'm') THEN<br><tab></tab><tab></tab><tab></tab>(SELECT LISTAGG(DISTINCT IME, ',') WITHIN GROUP (ORDER BY IME ASC)<br><tab></tab><tab></tab><tab></tab>FROM DA.DOSIJE<br><tab></tab><tab></tab><tab></tab>WHERE LOWER(POLARG)=POL)<br><tab></tab><tab></tab>ELSE <br><tab></tab><tab></tab><tab></tab>'Pol ne moze biti ' || POLARG<br><tab></tab>END;",
+                "VALUES STUDENTI('X');",
+                "VALUES STUDENTI('M');"
+            ]
+        },
+        {
+            "z": "Napisati korisnički definisanu funkciju koja vraća nisku sa indeksima studenata koji imaju prosek jednak vrednosti prosleđenoj kao argument. Ispret niske sa indeksima ispisti koliko ima indeksa, indekse razdvojiti crticama. Prosek gledati na dve decimale. Izlaz treba da bude na primer: '2:20170325-20170349'.",
+            "r":[
+                "CREATE FUNCTION STUDENTI_SA_PROSEKOM(X FLOAT)<br>RETURNS VARCHAR(4000)<br>RETURN <br><tab></tab>WITH PROSECI AS (<br><tab></tab><tab></tab>SELECT INDEKS, DECIMAL(AVG(OCENA+0.0), 4, 2) PROSEK<br><tab></tab><tab></tab>FROM DA.ISPIT <br><tab></tab><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab><tab></tab>GROUP BY INDEKS<br><tab></tab>)<br><tab></tab>SELECT COUNT(*) || ': ' || LISTAGG(INDEKS, '-')<br><tab></tab>FROM PROSECI<br><tab></tab>WHERE PROSEK=DECIMAL(X, 4, 2);",
+                "VALUES (9.96, STUDENTI_SA_PROSEKOM(9.96)),<br><tab></tab>(10,  STUDENTI_SA_PROSEKOM(10)),<br><tab></tab>(6,  STUDENTI_SA_PROSEKOM(6));"
+            ]
+        },
+        {
             "z": "Napisati naredbu na SQL-u koja:<ul><li>pravi tabelu predmet_student koja čuva podatke koliko studenata je položilo koji predmet. Tabela ima kolone: idpredmeta (tipa integer) i student (tipa smallint).</li><li>unosi u tabelu predmet_student podatke o obaveznim predmetima na smeru Informatika na osnovnim akademskim studijama (može se uzeti da je id 103). Za svaki predmet uneti podatak da ga je položilo 5 studenata.</li><li>ažurira tabelu predmet_student, tako što predmetima o kojima postoji evidencija ažurira broj studenata koji su ga položili, a za predmete o kojima ne postoji evidencija unosi podatke.</ul>",
             "r":[
                 "DROP TABLE IF EXISTS PREDMET_STUDENT;<br><br>CREATE TABLE PREDMET_STUDENT (<br><tab></tab>IDPREDMETA INTEGER,<br><tab></tab>STUDENT SMALLINT<br>);<br><br>INSERT INTO PREDMET_STUDENT <br>SELECT IDPREDMETA, 5<br>FROM DA.PREDMETPROGRAMA<br>WHERE IDPROGRAMA=103 AND VRSTA='obavezan';<br><br>MERGE INTO PREDMET_STUDENT PS<br>USING (<br><tab></tab>SELECT IDPREDMETA, COUNT(*) BR<br><tab></tab>FROM DA.ISPIT<br><tab></tab>WHERE OCENA>5 AND STATUS='o'<br><tab></tab>GROUP BY IDPREDMETA<br><tab></tab>) AS P<br>ON PS.IDPREDMETA=P.IDPREDMETA<br>WHEN MATCHED THEN <br><tab></tab>UPDATE <br><tab></tab>SET STUDENT=BR<br>WHEN NOT MATCHED THEN<br><tab></tab>INSERT<br><tab></tab>VALUES (IDPREDMETA, BR);"
