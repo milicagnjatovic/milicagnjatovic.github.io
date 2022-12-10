@@ -1,0 +1,115 @@
+{
+    "zadaci":[
+        {
+            "z": "Izdvojiti oznaku i naziv predmeta. ",
+            "r":[
+                "predmet[oznaka, naziv]"
+            ]
+        },
+        {
+            "z":"Izdvojiti podatke o predmetima koji imaju po 6 espb bodova. ",
+            "r":[
+                "predmet<br>where espb=6"
+            ]
+        },
+        {
+            "z":"Izdvojiti ime i prezime studenta sa indeksom 25/2014. ",
+            "r":[
+                "(dosije<br>where indeks=20140025)[ime, prezime]"
+            ]
+        },
+        {
+            "z":"Izdvojiti indekse studenata koji imaju: <ul><li>ocenu 10 ili 9 </li><li>ocenu 10 i 9 </li><li>samo ocene 10.</li></ul>",
+            "r":[
+                "(ispit<br>where ocena=10)[indeks]<br>union<br>(ispit<br>where ocena=9)[indeks]",
+                "(ispit<br>where ocena=10 or ocena=9)[indeks]",
+                "(ispit<br>where ocena=10)[indeks]<br>intersect<br>(ispit<br>where ocena=9)[indeks]",
+                "(ispit<br>where ocena=10)[indeks]<br>minus<br>(ispit<br>where ocena<10)[indeks]"
+
+            ]
+        },
+        {
+            "z":" Pronaći studente koji su upisali fakultet kada je održan neki ispit. Izdvojiti indeks, ime i prezime studenta. ",
+            "r":[
+                "((dosije times ispit)<br>where dosije.datupisa=ispit.datpolaganja)[dosije.indeks, ime, prezime]"
+            ]
+        },
+        {
+            "z":"Za svakog studenta izdvojiti podatke o ispitima koje je polagao. Izdvojiti indeks, ime, prezime studenta, identifikator predmeta i ocenu koju je dobio.",
+            "r":[
+                "((ispit times dosije) where dosije.indeks=dosije.indeks)<br>[dosije.indeks, ime, prezime, ispit.idpredmeta, ispit.ocena]",
+                "(ispit join dosije)[indeks, ime, prezime, idpredmeta, ocena]"
+            ]
+        },
+        {
+            "z":"Izdvojiti identifikatore predmeta koje su polagali svi studenti.",
+            "r":[
+                "ispit[idpredmeta, indeks]<br>divideby<br>dosije[indeks]"
+            ]
+        },
+        {
+            "z":"Izdvojiti parove predmeta koji imaju isti broj bodova. Izdvojiti šifre i nazive predmeta. ",
+            "r":[
+                "define alias predmet1 for predmet<br>define alias predmet2 for predmet <br>((predmet1 times predmet2)<br> where predmet1.espb=predmet2.espb and predmet1.idpredmeta<predmet2.idpredmeta)<br>[predmet1.oznaka, predmet1.naziv, predmet2.oznaka, predmet2.naziv] "
+            ],
+            "n": "RARRChecker ovde ne daje dobar rezultat."
+        },
+        {
+            "z":"Izdvojiti nazive ispitnih rokova u kojima je polozen predmet Analiza 1.",
+            "r":[
+                "(((predmet where naziv='Analiza 1')[idpredmeta]<br>join (ispit where ocena>5))<br>join ispitnirok)[naziv]"
+            ]
+        },
+        {
+            "z":"Izdvojiti indekse studenata koji nisu polagali ispite u ispitnom roku sa oznakom apr.",
+            "r":[
+                "dosije[indeks]<br>minus<br>(ispit where oznakaroka='apr')[indeks]"
+            ]
+        },
+        {
+            "z":"Pronaći ispitni rok u kome su isti predmet polagali svi studenti. Izdvojiti šk. godinu roka, oznaku roka i identifikator predmeta. ",
+            "r":[
+                "ispit[skgodina, oznakaroka, idpredmeta, indeks]<br>divideby<br>dosije[indeks]"
+            ]
+        },
+        {
+            "z":"Izdvojiti identifikatore predmeta koji imaju više od 5 bodova ili ih je položio neki student 20.01.2015. ",
+            "r":[
+                "(predmet where espb>5)[idpredmeta]<br>union<br>(ispit where ocena>5 and datpolaganja='20.01.2015')[idpredmeta]"
+            ]
+        },
+        {
+            "z":"Izdvojiti identifikatore predmeta koji imaju više od 5 bodova i nije ih položio neki student 20.01.2015. ",
+            "r":[
+                "(predmet where espb>5)[idpredmeta]<br>minus<br>(ispit where ocena>5 and datpolaganja='20.01.2015')[idpredmeta]"
+            ]
+        },
+        {
+            "z":"Pronaći predmet sa najvećim brojem espb bodova. Izdvojiti naziv i broj espb bodova predmeta.",
+            "r":[
+                "define alias p1 for predmet <br>define alias p2 for predmet <br>define alias p3 for predmet <br>p3[naziv, espb] <br>minus ((p1 times p2) where p1.espb < p2.espb)[p1.naziv, p1.espb] "
+            ]
+        },
+        {
+            "z":" Pronaći studenta koji je u jednoj šk. godini položio sve predmete. Izdvojiti šk. godinu i indeks.",
+            "r":[
+                "(ispit where ocena>5)[indeks, skgodina, idpredmeta] <br>divideby <br>predmet[idpredmeta] "
+            ]
+        }
+    ],
+    "zadaciZaVezbanje":[
+        "Izdvojiti nazive ispitnih rokova.",
+        "Izdvojiti podatke o studentima sa imenom Miloš.",
+        "Izdvojiti nazive rokova koji su održani posle 2009. godine.",
+        "Izdvojiti ime i prezime studenta i nazive predmeta koje je položio.",
+        "Pronaći nazive predmeta koji imaju po 6 bodova i koje je polagao student sa indeksom 21/2010.",
+        "Pronaći nazive predmeta koji imaju manje bodova od predmeta sa nazivom Geometrija.",
+        "Pronaći studente koji nemaju položen nijedan ispit.",
+        "Pronaći oznaku i naziv predmeta koji su položili svi studenti koji su fakultet upisali 06.07.2014.",
+        "Pronaći indekse studenata koji su fakultet upisali 06.07.2014. ili imaju bar jednu ocenu 10.",
+        "Pronaći podatke o predmetima koje nije položio nijedan student sa prezimenom Markovic.",
+        "Pronaći podatke o ispitnim rokovima u kojima je položen ispit iz predmeta Programiranje 1.",
+        "Izdvojiti podatke o studentima koji su polagali u ispitnom roku sa oznakom jan u šk. godini 2015.",
+        "Pronaći studente koji su položili neki predmet od 6 espb bodova. Izdvojiti indeks, ime, prezime i naziv predmeta."
+    ]
+}

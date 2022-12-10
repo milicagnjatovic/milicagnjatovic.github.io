@@ -41,6 +41,7 @@
                 <tr><td><a href="#cas8">ČAS 8</a></td></tr>
                 <tr><td><a href="#cas9">ČAS 9</a></td></tr>
                 <tr><td><a href="#recap">SQL RECAP</a></td></tr>
+                <tr><td><a href="#cas10">ČAS 10</a></td></tr>
             </table>
         </div>
 
@@ -756,6 +757,123 @@ loadClassFromJSON("cas9zadaci", "resources/rbp/cas9.json")
 
     <h1 id="recap">SQL RECAP</h1>
     <img src="./resources/rbp/recap.png" alt="recap" style="width: 100%;">
+
+<!-- CAS10 -->
+<h1 id="cas10">ČAS 10</h1>
+<h2>Relaciona algebra</h2>
+<h3>Tabele sa kojima ćemo raditi:</h3>
+<table id="relacione-tabele">
+    <tr>
+        <th>DOSIJE</th>
+        <th>PREDMET</th>
+        <th>ISPITNIROK</th>
+        <th>ISPIT</th>
+    </tr>
+    <tr>
+        <td>indeks<br>
+            ime<br>
+            prezime<br>
+            mestorodjenja<br>
+            datupisa</td>
+        <td>idpredmeta<br>
+            oznaka<br>
+            naziv<br>
+            espb</td>
+        <td>
+            skgodina<br>
+            oznakaroka<br>
+            naziv</td>
+        <td>
+            indeks<br>
+            idpredmeta<br>
+            skgodina<br>
+            oznakaroka<br>
+            ocena<br>
+            datpolaganja<br>
+            bodovi</td>
+    </tr>
+</table>
+
+<h2>Osnovne operacije</h2>
+<dl>
+    <dt>Projekcija</dt>
+    <dd>biramo atribute/kolone<br>
+        kao SELECT <br>
+        TABELA<b>[</b>kol1, kol2...<b>]</b>
+    </dd>
+    <dt>Restrikcija/Selekcija</dt>
+    <dd>biramo redove koje želimo u rezultatu<br>
+        kao WHERE <br>
+        tabela <b>WHERE</b> ...
+    </dd>
+    <dt>Proizvod</dt>
+    <dd>Dekartov proizvod - spaja svaki red jedne tabele sa svakim redom druge tabele<br>
+        u SQL-u: from tab1,tab2<br>
+        tab1 <b>TIMES</b> tab2
+    </dd>
+    <dt>Unija</dt>
+    <dd> spajaju se redovi rezultata jednog upita sa redovima drugog upita<br>
+        u SQL-u: UNION <br>
+        upit1 <b>UNION</b>
+    </dd>
+    <dt>Presek</dt>
+    <dd> zadržavaju se redovi koji se nalaze u rezultatima oba upita<br>
+        u SQL-u: INTERSECT <br>
+        upit1 <b>NTERSECT</b>
+    </dd>
+    <dt>Razlika</dt>
+    <dd> zadržavaju se redovi koji se nalaze u rezultatima prvog upita, ali ne u rezultatu drugog upita<br>
+        u SQL-u: MINUS, EXCEPT <br>
+        upit1 <b>MINUS</b> upit2
+    </dd>
+    <dt>Slobodno spajanje</dt>
+    <dd>restrikcija proizvoda dveju relacija<br>
+        (tab1 TIMES tab2) WHERE A.x=B.y
+    </dd>
+    <dt>Prirodno spajanje</dt>
+    <dd>spaja se po kolonama koje imaju isti NAZIV i OPSEG(TIP)<br>
+        u SQL-u uz join ide ON uslov, dok ovde ne navodimo uslov, već se on podrazumeva<br>
+        tab1 <b>JOIN</b> tab2</dd>
+    <dt>Deljenje</dt>
+    <dd>
+        <ul>
+            <li>Relacija A ima grupe kolona X i Y</li>
+            <li>Relacija B ima grupu kolona Y</li>
+            <li>Relacija B ima neke redove</li>
+            <li>Delimo A sa B i u rezultatu dobijamo kolone X iz A takve da važi da je taj red u A uparen sa svim redovima iz B</li>
+        </ul>
+        Primeri:
+        <img src="./resources/rbp/divide1.png" alt="divide" style="width: 100%;">
+        <ol>
+            <li> primer: U rezultatu se nalaze redovi koji su u A upareni sa p2 (iz B).</li>
+            <li> primer: U A postoje redovi s1-p2 i s1-p4 pa s1 ide u rezultat. Postoje redovi s4-p2 i s4-p4 pa i s4 ide u rezultat. Da bi se s2 našao u rezultatu bilo bi porebno da postoje reodvi a2-p2(postoji) i s2-p4(ne postoji). Identično za s3.</li>
+            <li> primer: Samo za vrednost s1 u A postoje parovi sa sve tri vrednost iz B, tj s1-p2, s1-p4 i s1-p1.</li>
+        </ol>
+    </dd>
+</dl>
+
+<h2>Izvršavanje koda</h2>
+<p>Za primere urađene na vežbama i date za vežbu rezultat možete videti pomoću parsera za relacioni račun i relacionu algebru koleginice Ane Vulović u sintaksi koja se koristi na vežbama.
+    Pomoću .deb paketa možete instalirati program na Ubuntu.
+    <br>
+    Na Ubuntu 20.04<br>
+    sudo dpkg -i rarrchecker_1.0-1_amd64_focal.deb<br>
+    ili sa<br>
+    sudo apt install ./rarrchecker_1.0-1_amd64_focal.deb<br>
+    
+    Na Ubuntu 18.04 - 19.*<br>
+    sudo dpkg -i rarrchecker_1.0-1_amd64_bionic.deb<br>
+    ili sa<br>
+    sudo apt install ./rarrchecker_1.0-1_amd64_bionic.deb </p>
+    <br>
+    <a href="./resources/rbp/24-rarrchecker_1.0-1_amd64_bionic.deb">rarrchecker_1.0-1_amd64_bionic.deb </a><br>
+    <a href="./resources/rbp/24-rarrchecker_1.0-1_amd64_focal.deb">rarrchecker_1.0-1_amd64_focal.deb </a><br>
+    <a href="./resources/rbp/mala_studentska_baza.sql">Skript za pravljenje smanjene studentske baze za parser </a><br>
+<div id="cas10zadaci"></div>
+<script>
+loadClassFromJSON("cas10zadaci", "resources/rbp/cas10.json")
+</script>
+<!-- CAS10 KRAJ-->
 
 <!-- levi div-->
          </div>
