@@ -42,6 +42,7 @@
                 <tr><td><a href="#cas9">ČAS 9</a></td></tr>
                 <tr><td><a href="#recap">SQL RECAP</a></td></tr>
                 <tr><td><a href="#cas10">ČAS 10</a></td></tr>
+                <tr><td><a href="#cas11">ČAS 11</a></td></tr>
             </table>
         </div>
 
@@ -875,6 +876,53 @@ loadClassFromJSON("cas9zadaci", "resources/rbp/cas9.json")
 loadClassFromJSON("cas10zadaci", "resources/rbp/cas10.json")
 </script>
 <!-- CAS10 KRAJ-->
+
+<!-- CAS11-->
+<h1 id="cas11">ČAS 11</h1>
+<h2>Relacioni račun</h2>
+<dl>
+    <dt>Projekcija</dt>
+    <dd>biramo atribute/kolone<br>
+        range of red is relacija <br>
+        red.A, red.B
+    </dd>
+    <dt>Restrikcija/Selekcija</dt>
+    <dd>biramo redove koje želimo u rezultatu<br>
+        range of red is relacija <br>
+        red.X <br>
+        <b>WHERE</b> ...
+    </dd>
+    <dt>Proizvod</dt>
+    <dd>Dekartov proizvod - spaja svaki red jedne tabele sa svakim redom druge tabele<br>
+        range of px is predmet <br>
+        range of ix is ispit
+    </dd>
+    <dt>exists x (uslov)</dt>
+    <dd>Navedeni uslov mora da važi za bar jednu n-torku x. Domen relacije x je samo uslov, ne možemo ga koristiti van zagrada uslova.</dd>
+    <dt>forall x (uslov)</dt>
+    <dd>Navedeni uslov mora da važi za sve n-torke iz x.  Domen relacije x je samo uslov, ne možemo ga koristiti van zagrada uslova.<br>
+        forall x (uslov)  <=> not exists x (not uslov)
+    </dd>
+    <dt>Implikacija</dt>
+    <dd>if form1 then form2 <br>
+        if a then b <=> not p or q 
+    </dd>
+</dl>
+<p>Ako radimo nad dve tabele, na primer predmet i ispit. U rezultatu možemo izdvojiti samo kolone iz na primer predmeta, ali onda kolone iz ispita ne možemo imati u where. Da bi u ovom slučaju gli da koristimo kolone iz where potrebno je da ispisujemo bar jednu kolonu iz tabele ispit (ne nužno onu koju koristimo) ili da koristimo exists/forall.</p>
+<ul>
+    <li>exists x exists y (...) <=> exists y exists x (...)</li>
+    <li>forall x forall y (...) <=> forall y forall x (...)</li>
+    <li>forall x exists y (...) <=/=> exists y forall x (...)</li>
+    <li>forall(if p then q) <=> <br>
+        forall (not p or q) <=> <br>
+        forall (not (not p or q)) <=> <br>
+        not exists (p and not q)</li>
+</ul>
+<div id="cas11zadaci"></div>
+<script>
+loadClassFromJSON("cas11zadaci", "resources/rbp/cas11.json")
+</script>
+<!-- CAS11 KRAJ-->
 
 <!-- levi div-->
          </div>

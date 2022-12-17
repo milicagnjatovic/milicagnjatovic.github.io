@@ -1,0 +1,137 @@
+{
+    "zadaci":[
+        {
+            "z": " Prikazati oznaku i naziv predmeta. ",
+            "r": [
+                "range of px is predmet<br> px.oznaka, px.naziv"
+            ]
+        },
+        {
+            "z": " Prikazati podatke o predmetima koji imaju po 6 espb bodova. ",
+            "r": [
+                "range of px is predmet <br> px.idpredmeta, px.oznaka, px.naziv, px.espb <br>where px.espb=6",
+                "range of px is predmet <br> px.* <br>where px.espb=6"
+            ],
+            "n": "U parseru nije implementirano px.* za ispis svih kolona, ali i to je tačno."
+        },
+        {
+            "z": " Za svakog studenta izdvojiti podatke o polaganim ispitima. Izdvojiti indeks studenta, naziv polaganog predmeta i ocenu koju je dobio. ",
+            "r":[
+                "range of px is predmet <br> range of ix is ispit<br>ix.indeks, px.naziv, ix.ocena<br>where px.idpredmeta = ix.idpredmeta"
+            ]
+        },
+        {
+            "z": " Izdvojiti parove predmeta koji imaju isti broj bodova. Izdvojiti oznake i nazive predmeta. ",
+            "r":[
+                "range of px is predmet<br> range of py is predmet<br> px.oznaka, px.naziv, py.oznaka, py.naziv<br> where px.espb = py.espb and px.idpredmeta<py.idpredmeta"
+            ]
+        },
+        {
+            "z": " Izdvojiti oznake i nazive predmeta koje je položio student sa indeksom 26/2014. ",
+            "r":[
+                "range of px is predmet <br>range of ix  is ispit<br> px.oznaka, px.naziv<br> where exists ix (ix.idpredmeta = px.idpredmeta  and  ix.indeks=20140026 and ix.ocena>5)"
+            ]
+        },
+        {
+            "z": " Izdvojiti indekse studenata koji su polagali sve predmete. ",
+            "r":[
+                "range of px is predmet<br>range of ix  is ispit<br>range of dx is dosije<br><br>dx.indeks<br>where forall px (<br><tab></tab>exists ix ( ix.idpredmeta = px.idpredmeta <br><tab></tab><tab></tab>and dx.indeks=ix.indeks)<br>)",
+                "range of px is predmet<br>range of ix  is ispit<br>range of dx is dosije<br><br>dx.indeks<br>where not exists px (<br><tab></tab>not exists ix ( ix.idpredmeta = px.idpredmeta <br><tab></tab><tab></tab>and dx.indeks=ix.indeks)<br>)"
+            ]
+        },
+        {
+            "z":" Izdvojiti nazive predmeta koje su polagali svi studenti. ",
+            "r":[
+                "range of px is predmet<br>range of ix  is ispit<br>range of dx is dosije<br><br>px.naziv<br>where forall dx (<br><tab></tab> exists ix ( ix.idpredmeta = px.idpredmeta <br><tab></tab><tab></tab>and dx.indeks=ix.indeks)<br>)",
+                "range of px is predmet<br>range of ix  is ispit<br>range of dx is dosije<br><br>px.naziv<br>where not exists dx (<br><tab></tab> not exists ix ( ix.idpredmeta = px.idpredmeta <br><tab></tab><tab></tab>and dx.indeks=ix.indeks)<br>)"
+            ]
+        },
+        {
+            "z":" Izdvojiti nazive predmeta koji imaju po 6 espb bodova i koje je polagao student sa prezimenom Vukovic. ",
+            "r":[
+                "range of dx is dosije<br>range of px is predmet<br>range of ix  is ispit<br><br>px.naziv<br>where px.espb=6 and exists ix ( <br><tab></tab>ix.idpredmeta = px.idpredmeta<br><tab></tab>and exists dx (ix.indeks = dx.indeks and dx.prezime='Vukovic'))",
+                "range of dx is dosije<br>range of px is predmet<br>range of ix  is ispit<br><br>px.naziv<br>where px.espb=6 and exists ix ( <br><tab></tab>exists dx (ix.indeks = dx.indeks and dx.prezime='Vukovic' and<tab></tab><br><tab></tab>ix.idpredmeta = px.idpredmeta<br>))"
+            ]
+        },
+        {
+            "z": " Izdvojiti indekse studenata koji su položili bar sve predmete koje je položio student sa indeksom 25/2014. ",
+            "r":[
+                "range of dx is dosije<br>range of px is predmet<br>range of ix  is ispit<br> <br>dx.indeks<br>where forall px ( if exists ix (ix.indeks=20140025 and ix.ocena>5 and ix.idpredmeta=px.idpredmeta)<br><tab></tab>then exists ix (ix.indeks=dx.indeks and ix.ocena>5 and ix.idpredmeta=px.idpredmeta))",
+                "range of dx is dosije<br>range of px is predmet<br>range of ix  is ispit<br> <br>dx.indeks<br>where forall px ( not exists ix (ix.indeks=20140025 and ix.ocena>5 and ix.idpredmeta=px.idpredmeta)<br><tab></tab>or exists ix (ix.indeks=dx.indeks and ix.ocena>5 and ix.idpredmeta=px.idpredmeta))",
+                "range of dx is dosije<br>range of px is predmet<br>range of ix  is ispit<br> <br>dx.indeks<br>where not exists px (  exists ix (ix.indeks=20140025 and ix.ocena>5 and ix.idpredmeta=px.idpredmeta)<br><tab></tab>and not exists ix (ix.indeks=dx.indeks and ix.ocena>5 and ix.idpredmeta=px.idpredmeta)<br>)"
+            ],
+            "n": "Parser greši u poslednjem rešenju."
+        },
+        {
+            "z": " Izdvojiti indeks, ime i prezime studenta koji je položio samo Programiranje 1. ",
+            "r":[
+                "range of dx is dosije<br>range of px is predmet<br>range of ix  is ispit<br>range of iy  is ispit<br> <br>dx.indeks, dx.ime, dx.prezime<br>where exists ix (  ix.indeks = dx.indeks and ix.ocena>5 and<br><tab></tab>exists px ( px.idpredmeta=ix.idpredmeta and px.naziv='Programiranje 1' and<br><tab></tab>not exists iy(iy.indeks=dx.indeks and iy.idpredmeta<>px.idpredmeta and iy.ocena>5)))",
+                "range of dx is dosije<br>range of px is predmet<br>range of ix  is ispit<br>range of iy  is ispit<br> <br>dx.indeks, dx.ime, dx.prezime<br>where exists ix (  ix.indeks = dx.indeks and ix.ocena>5 and<br><tab></tab><tab></tab>exists px ( px.idpredmeta=ix.idpredmeta and px.naziv='Programiranje 1'))  and<br><tab></tab>not exists ix (  ix.indeks = dx.indeks and ix.ocena>5 and<br><tab></tab><tab></tab>exists px ( px.idpredmeta=ix.idpredmeta and px.naziv<>'Programiranje 1'))"
+            ]
+        },
+        {
+            "z":" Pronaći predmet sa najvećim brojem espb bodova. Izdvojiti naziv i broj espb bodova predmeta. ",
+            "r":[
+                "range of px is predmet<br>range of py is predmet<br><br>px.naziv, px.espb<br>where not exists py (py.espb > px.espb)",
+                "range of px is predmet<br>range of py is predmet<br><br>px.naziv, px.espb<br>where forall py (py.espb <= px.espb)"
+            ]
+        },
+        {
+            "z": " Pronaći studente koji su položili neki predmet od 6 espb bodova. Izdvojiti indeks, ime, prezime i naziv predmeta. ",
+            "r":[
+                "range of px is predmet<br>range of ix is ispit<br>range of dx is dosije<br><br>dx.indeks, dx.ime, dx.prezime, px.naziv<br>where px.espb=6 and exists ix ( ix.indeks = dx.indeks and ix.idpredmeta=px.idpredmeta and ix.ocena>5)",
+                "range of px is predmet<br>range of ix is ispit<br>range of dx is dosije<br><br>ix.indeks, dx.ime, dx.prezime, px.naziv<br>where px.espb=6 and ix.indeks = dx.indeks and ix.idpredmeta=px.idpredmeta and ix.ocena>5"
+            ]
+        },
+        {
+            "z":" Pronaći studenta koji je u jednoj školskoj godini položio sve predmete. Izdvojiti školsku godinu i indeks. ",
+            "r":[
+                "range of ix is ispit <br>range of iy is ispit <br>range of px is predmet <br>ix.indeks, ix.skgodina <br>where forall px( exists iy (px.idpredmeta=iy.idpredmeta and ix.indeks=iy.indeks and ix.ocena>5 and ix.skgodina=iy.skgodina))"
+            ]
+        },
+        {
+            "z": "[Rešiti na relacionom računu i algebri] Izdvojiti indekse studenata koji su predmet sa identifikatorom 1001 polagali tačno dva puta.",
+            "r":[
+                "[Račun]<br>range of dx is dosije<br>range of ix is ispit<br>range of iy is ispit<br>range of iz is ispit<br><br>dx.indeks<br>where exists ix (ix.indeks=dx.indeks and ix.idpredmeta=1001 and<br><tab></tab>exists iy (iy.indeks = dx.indeks and iy.idpredmeta=1001 and iy.datpolaganja<>ix.datpolaganja and<br><tab></tab>not exists iz (iz.indeks = dx.indeks and iz.idpredmeta=1001 and iz.datpolaganja<>ix.datpolaganja and iz.datpolaganja<>iy.datpolaganja)))",
+                "[Algebra]<br>define alias i1 for ispit<br>define alias i2 for ispit<br>define alias i3 for ispit<br><br>((i1 times i2) where i1.indeks=i2.indeks and i1.idpredmeta=1001 and i2.idpredmeta=1001 and i1.datpolaganja&lt;i2.datpolaganja)[i1.indeks]<br>minus <br>((i1 times i2 times i3) where i1.indeks=i2.indeks and i1.indeks=i3.indeks and i1.idpredmeta=1001 and i2.idpredmeta=1001 and i3.idpredmeta=1001 and i1.datpolaganja&lt;i2.datpolaganja and i2.datpolaganja&lt;i3.datpolaganja)[i1.indeks]"
+            ]
+        },
+        {
+            "z":"[Rešiti na relacionom računu i algebri] Pronaći predmete koje su položili dva studenta rođena istog dana. Izdvojiti datum rođenja i naziv predmeta. ",
+            "r":[
+                "[Račun]<br>range of px is predmet <br>range of dx is dosije <br>range of dy is dosije <br>range of ix is ispit <br>range of iy is ispit <br><br>dx.datupisa, px.naziv <br>where exists ix(ix.indeks=dx.indeks and ix.idpredmeta=px.idpredmeta and ix.ocena>5 and <br>exists iy(iy.idpredmeta=px.idpredmeta and iy.ocena>5 and exists dy(dy.indeks<dx.indeks <br>and dx.datupisa=dy.datupisa)))",
+                "[Algebra]<br>define alias i1 for ispit <br>define alias i2 for ispit <br>define alias d1 for dosije <br>define alias d2 for dosije <br>(((((i1 where i1.ocena>5) join d1) <br>times <br>((i2 where i2.ocena>5) join d2)) <br>where i1.idpredmeta=i2.idpredmeta and i1.indeks&lt;i2.indeks and d1.datupisa=d2.datupisa)<br>join predmet)[d1.datupisa, naziv]"
+            ]
+        },
+        {
+            "z":"[Rešiti na relacionom računu i algebri] Pronaći indeks studenta koji je položio sve predmete od 6 espb bodova. ",
+            "r":[
+                "[Račun]<br>range of px is predmet<br>range of dx is dosije<br>range of ix is ispit<br><br>dx.indeks<br>where forall px( if px.espb=6 then<br><tab></tab>exists ix(ix.indeks=dx.indeks and ix.idpredmeta=px.idpredmeta and ix.ocena>5))",
+                "[Algebra]<br>(ispit where ocena>5)[indeks, idpredmeta]<br>divideby<br>(predmet where espb=6)[idpredmeta]"
+            ]
+        },
+        {
+            "z":"[Rešiti na relacionom računu i algebri] Pronaći indeks studenta koji je položio neki predmet od 6 espb bodova ali ne i sve predmete od 6 espb bodova. ",
+            "r":[
+                "[Račun]<br>range of px is predmet <br>range of py is predmet <br>range of dx is dosije <br>range of ix is ispit <br>range of iy is ispit <br><br>dx.indeks <br>where exists px(px.espb=6 and not exists ix(ix.indeks=dx.indeks and <br>ix.idpredmeta=px.idpredmeta and ix.ocena>5)) <br>and exists py(py.espb=6 and exists iy(iy.indeks=dx.indeks and <br>iy.idpredmeta=py.idpredmeta and iy.ocena>5))",
+                "[Algebra]<br>((ispit where ocena>5) join (predmet where espb=6))[indeks] <br>minus <br>((ispit where ocena>5)[indeks, idpredmeta] <br>divideby <br>(predmet where espb=6)[idpredmeta])"
+            ]
+        },
+        {
+            "z":"[Rešiti na relacionom računu i algebri] Pronaći indeks studenta koji  nije položio sve predmete od 6 bodova. ",
+            "r":[
+                "[Račun]<br>range of px is predmet <br>range of dx is dosije <br>range of ix is ispit <br><br>dx.indeks <br>where exists px(px.espb=6 and not exists ix(ix.indeks=dx.indeks and <br>ix.idpredmeta=px.idpredmeta and ix.ocena>5))",
+                "[Algebra]<br>dosije[indeks]<br>minus<br>((ispit where ocena>5) [indeks, idpredmeta]<br>divideby<br>(predmet where espb=6)[idpredmeta])"
+            ]
+        }
+    ],
+    "zadaciZaVezbanje": [
+        "Izdvojiti nazive predmeta koji imaju između 5 i 10 espb bodova.",
+        "Izdvojiti indeks i naziv predmeta, takve da je student polagao predmet i da je dobio ocenu koja je jednaka broju espb bodova predmeta.",
+        "Pronaći studente koji su u januarskom ispitnom roku 2014. godine dobili ocenu 9 ili 10. Izdvojiti indeks, ime i prezime studenta, naziv predmeta i ocenu.",
+        "Pronaći indekse studenata koji nisu polagali Analizu 2.",
+        "Izdvojiti nazive predmeta koje su položili svi studenti koji su fakultet upisali 04.07.2013.",
+        "Izdvojiti naziv predmeta kojj je bar jedan student rođen u Čačku položio u aprilu 2014.",
+        "Izdvojiti nazive predmeta koje su svi studenti rođeni u Čačku položili u aprilu 2014."
+    ]
+}
