@@ -19,13 +19,13 @@
             ]
         },
         {
-            "z":"Izdvojiti indekse studenata koji imaju: <ul><li>ocenu 10 ili 9 </li><li>ocenu 10 i 9 </li><li>samo ocene 10.</li></ul>",
+            "z":"Izdvojiti indekse studenata koji imaju: <ul><li>ocenu 10 ili 9 </li><li>ocenu 10 i 9 </li><li>ocenu 10 a nemaju ocenu 9</li><li>samo ocene 10.</li></ul>",
             "r":[
                 "(ispit<br>where ocena=10)[indeks]<br>union<br>(ispit<br>where ocena=9)[indeks]",
                 "(ispit<br>where ocena=10 or ocena=9)[indeks]",
                 "(ispit<br>where ocena=10)[indeks]<br>intersect<br>(ispit<br>where ocena=9)[indeks]",
+                "(ispit<br>where ocena=10)[indeks]<br>minus<br>(ispit<br>where ocena=9)[indeks]",
                 "(ispit<br>where ocena=10)[indeks]<br>minus<br>(ispit<br>where ocena<10)[indeks]"
-
             ]
         },
         {
