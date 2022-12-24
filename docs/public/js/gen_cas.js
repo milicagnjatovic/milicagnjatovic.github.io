@@ -59,7 +59,7 @@ function loadClassFromJSON(elId, classFile, prikazi = 'block'){
         let vezbanjeDIV = document.createElement("div");
         vezbanjeDIV.className = "domaci";
 
-        if (data.zadaciZaVezbanje) {
+        if ("zadaciZaVezbanje" in data) {
             let naslov = document.createElement("h3");
             naslov.textContent = "Zadaci za vežbanje";
             vezbanjeDIV.appendChild(naslov)
