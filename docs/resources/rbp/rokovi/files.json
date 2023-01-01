@@ -1,15 +1,45 @@
 {
-    "files": [
-        "sep22020.pdf" , 
-        "feb2021.pdf" , 
-        "sep12021.pdf",  
-        "jan2022.pdf",  
-        "sep32020.pdf" , 
-        "jun2021.pdf", 
-        "sep22021.pdf" ,
-        "jul2022.pdf",
-        "jan2021.pdf", 
-        "jul2021.pdf" ,
-        "jun2022.pdf"
-    ]
+    "godine":["2022", "2021", "2020", "2019", "2018", "2016"],
+    "files": {
+        "2022": [
+            "jan_2022.pdf",
+            "feb_2022.pdf",
+            "jun_2022.pdf",
+            "jul_2022.pdf"
+            ]    ,
+        "2021": [
+            "jan_2021.pdf",
+            "feb_2021.pdf",
+            "jun_2021.pdf",
+            "jul_2021.pdf",
+            "sep1_2021.pdf",
+            "sep2_2021.pdf"
+        ],
+        "2020": [
+            "jan_2020.pdf",
+            "feb_2020.pdf",
+            "jun_2020.pdf",
+            "sep1_2020.pdf",
+            "sep2_2020.pdf",
+            "sep3_2020.pdf"
+        ],
+        "2019": [
+            "jan_2019.pdf",
+            "feb_2019.pdf",
+            "jun_2019.pdf",
+            "sep1_2019.pdf"
+        ],
+        "2018": [
+            "jan_2018.pdf",
+            "feb_2018.pdf",
+            "jun_2018.pdf",
+            "sep1_2018.pdf"
+        ],
+        "2016": [
+            "jan_2016.pdf",
+            "feb_2016.pdf",
+            "jun_2016.pdf",
+            "sep1_2016.pdf"
+        ]
+    }
 }

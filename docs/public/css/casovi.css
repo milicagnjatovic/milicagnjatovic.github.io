@@ -130,3 +130,22 @@ dt {
     background-color: rgb(158, 187, 179);
     padding: 15px;
 }
+
+.tabela_rokova td{
+    background-color: lightblue;
+    padding: 10px;
+    text-align: center;
+}
+
+.tabela_rokova td:hover{
+    background-color: darkblue;
+    color: lightblue;
+    padding: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.obavestenje {
+    background-color: rgba(102, 76, 109, 0.4);
+    padding: 10px;
+}
