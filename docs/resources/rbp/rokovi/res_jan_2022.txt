@@ -1,0 +1,193 @@
+-- 1
+
+SELECT D.INDEKS, D.IME, D.PREZIME, 
+	COALESCE(SUBSTRING(P.NAZIV, 1, 2) || SUBSTRING(P.NAZIV, LENGTH(P.NAZIV)-1), 'nema') "Kod"
+FROM DA.DOSIJE D JOIN DA.STUDENTSKISTATUS SS
+		ON D.IDSTATUSA=SS.ID
+	LEFT JOIN DA.ISPIT I1
+		ON I1.INDEKS=D.INDEKS AND I1.OCENA>5 AND I1.STATUS='o' AND DATPOLAGANJA > CURRENT DATE - 2 YEARS - 6 MONTHS
+	LEFT JOIN DA.PREDMET P
+		ON P.ID=I1.IDPREDMETA
+WHERE SS.STUDIRA=1 AND
+	NOT EXISTS (
+		SELECT *
+		FROM DA.ISPIT I 
+		WHERE I.INDEKS=D.INDEKS AND STATUS='x'
+	);
+	
+-- U zadatku smo radili u posldenje 2,5 godine umesto 1,5 godinu da bi imali neki ispis
+-- Obratiti pažnju na sledeće:
+-- 	ispiti moraju da se spoje sa LEFT da bi dobili i studente koji nemaju položen ispit u to vreme
+--	pri spajanju sa ispitom mora da se nađe i uslov za datum, ako bi taj uslov stavili u where onda bi smo uklonili one studente koji nemaju ispit, a koje smo uključili jer smo stavili LEFT 
+--	predmet moramo spojiti isto sa LEFT, jer studneti koji nemaju položen ispit će biti spojeni sa NULL ispitom, a taj nepostojeći ispit nema predmet sa kojim bi mogao da se upari
+--	student je aktivan ako je vrednost STUDIRA=1 u tabeli studentskistatus
+-- 	u SQL-u brojanje kreće od 1, pa kada navedemo substring(x, 1, 2) to znači dva karaktera počevši od prvog
+--	da bi dobili poslednja dva karaktera navodimo length-1, npr ako reč ima 15 karaktera, length-1=14, što znači da će biti ispisan 14i i 15i karakter
+
+
+-- 2
+
+WITH TMP AS (
+	SELECT I.OZNAKAROKA, I.SKGODINA, IR.NAZIV ROK, P.NAZIV PREDMET, P.ESPB,
+		COUNT(CASE WHEN OCENA>5 AND STATUS='o' THEN 1 ELSE NULL END)*100.0/COUNT(*) ODNOS,
+		COUNT(CASE WHEN OCENA>5 AND STATUS='o' THEN 1 ELSE NULL END) POLOZILO,
+		AVG(CASE WHEN OCENA>5 AND STATUS='o' THEN OCENA ELSE NULL END) PROSEK
+	FROM DA.ISPIT I JOIN DA.ISPITNIROK IR
+			ON I.OZNAKAROKA=IR.OZNAKAROKA AND I.SKGODINA=IR.SKGODINA
+		JOIN DA.PREDMET P 
+			ON P.ID=I.IDPREDMETA
+	GROUP BY I.OZNAKAROKA, I.SKGODINA, P.NAZIV, P.ESPB, IR.NAZIV),
+	NAJVECI AS (
+		SELECT MAX(ODNOS) MAXODNOS, OZNAKAROKA, SKGODINA
+		FROM TMP 
+		GROUP BY OZNAKAROKA, SKGODINA)
+SELECT ROK, PREDMET, ESPB, PROSEK, POLOZILO, ODNOS
+FROM TMP T1
+WHERE ODNOS = (
+	SELECT MAXODNOS
+	FROM NAJVECI T2
+	WHERE T1.OZNAKAROKA=T2.OZNAKAROKA AND T1.SKGODINA=T2.SKGODINA
+)
+ORDER BY ROK DESC;
+
+-- Obratiti pažnju na sledeće:
+--	kada prebrojavamo sa COUNT i CASE ne možemo da stavimo 0 ako ne želimo da brojimo, već mora NULL (count broji ne-null vrednosti, a 0 jeste ne-null), da smo stavili SUM u else bi moglo 0
+--	identično prethodnom, za AVG mora NULL u else, inače bi se 0 računala u proseku i smanjila ga
+-- 	u with svaka kolona mora imati naziv, u ovom slučaju naziv roka i naziv predmeta bi automatski imali dodeljeno ime NAZIV, pa im je potrebno dati različita imena
+
+-- 3
+
+-- a
+CREATE TABLE DIPLOMIRANI (
+	INDEKS INTEGER NOT NULL PRIMARY KEY,
+	POLOZENO_ESPB SMALLINT,
+	PROSEK DOUBLE,
+	DATUM_PRVOG_POLOZENOG DATE
+);
+
+-- b
+
+--#SET TERMINATOR @
+CREATE TRIGGER UNOS
+BEFORE UPDATE OF DATDIPLOMIRANJA
+ON DA.DOSIJE 
+REFERENCING OLD AS O
+	NEW AS N
+FOR EACH ROW
+WHEN (O.DATDIPLOMIRANJA IS NULL AND N.DATDIPLOMIRANJA IS NOT NULL)
+BEGIN
+	-- INDEKS, ESPB, PROSEK PRVI ISPIT
+	INSERT INTO DIPLOMIRANI
+	SELECT D.INDEKS, SUM(ESPB), AVG(OCENA*1.0), MIN(DATPOLAGANJA)
+	FROM DA.DOSIJE D JOIN DA.ISPIT I
+			ON D.INDEKS=I.INDEKS AND OCENA>5 AND STATUS='o'
+		JOIN DA.PREDMET P
+			ON P.ID=I.IDPREDMETA
+	WHERE D.INDEKS=N.INDEKS
+	GROUP BY D.INDEKS;
+END@
+
+-- trazimo studenta za testiranja:
+SELECT *
+FROM DA.DOSIJE
+WHERE DATDIPLOMIRANJA IS NULL@
+
+UPDATE DA.DOSIJE
+SET DATDIPLOMIRANJA = CURRENT DATE
+WHERE INDEKS=20150109@
+
+SELECT *
+FROM DIPLOMIRANI@
+
+-- vracamo staru vrednost
+UPDATE DA.DOSIJE
+SET DATDIPLOMIRANJA = NULL
+WHERE INDEKS=20150109@
+
+-- c
+
+-- SAVET pre rada zadatka: napraviti kopiju tabele dosije da bi kasnije mogli da se vratimo na prvobitno stanje
+
+CREATE TABLE DOSIJE1 AS (
+SELECT *
+FROM DA.DOSIJE)
+WITH DATA@
+
+-- KRAJ SAVETA
+
+UPDATE DA.DOSIJE
+SET DATDIPLOMIRANJA=CURRENT DATE
+WHERE INDEKS IN (
+	SELECT INDEKS
+	FROM DA.DOSIJE D
+	WHERE YEAR(DATUPISA)=2015 AND
+		EXISTS (
+			SELECT *
+			FROM DA.PRIZNATISPIT
+			WHERE INDEKS=D.INDEKS
+		)
+)@
+
+-- vidimo da su dodati redovi samo za one studente koji su imali datdiplomiranja NULL
+SELECT *
+FROM DIPLOMIRANI
+
+-- VRAĆANJE TABELE U PRVOBITNO STANJE:
+MERGE INTO DA.DOSIJE D
+USING (
+	SELECT *
+	FROM DOSIJE1 
+) AS D1
+ON D.INDEKS=D1.INDEKS
+WHEN MATCHED THEN 
+	UPDATE 
+	SET DATDIPLOMIRANJA=D1.DATDIPLOMIRANJA
+
+-- menjali smo samo datdiplomiranja pa je ovo jedino sto je neophodno izmeniti
+-- ne bi mogli da obrišemo sve iz tabele dosije (DELETE FROM DA.DOSIJE) pa da ubcimo sve iz dosije1 (ISERT INTO DA.DOSIJE SELECT * FROM DOSIJE1)
+-- jer ima previše uvezanih stranih ključeva, na primer ako je student položio ispit onda indeks iz ispita mora da postoji u dosijeu, pa ne može da se obriše iz dosije
+
+-- ne bi mogli npr da postavimo svima koji zadovoljavaju uslov datdiplomiranja nazada na null jer nisu svi bili null, a prebrisali smo vrednost koja je bila
+
+-- d
+
+DELETE FROM DIPLOMIRANI 
+WHERE INDEKS IN(
+	SELECT INDEKS
+	FROM DA.UPISGODINE UG JOIN DA.STUDENTSKISTATUS SS
+		ON UG.IDSTATUSA = SS.ID
+	WHERE LOWER(SS.NAZIV) LIKE 'mirovanje%'
+);
+
+SELECT *
+FROM DIPLOMIRANI;
+
+-- e
+
+DROP TABLE DIPLOMIRANI;
+
+
+-- 4
+
+-- Relaciona algebra
+((ispit where ocena>5) join 
+(dosije where mestorodjenja='Cacak') join 
+predmet)[naziv]
+minus
+((ispit where ocena>5) join 
+(dosije where mestorodjenja='Beograd') join 
+predmet)[naziv]
+
+-- Relacioni racun
+range of dx is dosije
+range of ix is ispit
+range of px is predmet
+
+px.naziv
+where exists ix (
+	ix.idpredmeta=px.idpredmeta and ix.ocena>5 and
+	exists dx (dx.indeks=ix.indeks and dx.mestorodjenja='Cacak')
+	) and not exists ix (
+	ix.idpredmeta=px.idpredmeta and ix.ocena>5 and
+	exists dx (dx.indeks=ix.indeks and dx.mestorodjenja='Beograd')
+	)
