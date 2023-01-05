@@ -1,0 +1,223 @@
+-- 1
+WITH NAJVECA_OCENA AS(
+	SELECT IDPREDMETA, MAX(OCENA) OCENA
+	FROM DA.ISPIT I
+	WHERE OCENA>5 AND STATUS='o'
+	GROUP BY IDPREDMETA
+) 
+SELECT P.NAZIV, IR.NAZIV, COUNT(*) "Broj polozenih"
+FROM DA.ISPIT I JOIN DA.ISPITNIROK IR
+		ON I.OZNAKAROKA=IR.OZNAKAROKA AND I.SKGODINA=IR.SKGODINA
+	JOIN DA.PREDMET P
+		ON P.ID=I.IDPREDMETA
+WHERE STATUS='o' AND OCENA = (
+	SELECT OCENA
+	FROM NAJVECA_OCENA
+	WHERE IDPREDMETA=I.IDPREDMETA
+	)
+GROUP BY I.SKGODINA, I.OZNAKAROKA, IR.NAZIV, P.NAZIV, P.ID
+ORDER BY P.NAZIV ASC, 3 DESC, IR.NAZIV ASC;
+
+-- predmet je položen u bar jednom ispitnom roku ako je pložen na bar jendom ispitu, dovoljno je samo join gde treba i da gledamo samo iz tabele ispit
+-- da smo gledali predmete koji nikad nisu položeni onda bi morali tabelu predmet da spojimo sa ispitima i to sa left ili right join
+-- umesto pomoćne tabele NAJVECA_OCENA smo taj upit mogli da stavimo direktno u podupit
+
+-- 2
+WITH DIPLOMIRANI AS (
+	SELECT INDEKS
+	FROM DA.DOSIJE
+	WHERE DATDIPLOMIRANJA IS NOT NULL
+	), 
+	ISTI_STUDENTI_POLOZENO AS (
+		SELECT I1.INDEKS INDEKS1, I2.INDEKS INDEKS2, COUNT(*) POLOZENO_ISTIH, 
+			SUM (
+				CASE 
+					WHEN I1.OCENA=I2.OCENA AND I1.STATUS='o' AND I2.STATUS='o' THEN 1
+					ELSE 0
+				END
+			) ISTA_OCENA
+		FROM DA.ISPIT I1 JOIN DA.ISPIT I2
+				ON I1.IDPREDMETA=I2.IDPREDMETA AND I1.INDEKS<I2.INDEKS
+					AND I1.STATUS NOT IN ('p', 'n')
+					AND I2.STATUS NOT IN ('p', 'n')
+					AND I1.INDEKS IN (SELECT INDEKS FROM DIPLOMIRANI) 
+					AND I2.INDEKS IN (SELECT INDEKS FROM DIPLOMIRANI)
+		GROUP BY I1.INDEKS, I2.INDEKS
+		HAVING COUNT(*)>=5
+	), 
+	TRI_ISTA_OCENA AS (
+		SELECT I1.INDEKS INDEKS1, I2.INDEKS INDEKS2, COUNT(*) POLOZENO_ISTIH
+		FROM DA.ISPIT I1 JOIN DA.ISPIT I2
+				ON I1.IDPREDMETA=I2.IDPREDMETA AND I1.INDEKS<I2.INDEKS
+					AND I1.STATUS='o' AND I2.STATUS='o'
+					AND I1.OCENA>5 AND I1.OCENA=I2.OCENA
+					AND I1.INDEKS IN (SELECT INDEKS FROM DIPLOMIRANI) 
+					AND I2.INDEKS IN (SELECT INDEKS FROM DIPLOMIRANI) 
+		WHERE EXISTS (
+			SELECT *
+			FROM DA.ISPIT I3 JOIN DA.DOSIJE D3
+					ON I3.INDEKS=D3.INDEKS
+				JOIN DA.DOSIJE D1
+					ON D1.INDEKS=I1.INDEKS AND D1.IME=D3.IME -- ove proverimo da je isto ime
+			WHERE I3.INDEKS<>I1.INDEKS AND I3.INDEKS<>I2.INDEKS
+				AND I3.STATUS='o' AND I3.OCENA=I1.OCENA
+				AND I3.IDPREDMETA=I1.IDPREDMETA
+		)
+-- Naredno umesto EXISTS bi bilo POGREŠNO, 
+-- zato što mi za svaki par ispita treba da proverimo da li POSTOJI još jedan imenjak koji je položio isti predmet sa istom ocenom
+-- ako odradimo JOIN onda ćemo dobiti npr parove
+-- student1 student2 imenjak1
+-- student1 student2 imenjak2
+-- student1 student2 imenjak3
+-- na kraju bi ova tri imenjaka prebrojali i dobili 3, a zapravo treba samo 1
+-- grešku bi mogli uočiti u krajnjem rezultatu gde bi dobili da je broj predmeta sa istom ocenom veći od broja predmeta sa istom ocenom i trećim imenjakom
+-- logično je da je prvi broj manji ili jednak drugom jer treći imenjak ili postoji ili ne, znači manje ili jednako, ne može da ih bude više
+--			JOIN DA.ISPIT I3
+--				ON I3.INDEKS<>I2.INDEKS AND I3.INDEKS<>I1.INDEKS
+--					AND I3.IDPREDMETA=I2.IDPREDMETA
+--					AND I3.STATUS='o' AND I3.OCENA=I1.OCENA
+--			JOIN DA.DOSIJE D1 ON D1.INDEKS=I1.INDEKS
+--			JOIN DA.DOSIJE D3 ON D3.INDEKS=I3.INDEKS AND D1.IME=D3.IME
+		GROUP BY I1.INDEKS, I2.INDEKS
+	)
+SELECT D1.IME || ' ' || D1.PREZIME, D2.IME || ' ' || D2.PREZIME,
+	SP.ISTA_OCENA "Broj predmeta sa istom ocenom",
+	TIO.POLOZENO_ISTIH "Broj predmeta sa istom ocenom i trecim imenjakom"
+FROM ISTI_STUDENTI_POLOZENO SP 
+	JOIN TRI_ISTA_OCENA TIO 
+		ON TIO.INDEKS1=SP.INDEKS1 AND TIO.INDEKS2=SP.INDEKS2
+	JOIN DA.DOSIJE D1
+		ON D1.INDEKS=SP.INDEKS1
+	JOIN DA.DOSIJE D2
+		ON D2.INDEKS=SP.INDEKS2
+WHERE D1.IME=D2.IME
+
+-- u pomoćnoj tabeli svaka kolona mora imati ime, u ovom slučaju imamo dve kolone indeks pa im moramo dati dva različita imena
+-- uslov da je jedan indeks manji od drugog nam je neophodan da ne bi spojili studenta sa samim sobom, a i da nemamo parove a-b i b-a, već samo jedan od ta dva
+-- uslov da su studenti diplomirali proveravamo ranije zbog efikasnosti, bolje nam je da uparujemo ispite 405 diploiranih studenata nego svih 3497 studenata
+-- kada prebrojavamo sa COUNT i CASE bitno nam je da stavimo NULL ukoliko ne želimo da prebrojimo vrednost, 0 će biti prebrojana kao vrednost, ako prebrojavamo sa SUM onda možemo u CASE da stavljamo 0 i 1
+-- obratiti pažnju da se traži da su POLAGALI isit predmet, ne nužno POLOŽILI
+
+-- 3
+
+-- a
+CREATE TABLE DIPLOMIRANI_STAT(
+	INDEKS INTEGER NOT NULL PRIMARY KEY,
+	PROSEK DOUBLE,
+	BR_POLOZENIH SMALLINT
+);
+
+-- b
+--#SET TERMINATOR @
+
+CREATE TRIGGER DIPLOMIRALI
+AFTER UPDATE OF DATDIPLOMIRANJA
+ON DA.DOSIJE
+REFERENCING NEW AS N
+FOR EACH ROW
+WHEN (N.DATDIPLOMIRANJA IS NOT NULL
+	AND N.INDEKS NOT IN (SELECT INDEKS FROM DIPLOMIRANI_STAT)
+	)
+BEGIN ATOMIC
+	INSERT INTO DIPLOMIRANI_STAT(INDEKS, PROSEK)
+	SELECT INDEKS, AVG(OCENA*1.0)
+	FROM DA.ISPIT I
+	WHERE I.OCENA>5 AND I.STATUS='o' AND I.INDEKS=N.INDEKS
+	GROUP BY INDEKS;
+END@
+
+
+GREŠKA SA ČASA:
+U bazi je postojao još jedan trigger (trigger UNOS sa roka jan1 2022) koji radi nad tabelom dosije.
+Taj trigger je javljao grešku jer nije postojala tabela sa kojom on radi.
+Sve triggere u bazi možete videti sa 
+SELECT *
+FROM SYSCAT.TRRIGGERS;
+Dodatno možete videti OWNERTYPE='U', za trigere koje ste vi pravili.
+Kolona TABNAME govori nad kojom tabelom je trigger.
+
+SAVET:
+Obrištite tabele i triggere kada završtite zadatak.
+
+-- 2019-09-06 -stari datdiplomiranja
+UPDATE DA.DOSIJE
+SET DATDIPLOMIRANJA=CURRENT DATE
+WHERE INDEKS=20150090;
+
+SELECT *
+FROM DIPLOMIRANI_STAT;
+
+-- vracamo na staro
+UPDATE DA.DOSIJE
+SET DATDIPLOMIRANJA='2019-09-06'
+WHERE INDEKS=20150090;
+
+
+-- c
+-- I način
+UPDATE DIPLOMIRANI_STAT D
+SET BR_POLOZENIH= (
+	SELECT COUNT(*) 
+	FROM DA.ISPIT I 
+	WHERE OCENA>5 AND STATUS='o' 
+		AND I.INDEKS = D.INDEKS
+	GROUP BY I.INDEKS
+);
+-- ovim upitom ćemo dobiti upozorenje i SQLState=01504 jer nemamo WHERE, db2 nas upozorava da možda ipak ne želimo celu tabelu da menjamo
+
+-- II način
+MERGE INTO DIPLOMIRANI_STAT DS
+USING (
+	SELECT INDEKS, COUNT(*) BR
+	FROM DA.ISPIT
+	WHERE OCENA>5 AND STATUS='o'
+	GROUP BY INDEKS
+) AS TMP
+ON TMP.INDEKS = DS.INDEKS
+WHEN MATCHED THEN	
+	UPDATE 
+	SET BR_POLOZENIH=TMP.BR;
+	
+-- Oba rešenja su tačna, ali možemo razmotriti sledeće
+-- u prvom slučaju imamo upozorenje jer menjamo sve redove (što je u redu), i za svaki red izvršavamo upit za prebrojavanje
+-- u drugom slučaju izvršavamo samo jedan upit za prebrojavanje (ali prebrojavamo ispite za mnogo više stunata nego što nam treba u ovom slučaju), i imamo samo jedan slučaj kada se vrednosti poklope (WHEN MATCHED)
+
+-- d
+DROP TABLE DIPLOMIRANI_STAT;
+
+-- ne traži se u zadatku, ali nije loše obrisati šta ste pravili ukoliko radite puno zadataka
+DROP TRIGGER DIPLOMIRALI;
+
+
+-- 4
+
+-- Relaciona algebra
+define alias d1 for dosije
+define alias d2 for dosije
+
+((((ispit[indeks, skgodina, oznakaroka]
+divideby
+ispitnirok[skgodina, oznakaroka]) join d1)
+times d2)
+where d1.mestorodjenja=d2.mestorodjenja)[d1.indeks, d1.ime, d2.indeks, d2.ime]
+-- ovim parser javlja grešku, iako bi trebalo da radi
+
+-- ako zamenimo poslednju liniju narednom ispisuje oba indeksa i oba imena, što ne bi trebalo da je korektno rešenje
+where d1.mestorodjenja=d2.mestorodjenja)[indeks, ime]
+
+((((ispit[indeks, skgodina, oznakaroka]
+divideby
+ispitnirok[skgodina, oznakaroka]) join d1)  times d2)
+where d1.mestorodjenja=d2.mestorodjenja and ispit.indeks<d2.indeks)[ispit.indeks, d2.indeks, d1.ime, d2.ime]
+
+
+-- Realacioni racun
+range of dx is dosije
+range of dy is dosije
+range of ix is ispit
+range of px is predmet
+range of irx is ispitnirok
+
+dx.indeks, dy.indeks
+where dx.mestorodjenja=dy.mestorodjenja and dx.indeks<dy.indeks and
+	forall irx ( exists ix (ix.indeks=dx.indeks and ix.oznakaroka=irx.oznakaroka and ix.skgodina=irx.skgodina) )
