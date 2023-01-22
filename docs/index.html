@@ -53,15 +53,6 @@
             
             <h3><a href="http://www.bazepodataka.matf.bg.ac.rs/RelacioneBazePodataka.html#0_tab">Zvanična stranica predmeta</a></h3>
 
-            <div class="obavestenje"><b>U obaveštenjima na stranici predmeta je anketa za prijavu ispita.</b></div>
-
-            <div class="obavestenje">
-                <h3>Konsultacije</h3>
-                Konsultacije će se održati online danas (11.01.2023.) od 16:15.<br>
-                <a href="https://matf.webex.com/matf/j.php?MTID=m992ae5d5c27fee77870bd6aea921db60">Link za pristup</a><br>
-                Šifra: rbprbp<br>
-            </div>
-
             <div class="obavestenje">
             <h3>Časovi u januaru</h3>
             Rešenja rokova su okačena u dnu stranice u delu sa rokovima.<br>
@@ -72,7 +63,15 @@
 
             <p>Za dodatne konsultacije se možete javiti mejlom.</p>
             </div>
+
             
+            <h3>Deo rezultata</h3>
+            <p>Rezultate za 2. i 3. zadatak možete videti u narednoj tabeli. Uvid (najverovatnije mejlom) će se obaviti kada izađu zvanični rezultati.
+                <a href="https://docs.google.com/spreadsheets/d/1mOXUWeEyR4ArQP59rXVoGy0bB-GEcKP9LzgeQcf0H9A/edit?usp=sharing" target="_blank">tabela</a>
+            <br>
+            Pošto su triggeri posebno loše odrađeni dodato je još objašnjenja za 9. čas.
+            </p>
+
             <h3>Snimak nadoknade</h3>
             <a href="https://matf.webex.com/matf/ldr.php?RCID=1dacaf5a68580844cb3d203555433195">Snimak</a> <br>
             Šifra: RBP5petak
@@ -751,7 +750,7 @@ STRING može biti neka kolona, kol1 || kol2, DISTINCT kol...
 <h2>Okidači</h2>
 <p class="kod">
     <b>CREATE TRIGGER</b> NAZIV_TRIGERA<br>
-    <b>BEFORE/AFTER DELETE/UPDATE/CREATE</b><br>
+    <b>BEFORE/AFTER INSERT/UPDATE/DELETE</b><br>
     <b>ON</b> NAZIV_TABELE<br>
     <b>REFERENCING</b><br>
     <tab></tab> OLD AS STARI<br>
@@ -764,6 +763,46 @@ STRING može biti neka kolona, kol1 || kol2, DISTINCT kol...
     <tab></tab>    ... ; <br>
     <b>END</b> @
 </p>
+
+<h2>Izvršavanje okidača</h2>
+<p>Jako je bitno da znamo šta koja vrsta triggera radi da bi znali kada se koja koristi.</p>
+<div class="triangle"><b>BEFORE TRIGGER</b>
+    <ul>
+        <li>možemo sprečiti operaciju (unos, brisanje, izmenu) tako što ćemo iskoristiti SQLSTATE</li>
+        <li>možemo izmeniti vrednosti koje se ubacuju ili menjaju (npr. probamo da unesemo ocenu 11, umesto da javimo grešku mi postavimo ocenu na 10)</li> 
+        <li>izmena unosa se radi sa SET N.KOL = ..., ovde NE radimo INSERT, UPDATE, DELETE, jer nakon ovog triggera će se vrednost stvarno uneti, to NE RADI TRIGGER</li> 
+        <li>Ukoliko treba nakon unosa ocena da se nešto upiše u neku drugu tabelu to se radi u AFTER TRIGGERU, zato što before trigger može da spreči unos (odnosno može da se desi da smo u before triggeru izmenili prosek studenta jer je dobio 10, ali da se javi greška pa da se ta 10ka ne unese u bazu, prosek u toj drugoj tabeli neće biti tačan jer 10ka nije stvarno uneta)</li> 
+    </ul>
+</div>
+<div class="triangle"><b>Unos podataka</b> 
+    <ul>
+        <li>podaci se fizički upisuju u tabelu</li>
+        <li>prethodno smo mogli imati OLD vrednost, nakon ovoga nemamo jer smo upisali podatke preko nje</li>
+    </ul>
+</div>
+<div class="triangle-end"><b>AFTER TRIGGER</b> 
+    <ul>
+        <li>ovde se tipično može raditi sa nekom drugom tabelom (na primer uneli smo ocenu 10 iz P1, onda na primer u tabelu u kojoj su proseci studenata izmenimo prosek studenta koji je dobio tu desetku)</li>
+        <li>ovde se NE SME raditi nešto što će opet okinuti isti okidač (na primer ako unosimo komentar u neku tabelu, ako u after triggeru za taj unos imamo insert u istu tabelu, onda će se opet okinuti isti trigger za unos komentara, koji će opet nešto uneti, i tako u beskonačnost... Eventualni izuzetci su neki uslovi koji će zaustaviti ovaj niz unosa, ali to se generalno NE RADI)</li>
+    </ul> 
+</div>
+
+<h2>NEW/OLD</h2>
+<table class="trigger-tabela">
+    <tr><th></th><th>OLD</th><th>NEW</th></tr>
+    <tr><td>INSERT</td>
+        <td><b>X</b> <br>Unosimo vrednos, nije bilo ništa prethodno.</td>
+        <td><b>O</b><br> Vrednos koju unosimo, možemo je izmeniti preko new.</td></tr>
+    <tr><td>UPDATE</td>
+        <td><b>O</b><br>Vrednost koja je pretodno bila u tabeli, ne možemo nju menjati, ali na osnovu nje možemo menjti novu vrednost.</td>
+        <td><b>O</b><br>Vrednost koju postavljamo, možemo je menjti.</td></tr>
+    <tr><td>DELETE</td>
+        <td><b>O</b><br>Vrednost koju pokušavamo da obrišemo, možemo proveriti da li ova vrednost zadovoljava neki uslov, pa da ne izvršimo brisanje ako zadovoljava.</td>
+        <td><b>X</b><br>Obrisali smo vrednost, nema ništa više i ne znamo šta je bilo.</td></tr>
+</table>
+
+<p><b>Napomena:</b> OLD vrednost ako imamo one su u BEFORE triggeru, NEW vrednosti možemo imati u BEFORE i AFTER.</p>
+
 <p>Kada radimo sa triggerima u većini slučajva ćemo imati više naredbi u telu i te naredbe treba razdvojiti sa ";". Ali ako ";" iskoistimo unutar kreiranja triggera (koji je jedna komanda), onda ne možemo to iskoristiti za kraj naredbe.
     Zbog toga uvodimo novi terminator, tipično @. 
 </p>
