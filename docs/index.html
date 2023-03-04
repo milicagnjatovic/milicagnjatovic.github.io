@@ -263,6 +263,62 @@
 
             <img src="resources/rbp/spajanje.png" width="100" style="width: 100%;">
 
+            <h3>Da li staviti uslov u WHERE ili u ON?</h3>
+            Bitno nam je gde ide uslov kada imamo left ili right join. 
+            Ako na primer tražimo da se izdvoje studenti i predmeti na kojima imaju desetke, 
+            i oni studenti koji nemaju ni jednu desetku.
+            <br>
+            Ako izvršimo:
+            <p class="kod">
+            SELECT D.INDEKS, I.INDEKS, OCENA <br>
+            FROM DA.DOSIJE D LEFT JOIN DA.ISPIT I <br>
+            <tab></tab>    ON I.INDEKS=D.INDEKS AND OCENA>5 AND STATUS='o';
+            </p>
+
+            Imaćemo 33679 redova (bar kod mene). Neki od tih redova su
+            <br>
+            20171010      |     NULL  |    NULL
+            <br> 
+            20171106      |     NULL    |  NULL
+            <br>
+            20180087       |    NULL   |   NULL
+            <br>
+            
+            To su studenti koji nemaju ni jedan položen ispit. 
+            Dakle, sada imamo studente spojene sa njihovim ispitima, a ako nemaju ispite onda su spojeni sa NULL.
+            <br>
+            Ovde sada treba dodati uslov za 10ke.
+            
+            Ako dodamo samo
+            <p class="kod">
+            WHERE OCENA=10;
+            </p>
+
+            Dobićemo 7401 red, ali među njima će biti sve desetke.
+            
+            Izgubićemo prethodna 3 reda, a to su nam studenti koji nemaju ni jedan položen ispit (samim tim ni jednu 10ku), dakle želimo ih u rezultatu.
+            
+            Da bi ti redovi ostali potrebno je da uslov za 10 ide u ON:
+            
+            <p class="kod">
+            SELECT D.INDEKS, I.INDEKS, OCENA <br>
+            FROM DA.DOSIJE D LEFT JOIN DA.ISPIT I <br>
+            <tab></tab>    ON I.INDEKS=D.INDEKS AND OCENA>5 AND STATUS='o' AND OCENA=10;
+            </p>
+            
+            Sada imamo 9101 red i među njima i ona tri sa početka.
+            <br>
+            
+            Ovo spajanje možemo da tumačimo ovako: 
+            <blockquote>Svakog studenta iz tabele dosije probaj da spojiš sa njegovim ispitom na kom je dobio 10, ako takav ispit ne postoji ostavi studenta u rezultatu i spoji ga sa NULL.</blockquote>
+            
+            Još jedan način da ovo gledate je da pre nego dodamo onaj WHERE razmislimo koje vrednosti će da poredi. 
+            U rezultatu pre toga smo videli da imamo redove gde je ocena null, znači da će where koji dodamo imati poređenje null=10. null=10 je false, pa će red time biti izbačen iz rezultata.
+            
+            Ovo razmatranje nam nije tako značajno ako imamo samo join jer će on spojiti samo studente sa njihovim ispitima, nećemo uopšte imati redove sa ocenom NULL na koje potencijalno treba da se pazi da se ne izgube dodavanjem where.
+            
+            <br><br>
+            U prethodnim upitima namerno stoje D.INDEKS i I.INDEKS da bi obratili pažnju da su sve I.XXX vrednosti NULL ako ne postoji ispit sa kojim spajamo studenta.
         <div id="cas2zadaci"></div>
         <script>
             loadClassFromJSON("cas2zadaci", "resources/rbp/cas2.json")
