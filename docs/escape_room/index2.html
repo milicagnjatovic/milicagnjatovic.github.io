@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <style>
+
+        body, input {
+            font-size: 15px;
+        }
+
+        .switch {
+            position: relative;
+            display: block;
+            width: 60px;
+            height: 34px;
+            border-radius: 10px;
+            margin-top: 5px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.6;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+            /* border-radius: 10%; */
+        }
+
+        .slider::before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            top: 4px;
+            background-color: white;
+            opacity: 0.5;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 10px;
+        }
+
+
+        input:checked + .slider::before {
+            opacity: 1;
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        #red {
+            background-color: black;
+        }
+
+        /* body:has(input[name='light']:checked) {
+            background-color: black;
+        } */
+
+        #task {
+            text-shadow: 1px -1px 3px white, -1px 1px 3px white;
+        }
+
+        #hidden-text {
+            color: white;
+        }
+
+        #hidden-text:hover, input[type='text']:hover {
+            cursor: default;
+            user-select: none;
+            font-family: "typewriter";
+        }
+
+        input[type='text']{
+            border-top: 0px;
+            border-left: 0px;
+            border-right: 0px;
+            border-bottom: double white 2px;
+            background-color: transparent;
+            color: white;
+            text-transform: uppercase;
+            font-weight: bolder;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+    <h1 id="task">In order to be a good programmer you have to be able to see in the dark</h1>
+    <label class="switch" id="red">
+        <input type="checkbox" name="light" onchange="toggle()">
+        <span class="slider"></span>
+    </label>
+
+    <h1 id="hidden-text">Reason why programmers are afraid of light is because the light attracts <input type="text" size="10" id="solution"></h1>
+    <script>
+        let solution = document.getElementById('solution');
+        solution.oninput = () => {
+            if (solution.value.toLowerCase() === 'bug'){
+                // solution.style.color = 'green'
+                window.location.href = 'index3.html';
+            }
+        }
+
+        function toggle(){
+            let body = document.getElementsByTagName('body')[0];
+            if (body.style.backgroundColor === 'black')
+                body.style.backgroundColor = 'white';
+            else
+                body.style.backgroundColor = 'black';
+
+        }
+    </script>
+</body>
+</html>

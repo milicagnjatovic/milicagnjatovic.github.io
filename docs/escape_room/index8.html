@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+        body {
+            background-color: black;
+            height: 100vh;
+            width: 100vw;
+            margin: 0;
+            padding: 0;
+        }
+
+        #door {
+            height: 25vh;
+            position: absolute;
+            bottom: 0vh;
+            left: 0vh;
+        }
+
+        #player {
+            width: 10vh;
+            height: 10vh;
+            /* background-color: rgb(255, 255, 255, 0.5); */
+            background-image: radial-gradient(transparent, white);
+            border-radius: 50%;
+            border: solid white 1vh;
+            box-shadow: 0px 0px 20px 10px white;
+            position: absolute;
+            right: 0vw;
+            top: 0vh;
+            z-index: 0;
+        }
+
+        h1 {
+            position: absolute;
+            right: 20px;
+            bottom: 5px;
+            color: white;
+            font-family: 'typewriter';
+        }
+
+        #message {
+            position: absolute;
+            color: white;
+            background-color: black;
+            width: 40%;
+            height: 200px;
+            border: solid white 5px;
+            z-index: 2;
+            left: 25%;
+            box-shadow: 0px 0px 20px 10px white;
+            padding: 5%;
+            font-size: 2em;
+            top: 10%;
+            display: none;
+        }
+
+        #message p:hover {
+            color: white;
+            font-size: 1em;
+        }
+
+        #message p {
+            color: black;
+        }
+    </style>
+</head>
+<body>
+    <h1>Go to the door</h1>
+    <img src="./door.png" alt="door" id="door">
+    <div id="player"></div>
+
+    <div id="message">Great! Now you need to openTheDoor
+        <p>Just like previous level :)</p>
+    </div>
+    
+    <script>
+        let player = {
+            x:0, y:0
+        }
+        let door = {
+            x:0, y:0
+        }
+        let playerElement = document.getElementById("player")
+        let doorElement = document.getElementById("door")
+        let messageElement = document.getElementById("message");
+        let korak = 0.5
+        document.addEventListener('keydown', function(){
+            switch(event.code){
+                case 'ArrowDown': player.y+=korak; door.y+=korak; break;
+                case 'ArrowUp': player.y -= korak; door.y-=korak; break;
+                case 'ArrowLeft': player.x+=korak; door.x+=korak;break;
+                case 'ArrowRight': player.x -= korak; door.x-=korak; break;
+                default: return;
+            }
+
+            playerElement.style.right = player.x + 'vw';
+            playerElement.style.top = player.y + 'vh';
+
+            doorElement.style.left = door.x + 'vw';
+            doorElement.style.bottom = door.y + 'vh';
+
+            // console.log(doorElement.offsetTop)
+            // console.log(playerElement.offsetTop)
+
+            // console.log(Math.abs(doorElement.offsetTop - playerElement.offsetTop))
+            if (playerElement.offsetTop - doorElement.offsetTop < doorElement.offsetHeight/2 &&
+            playerElement.offsetTop - doorElement.offsetTop > 0 &&
+            playerElement.offsetLeft - doorElement.offsetLeft < doorElement.offsetWidth/2 &&
+            playerElement.offsetLeft - doorElement.offsetLeft > 0 ) {
+                console.log('Great work again, you know how to open the door?');
+                messageElement.style.display = 'block'
+            }
+
+        });
+
+        function openTheDoor() {
+            window.location.href = './index9.html'
+        }
+    </script>
+</body>
+</html>

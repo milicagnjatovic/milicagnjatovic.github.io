@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <style>
+        body {
+            background-color: black;
+            color: white;
+        }
+        main {
+            width: 80%;
+            margin: auto;
+            margin-top: 50px;
+            text-align: center;
+            font-size: 50px;
+        }
+
+        h1 {
+            margin: 50px;
+        }
+
+        h2 {
+            margin: 50px;
+            text-align: center;
+        }
+
+        input[type='text'] {
+            background-color: black;
+            border: none;
+            border-bottom: double white 5px;
+            color: white;
+            font-size: 50px;
+            font-family: 'typewriter';
+            text-align: center;
+        }
+
+        button{
+            display: block;
+            width: 400px;
+            height: 100px;
+            margin: auto;
+            margin-top: 50px;
+            font-size: 50px;
+            font-family: 'typewriter';
+            font-weight: bold;
+            background-color: transparent;
+            color: white;
+            box-shadow: 0px 0px 20px 10px white;
+            border-radius: 20px;
+        }
+
+        button:hover{
+            box-shadow: 0px 0px 20px 10px green;
+
+        }
+
+        #red {
+            color: red;
+        }
+
+        #blue {
+            color: blue;
+        }
+
+        #hint {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Complete the poem...</h1>
+    <main>Roses are<br>
+    <input type="text" id="red"><br>
+    Violets are<br>
+    <input type="text" id="blue"><br>
+    Missing ; <br>
+    on line 32.
+
+    <button onclick="submitSolution()">TRY</button>
+    </main>
+
+    <h2 id="hint">Try more scientific approach. Just 'red' and 'blue' is too basic.</h2>
+
+    <script>
+        function submitSolution(){
+            let red = document.getElementById("red");
+            let blue = document.getElementById("blue");
+            // console.log(red.value)
+            // console.log(blue.value)
+            let redOk = false;
+            let blueOk = false;
+            if (red.value.replaceAll(' ', '').toLowerCase() === 'rgb(255,0,0)' || red.value.toLowerCase() ==='#ff0000')
+                redOk = true;
+            
+            if (blue.value.replaceAll(' ', '').toLowerCase() === 'rgb(0,0,255)' || blue.value.toLowerCase() ==='#0000ff')
+                blueOk = true;
+
+            // console.log(redOk)
+            // console.log(blueOk)
+            if(redOk && blueOk) {
+                window.location.href = 'index6.html';
+            } else {
+                let hint = document.getElementById('hint');
+                hint.style.display = 'block'
+            }
+        }
+    </script>
+</body>
+</html>

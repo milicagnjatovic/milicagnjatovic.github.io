@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <style>
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        main {
+            background-color: black;
+            font-family: 'typewriter';
+            cursor: not-allowed;
+            height: 100vh;
+            width: 100wh;
+            padding: 0;
+            margin: 0;
+        }
+
+        #box {
+            width: 6vh;
+            height: 6vh;
+            background-color: black;
+            position: relative;
+            display: block;
+        }
+
+        #box:hover {
+            border: solid green 3px;
+            box-shadow: 0px 0px 30px 10px green,
+                0px 0px 60px 15px yellow;
+            border-radius: 20px;
+        }
+
+
+        h1 {
+            color: white;
+            position: fixed;
+            bottom: 50px;
+            right: 50px;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Great job, bugs are the worst! <br>
+            Now you need to find the box</h1>
+
+        <a href="index4.html" id="box">
+            <!-- <div id="box"></div> -->
+            <!-- <img src="magnify.webp"> -->
+        </a>
+    </main>
+
+    <script>
+        window.onload = () => {
+            let box = document.getElementById('box');
+            let left = Math.random() * 94;
+            let top = Math.random() * 90;
+            box.style.left = left + 'vw';
+            box.style.top = top + 'vh';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <style>
+        body{
+            background-color: black;
+        }
+        .switch {
+            position: relative;
+            display: block;
+            width: 200px;
+            height: 100px;
+            border-radius: 20px;
+            margin-top: 5px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.6;
+
+            position: absolute;
+            right: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider::before {
+            position: absolute;
+            content: "";
+            height: 84px;
+            width: 84px;
+            left: 8px;
+            top: 8px;
+            background-color: white;
+            opacity: 0.5;
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 20px;
+        }
+
+        input:checked + .slider {
+            background-color: blueviolet;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px red;
+        }
+
+        input:checked + .slider::before {
+            opacity: 1;
+            -webkit-transform: translateX(100px);
+            -ms-transform: translateX(100px);
+            transform: translateX(100px);
+        }
+
+        #red {
+            background-color: red;
+        }
+
+        #green {
+            background-color: green;
+        }
+
+        #blue {
+            background-color: blue;
+        }
+
+        h1 {
+            color: white;
+            margin: 50px;
+        }
+
+        h2 {
+            color: white;
+        }
+
+        h2 {
+            height: 100px;
+            width: 100px;
+            position: absolute;
+            left: 0;
+            margin-top: 40px;
+        }
+
+        div {
+            position: relative;
+            width: 300px;
+            height: 150px;
+            margin: auto;
+        }
+
+        a {
+            color: green;
+        }
+
+        #over {
+            display: none;
+        }
+    </style>
+
+</head>
+<body>
+    <h1>It may be difficult to have it all, but it's not impossible. Just be patient and don't give up!</h1>
+    <form>
+        <div>
+        <h2>LOVE</h2>
+        <label class="switch" id="red">
+            <input type="checkbox" name="red">
+            <span class="slider"></span>
+        </label> 
+        </div>
+
+        <div>
+        <h2>MONEY</h2>
+        <label class="switch" id="green">
+            <input type="checkbox" name="green">
+            <span class="slider"></span>
+        </label>
+        </div>
+
+        <div>
+        <h2>TIME</h2>
+        <label class="switch" id="blue">
+            <input type="checkbox" name="blue">
+            <span class="slider"></span>
+        </label>
+        </div>
+    </form>
+
+    <h1 id="over">I said it's not impossible, you may <a href="index7.html">continue</a></h1>
+
+
+    <script>
+
+        function randomTrue() {
+            return Math.random() < 0.5;
+        }
+
+        function lowProbability() {
+            return Math.random() < 0.25;
+        }
+
+        let red = document.getElementById("red");
+        let blue = document.getElementById("blue");
+        let green = document.getElementById("green");
+
+        let redCk = document.getElementsByName("red")[0];
+        let blueCk = document.getElementsByName("blue")[0];
+        let greenCk = document.getElementsByName("green")[0];
+
+        function over(){
+            let done = document.getElementById('over');
+            done.style.display = 'block';
+        }
+
+        redCk.onchange = ()=> {
+            if(blueCk.checked && greenCk.checked){
+                if (lowProbability()){
+                    over();
+                    return;
+                }
+                if (randomTrue())
+                    greenCk.checked = false;
+                else
+                    blueCk.checked = false;
+            }
+        }
+
+        greenCk.onchange = ()=> {
+            if(redCk.checked && blueCk.checked){
+                if (lowProbability()){
+                    over();
+                    return;
+                }
+                if (randomTrue())
+                    redCk.checked = false;
+                else
+                    blueCk.checked = false;            }
+        }
+
+        blueCk.onchange = ()=> {
+            if(redCk.checked && greenCk.checked){
+                if (lowProbability()){
+                    over();
+                    return;
+                }
+                if (randomTrue())
+                    greenCk.checked = false;
+                else
+                    redCk.checked = false;            }
+        }
+
+
+    </script>
+</body>
+</html>

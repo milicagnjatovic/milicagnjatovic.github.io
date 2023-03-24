@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'typewriter';
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 70px;
+        }
+
+        input[type='text'] {
+            background-color: black;
+            border: none;
+            border-bottom: double white 5px;
+            color: white;
+            font-size: 50px;
+            font-family: 'typewriter';
+            text-align: center;
+            margin: auto;
+            display: block;
+        }
+
+        button {
+            background-color: black;
+            border: dashed white;
+            margin: auto;
+            margin-top: 40px;
+            display: block;
+            color: white;
+            font-family: 'typewriter';
+            font-size: 20px;
+            padding: 20px;
+        }
+
+        button:active {
+            color: white !important;
+        }
+
+        p {
+            /* color: black; */
+            display: none;
+        }
+
+        button:active p {
+            display: block;
+        }
+        
+    </style>
+</head>
+<body>
+    <h1>This one will be difficult.<br>
+    You need to find magicWord</h1>
+
+    <input type="text" id="word">
+
+    <button>
+        HINT 
+        <p>Good programmers can solve many problems using terminal (AKA console).</p>
+    </button>
+    
+    <script>
+        console.log('Hello, you are on the right track, magicWord is here somwhere ;)')
+        let magicWord = '';
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        const charactersLength = characters.length;
+        for (let i=0; i < 8; i++) {
+            magicWord += characters.charAt(Math.floor(Math.random() * charactersLength));
+        }
+
+        let element = document.getElementById('word');
+        element.oninput = () => {
+            if (magicWord===element.value){
+                window.location.href = 'index8.html';
+            }
+        }
+    </script>
+</body>
+</html>

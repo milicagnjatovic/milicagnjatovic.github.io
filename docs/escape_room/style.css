@@ -1,0 +1,9 @@
+
+@font-face {
+    font-family: 'typewriter';
+    src: url('./JMH\ Typewriter.ttf');
+}
+
+body {
+    font-family: 'typewriter';
+}

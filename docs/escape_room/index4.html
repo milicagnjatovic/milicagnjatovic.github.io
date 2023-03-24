@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+    <style>
+
+        body {
+            color: white;
+            background-color: black;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin: auto;
+        }
+        td {
+            width: 100px;
+            height: 100px;
+            font-size: 60px;
+            text-align: center;
+            vertical-align:middle;
+            font-weight: bold;
+        }
+
+        .left-right-border {
+            border-left: ridge white 10px;
+            border-right: ridge white 10px;
+        }
+        .top-down-border {
+            border-top: ridge white 10px;
+            border-bottom: ridge white 10px;
+        }
+
+        .all-sides {
+           border: ridge white 10px;
+        }
+
+        .hidden-cell {
+            color: transparent;
+            cursor: crosshair;
+        }
+
+        a {
+            display: none;
+            width: 50%;
+            border-radius: 30px;
+            margin: auto;
+            box-shadow: 0px 0px 40px 30px darkgreen;
+            text-align: center;
+            font-size: 80px;
+            text-decoration: inherit;
+            color: darkgreen;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Great job!<br>
+    Now try to think outside the box</h1>
+
+    <table>        
+        <tr>
+            <td class="hidden-cell res1" onclick="solution('res1')">X</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td class="hidden-cell res2" onclick="solution('res2')">X</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td class="res1">X</td>
+            <td  class="left-right-border">O</td>
+            <td class="res2">X</td>
+            <td></td>
+        </tr>        
+        <tr>
+            <td></td>
+            <td class="top-down-border">O</td>
+            <td class="all-sides res1 res2 res3 res4">X</td>
+            <td class="top-down-border res4">X</td>
+            <td class="hidden-cell res4"  onclick="solution('res4')">X</td>
+        </tr>        
+        <tr>
+            <td></td>
+            <td>O</td>
+            <td class="left-right-border res3">X</td>
+            <td>O</td>
+            <td></td>
+        </tr>        
+        <tr>
+            <td></td>
+            <td></td>
+            <td class="hidden-cell res3" onclick="solution('res3')">X</td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table>
+
+    <a href="index5.html">></a>
+
+    <script>
+        function solution(klasa){
+            console.log(klasa)
+            let elements = document.getElementsByClassName(klasa);
+            for(let el of elements){
+                el.style.color = 'red'
+            }
+            let a = document.getElementsByTagName('a')[0];
+            a.style.display = 'block'
+        }
+    </script>
+</body>
+</html>
