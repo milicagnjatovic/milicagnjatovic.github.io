@@ -1,3 +1,5 @@
+window.alert("Na zvaničnoj strani predmeta je anketa za prijavu ispita. Molimo studente koji planiraju da polažu u junu 1 da se prijave.")
+
 function loadClassFromJSON(elId, classFile, prikazi = 'block'){
     let root = document.getElementById(elId)
     fetch(classFile) // vr=1.0 da bi se video najnoviji fajl
