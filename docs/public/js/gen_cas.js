@@ -1,4 +1,7 @@
-// window.alert("Na zvaničnoj strani predmeta je anketa za prijavu ispita. Molimo studente koji planiraju da polažu u junu 1 da se prijave.")
+if(!localStorage.hasOwnProperty("prikazanoObavestenje") || localStorage.getItem("prikazanoObavestenje") != (new Date()).toDateString()) {
+    window.alert("Konsultacije: 24.08 u 17h. Link je u obaveštenju.");
+    localStorage.setItem("prikazanoObavestenje", (new Date()).toDateString())
+} 
 
 function loadClassFromJSON(elId, classFile, prikazi = 'block'){
     let root = document.getElementById(elId)
