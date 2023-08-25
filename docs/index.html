@@ -53,6 +53,96 @@
             
             <h3><a href="http://www.bazepodataka.matf.bg.ac.rs/RelacioneBazePodataka.html#0_tab">Zvanična stranica predmeta</a></h3>
 
+
+            <div class="obavestenje">
+                <h2>Septembar 2 2021 - 4. zadatak</h2>
+                <p>
+                    Napisati upit koji izdvaja parove predmeta za koje važi da imaju isti broj espb bodova i da su prvi
+predmet u paru polagali svi studenti iz Beograda. Izdvojiti nazive predmeta i broj espb bodova.
+                </p>
+
+                <p>
+                    
+                    <h3>Relaciona algebra:</h3>
+Predmeti koje su polagali svi studenti iz Beograda:<br>
+ispit[idpredmeta, indeks]<br>
+divideby<br>
+(dosije<br>
+where mestorodjenja='Beograd'<br>
+)[indeks] <br>
+<br>
+Ne bi moglo na primer: <br>
+ispit<br>
+divideby<br>
+(dosije<br>
+where mestorodjenja='Beograd'<br>
+)[indeks] <br>
+<br>
+Ispit ima redove indeks, idpredmeta, ocena, oznakaroka (ima vise, ali za primer gledamo ovih nekoliko). Ako delimo to sa dosije[indeks] onda tražimo da svi studenti iz Beograda imaju isti idpredmeta, ocena i oznakaroka (sve kolone osim indeks).<br>
+<br>
+Na primer da su indeksi iz Beograda 1 i 2. A ispit je<br>
+1 p1 6 jun1<br>
+2 p1 7 jun1<br>
+<br>
+Kada podelimo ovu tabelu sa studentima ne dobijamo ništa jer se ocene ne poklapaju. S druge strane, ako bi gledali samo neke kolone ispita:<br>
+1 p1<br>
+2 p1<br>
+Dobili bi p1 kao rezultat jer je svaki student iz Beograda (i 1 i 2) spojen sa predmetom p1. Zbog ovoga spajanje mora ovako, a ne možemo izmnožiti parove predmeta pa onda nešto dalje.<br>
+Nakon ovoga imamo samo id predmeta, pošto će nam trebati više informacija (espb i  naziv), dalje možemo uradit join predmet da bi dobili ostale informacije: <br>
+<br>
+ispit[idpredmeta, indeks]<br>
+divideby<br>
+(dosije<br>
+where mestorodjenja='Beograd'<br>
+)[indeks] <br>
+join predmet<br>
+<br>
+Ovim upitom dobijamo predmet koji treba da se nađe prvi u paru. Drugi predmet treba da ima isti broj espb. Ovde moramo koristiti times, jer join spaja po kolonama koje imaju isti naziv (u našem slučaju bi samo spojio predmet sa samim sobom). Dodatno moramo uvesti alias da bi spojili drugi predmet. Dodamo na kraju uslov da predmeti imaju isti broj espb.<br>
+<br>
+define alias p for predmet<br>
+<br>
+(ispit[idpredmeta, indeks]<br>
+divideby<br>
+(dosije<br>
+where mestorodjenja='Beograd'<br>
+)[indeks] <br>
+join predmet<br>
+times p<br>
+where p.espb=espb )<br>
+[naziv, espb, p.naziv, p.espb]<br>
+<br>
+Dodatno bi se moglo razmotriti dodavanje uslova za različitost predmeta, na primer p.idpredmeta < idpredmeta.<br>
+Raar checker deluje da daje pogrešan rezultat.<br>
+<br>
+<h3>Relacioni račun:</h3>
+Prvo gledamo predmete koji su polagali svi studenti iz Beograda: <br>
+<br>
+range of p1 is predmet<br>
+range of i is ispit<br>
+range of d is dosije<br>
+<br>
+p1.naziv, p1.espb<br>
+where forall d ( if d.mestorodjenja='Beograd' then exists i (i.indeks=d.indeks and i.idpredmeta=p1.idpredmeta ) )<br>
+<br>
+Dakle za sve studente, ali samo ako su iz Beograda, važi da postoji ispit na kom su oni (uslov sa indkesom) polagali baš taj predmet (uslov za predmet).<br>
+<br>
+Raar checker ne daje dobar rezultat.<br>
+<br>
+Dalje treba da dodamo drugi predmet koji ima isti broj bodova:<br>
+<br>
+range of p1 is predmet<br>
+range of p2 is predmet<br>
+range of ix is ispit<br>
+range of dx is dosije<br>
+<br>
+p1.naziv, p1.espb, p2.naziv, p2.espb<br>
+where forall dx ( if dx.mestorodjenja='Beograd' then exists ix (ix.indeks=dx.indeks and ix.idpredmeta=p1.idpredmeta ) )  <br>
+and p1.espb = p2.espb
+                </p>
+
+                <p><b>Napomena: </b>U objašnjenu RaaR check aplikacije u 10-om času postoji objašnjenje kako uvesti podatke.</p>
+            </div>
+
             <div class="obavestenje">
                 <h3>Konsultacije</h3>
                 Konsultacije pred septembarski rok će se održati online u četvrtak 24.08 u 17h. <br>

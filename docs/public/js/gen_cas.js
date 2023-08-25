@@ -1,5 +1,5 @@
 if(!localStorage.hasOwnProperty("prikazanoObavestenje") || localStorage.getItem("prikazanoObavestenje") != (new Date()).toDateString()) {
-    window.alert("Konsultacije: 24.08 u 17h. Link je u obaveštenju.");
+    window.alert("Na zvaničnoj strani predmeta je postavljena anketa za prijavu ispita. Molimo Vas da je savesno popunite. Hvala!");
     localStorage.setItem("prikazanoObavestenje", (new Date()).toDateString())
 } 
 
