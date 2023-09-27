@@ -1,0 +1,79 @@
+4. zadatak 
+----------------------------
+Relaciona algebra:
+Predmeti koje su polagali svi studenti iz Beograda:
+ispit[idpredmeta, indeks]
+divideby
+(dosije
+where mestorodjenja='Beograd'
+)[indeks]
+
+Ne bi moglo na primer:
+ispit
+divideby
+(dosije
+where mestorodjenja='Beograd'
+)[indeks]
+
+Ispit ima redove indeks, idpredmeta, ocena, oznakaroka (ima vise, ali za primer gledamo ovih nekoliko). Ako delimo to sa dosije[indeks] onda tražimo da svi studenti iz Beograda imaju isti idpredmeta, ocena i oznakaroka (sve kolone osim indeks).
+
+Na primer da su indeksi iz Beograda 1 i 2. A ispit je
+1 p1 6 jun1
+2 p1 7 jun1
+
+Kada podelimo ovu tabelu sa studentima ne dobijamo ništa jer se ocene ne poklapaju. S druge strane, ako bi gledali samo neke kolone ispita:
+1 p1
+2 p1
+Dobili bi p1 kao rezultat jer je svaki student iz Beograda (i 1 i 2) spojen sa predmetom p1. Zbog ovoga spajanje mora ovako, a ne možemo izmnožiti parove predmeta pa onda nešto dalje.
+Nakon ovoga imamo samo id predmeta, pošto će nam trebati više informacija (espb i naziv), dalje možemo uradit join predmet da bi dobili ostale informacije:
+
+ispit[idpredmeta, indeks]
+divideby
+(dosije
+where mestorodjenja='Beograd'
+)[indeks]
+join predmet
+
+Ovim upitom dobijamo predmet koji treba da se nađe prvi u paru. Drugi predmet treba da ima isti broj espb. Ovde moramo koristiti times, jer join spaja po kolonama koje imaju isti naziv (u našem slučaju bi samo spojio predmet sa samim sobom). Dodatno moramo uvesti alias da bi spojili drugi predmet. Dodamo na kraju uslov da predmeti imaju isti broj espb.
+
+define alias p for predmet
+
+(ispit[idpredmeta, indeks]
+divideby
+(dosije
+where mestorodjenja='Beograd'
+)[indeks]
+join predmet
+times p
+where p.espb=espb )
+[naziv, espb, p.naziv, p.espb]
+
+Dodatno bi se moglo razmotriti dodavanje uslova za različitost predmeta, na primer p.idpredmeta < idpredmeta.
+Raar checker deluje da daje pogrešan rezultat.
+
+Relacioni račun:
+Prvo gledamo predmete koji su polagali svi studenti iz Beograda:
+
+range of p1 is predmet
+range of i is ispit
+range of d is dosije
+
+p1.naziv, p1.espb
+where forall d ( if d.mestorodjenja='Beograd' then exists i (i.indeks=d.indeks and i.idpredmeta=p1.idpredmeta ) )
+
+Dakle za sve studente, ali samo ako su iz Beograda, važi da postoji ispit na kom su oni (uslov sa indeksom) polagali baš taj predmet (uslov za predmet).
+
+Raar checker ne daje dobar rezultat.
+
+Dalje treba da dodamo drugi predmet koji ima isti broj bodova:
+
+range of p1 is predmet
+range of p2 is predmet
+range of ix is ispit
+range of dx is dosije
+
+p1.naziv, p1.espb, p2.naziv, p2.espb
+where forall dx ( if dx.mestorodjenja='Beograd' then exists ix (ix.indeks=dx.indeks and ix.idpredmeta=p1.idpredmeta ) )
+and p1.espb = p2.espb
+
+Napomena: U objašnjenu RaaR check aplikacije u 10-om času postoji objašnjenje kako uvesti podatke.

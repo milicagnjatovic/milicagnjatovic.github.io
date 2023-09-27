@@ -52,157 +52,9 @@
             <p> Kontakt: milica.gnjatovic[at]matf.bg.ac.rs</p>
             
             <h3><a href="http://www.bazepodataka.matf.bg.ac.rs/RelacioneBazePodataka.html#0_tab">Zvanična stranica predmeta</a></h3>
-
-            <h3>Deo rezultata</h3>
-            <p>Rezultate za 2. i 3. zadatak možete videti u narednoj tabeli. Uvid (najverovatnije mejlom) će se obaviti kada izađu zvanični rezultati.
-                <a href="https://docs.google.com/spreadsheets/d/1mOXUWeEyR4ArQP59rXVoGy0bB-GEcKP9LzgeQcf0H9A/edit?usp=sharing" target="_blank">tabela</a>
-            <br>
-                Generalno jako dobro urađeno. Napomena: ukoliko se u zadatku traži da se izmene redovi koji zadovoljavaju neki uslov dovoljan je update (tri linije), nije neophodno pisati ogroman merge (iako i to može i radi kako treba). 
-                Nema potrebe komplikovati :)
-            </p>
-
-            <div class="obavestenje">
-                <h2>Septembar 2 2021 - 4. zadatak</h2>
-                <p>
-                    Napisati upit koji izdvaja parove predmeta za koje važi da imaju isti broj espb bodova i da su prvi
-predmet u paru polagali svi studenti iz Beograda. Izdvojiti nazive predmeta i broj espb bodova.
-                </p>
-
-                <p>
-                    
-                    <h3>Relaciona algebra:</h3>
-Predmeti koje su polagali svi studenti iz Beograda:<br>
-ispit[idpredmeta, indeks]<br>
-divideby<br>
-(dosije<br>
-where mestorodjenja='Beograd'<br>
-)[indeks] <br>
-<br>
-Ne bi moglo na primer: <br>
-ispit<br>
-divideby<br>
-(dosije<br>
-where mestorodjenja='Beograd'<br>
-)[indeks] <br>
-<br>
-Ispit ima redove indeks, idpredmeta, ocena, oznakaroka (ima vise, ali za primer gledamo ovih nekoliko). Ako delimo to sa dosije[indeks] onda tražimo da svi studenti iz Beograda imaju isti idpredmeta, ocena i oznakaroka (sve kolone osim indeks).<br>
-<br>
-Na primer da su indeksi iz Beograda 1 i 2. A ispit je<br>
-1 p1 6 jun1<br>
-2 p1 7 jun1<br>
-<br>
-Kada podelimo ovu tabelu sa studentima ne dobijamo ništa jer se ocene ne poklapaju. S druge strane, ako bi gledali samo neke kolone ispita:<br>
-1 p1<br>
-2 p1<br>
-Dobili bi p1 kao rezultat jer je svaki student iz Beograda (i 1 i 2) spojen sa predmetom p1. Zbog ovoga spajanje mora ovako, a ne možemo izmnožiti parove predmeta pa onda nešto dalje.<br>
-Nakon ovoga imamo samo id predmeta, pošto će nam trebati više informacija (espb i  naziv), dalje možemo uradit join predmet da bi dobili ostale informacije: <br>
-<br>
-ispit[idpredmeta, indeks]<br>
-divideby<br>
-(dosije<br>
-where mestorodjenja='Beograd'<br>
-)[indeks] <br>
-join predmet<br>
-<br>
-Ovim upitom dobijamo predmet koji treba da se nađe prvi u paru. Drugi predmet treba da ima isti broj espb. Ovde moramo koristiti times, jer join spaja po kolonama koje imaju isti naziv (u našem slučaju bi samo spojio predmet sa samim sobom). Dodatno moramo uvesti alias da bi spojili drugi predmet. Dodamo na kraju uslov da predmeti imaju isti broj espb.<br>
-<br>
-define alias p for predmet<br>
-<br>
-(ispit[idpredmeta, indeks]<br>
-divideby<br>
-(dosije<br>
-where mestorodjenja='Beograd'<br>
-)[indeks] <br>
-join predmet<br>
-times p<br>
-where p.espb=espb )<br>
-[naziv, espb, p.naziv, p.espb]<br>
-<br>
-Dodatno bi se moglo razmotriti dodavanje uslova za različitost predmeta, na primer p.idpredmeta < idpredmeta.<br>
-Raar checker deluje da daje pogrešan rezultat.<br>
-<br>
-<h3>Relacioni račun:</h3>
-Prvo gledamo predmete koji su polagali svi studenti iz Beograda: <br>
-<br>
-range of p1 is predmet<br>
-range of i is ispit<br>
-range of d is dosije<br>
-<br>
-p1.naziv, p1.espb<br>
-where forall d ( if d.mestorodjenja='Beograd' then exists i (i.indeks=d.indeks and i.idpredmeta=p1.idpredmeta ) )<br>
-<br>
-Dakle za sve studente, ali samo ako su iz Beograda, važi da postoji ispit na kom su oni (uslov sa indkesom) polagali baš taj predmet (uslov za predmet).<br>
-<br>
-Raar checker ne daje dobar rezultat.<br>
-<br>
-Dalje treba da dodamo drugi predmet koji ima isti broj bodova:<br>
-<br>
-range of p1 is predmet<br>
-range of p2 is predmet<br>
-range of ix is ispit<br>
-range of dx is dosije<br>
-<br>
-p1.naziv, p1.espb, p2.naziv, p2.espb<br>
-where forall dx ( if dx.mestorodjenja='Beograd' then exists ix (ix.indeks=dx.indeks and ix.idpredmeta=p1.idpredmeta ) )  <br>
-and p1.espb = p2.espb
-                </p>
-
-                <p><b>Napomena: </b>U objašnjenu RaaR check aplikacije u 10-om času postoji objašnjenje kako uvesti podatke.</p>
-            </div>
-
-            <div class="obavestenje">
-                <h3>Konsultacije</h3>
-                Konsultacije pred septembarski rok će se održati online u četvrtak 24.08 u 17h. <br>
-                <a href="https://matf.webex.com/matf/j.php?MTID=m555a98d7a31240d65181225a628bda08">link</a><br>
-                Šifra: rbprbp <br>
-                Spremite pitanja :)
-            </div>
-
-            <div class="obavestenje">
-                <h3>Konsultacije</h3>
-                Konsultacije pred februarski rok će se održati online u nedelju 29.01 u 10h. <br>
-                <a href="https://matf.webex.com/matf/j.php?MTID=mb1475166105d05d4524e13f68a20b613">link</a><br>
-                Šifra: rbprbp <br>
-                Spremite pitanja :)
-            </div>
-    
-            <div class="obavestenje">
-                <h3>Uvid</h3>
-                Uvid za drugi i treći zatak će se obaviti mejlom. <br>
-                Možete mi pisati od sutra (petak), da bih stigla tokom vikenda svima da odgovorim (bez obzira na ostatak rezultata). <br>
-                Za naslov mejla stavite <b>[RBP] Uvid</b>, i obavezno pišite sa <b>studentskih alas naloga</b> (dešavalo se da gmail ode u spam pa da ne vidim).
-            </div>
-
-            <div class="obavestenje">
-            <h3>Časovi u januaru</h3>
-            Rešenja rokova su okačena u dnu stranice u delu sa rokovima.<br>
-            <b>Greška koja se javila na času u četvrtak:</b> U bazi je postojao trigger UNOS koji radi nad tabelom koja ne postoji, i taj okidač je javljao grešku (jer nad jednom tabelom može postojati više triggera koji reaguju u isto ili različito vreme). U rešenju za sep1 2021 ima dodatni komentar kako izbeći takve greške.<br>
-
-            <a href="https://matf.webex.com/matf/ldr.php?RCID=b0afc06aaaf21d9bece2396fabd8a2df" target="_blank">Snimak 3.1, jan1 2022</a>, šifra: <b>Rbp03.01</b><br>
-            <a href="https://matf.webex.com/matf/ldr.php?RCID=cc91eeb2f7f3f6f31a9bd8d07498f185" target="_blank">Snimak 5.1, sep1 2021</a>, šifra: <b>Rbp05.01</b>
-
-            <p>Za dodatne konsultacije se možete javiti mejlom.</p>
-            </div>
-
-            
-            <h3>Deo rezultata</h3>
-            <p>Rezultate za 2. i 3. zadatak možete videti u narednoj tabeli. Uvid (najverovatnije mejlom) će se obaviti kada izađu zvanični rezultati.
-                <a href="https://docs.google.com/spreadsheets/d/1mOXUWeEyR4ArQP59rXVoGy0bB-GEcKP9LzgeQcf0H9A/edit?usp=sharing" target="_blank">tabela</a>
-            <br>
-            Pošto su triggeri posebno loše odrađeni dodato je još objašnjenja za 9. čas.
-            </p>
-
-            <h3>Snimak nadoknade</h3>
-            <a href="https://matf.webex.com/matf/ldr.php?RCID=1dacaf5a68580844cb3d203555433195">Snimak</a> <br>
-            Šifra: RBP5petak
-            
-            <p>Ukoliko nekog zanima funkcionalno programiranje može da isprati naredni <a href="https://forum.hklbgd.org/t/radionica-funkcionalnog-programiranja/258" target="_blank">link</a>.</p>
-
-            <h3>Prisustvo</h3>
-            <p>Prisustvo se NE BODUJE. Zamolila bih studente da unesu na kojim časovima su bili.
-                Ovo će biti kao malo istraživanje da li studenti koji dolaze na vežbe postižu bolje razultat od onih koji ne dolaze.
-                <a href="https://docs.google.com/spreadsheets/d/1vs1RbOP7habpQxw_e56Qwbuf2BysVfEH2rMzpADlM08/edit?usp=sharing">tabela</a>
-            </p>
+           
+            <h3 class="obavestenje">Srećan početak novog semestra! <br>
+                Sva važna obaveštenja će biti na zvaničnoj strani predmeta.</h3>
             
             <h1 id="podesavanje_sistema">Podešavanje sistema</h1>
             <p>
@@ -1190,6 +1042,12 @@ loadClassFromJSON("cas12zadaci", "resources/rbp/cas12.json")
     dohvatiRokove()
 </script>
 
+<p>
+    <h3>Snimci konsultacija na kojima su rađeni rokovi:</h3>
+    <a href="https://matf.webex.com/matf/ldr.php?RCID=b0afc06aaaf21d9bece2396fabd8a2df" target="_blank">Snimak 3.1, jan1 2022</a>, šifra: <b>Rbp03.01</b><br>
+    <a href="https://matf.webex.com/matf/ldr.php?RCID=cc91eeb2f7f3f6f31a9bd8d07498f185" target="_blank">Snimak 5.1, sep1 2021</a>, šifra: <b>Rbp05.01</b>
+
+</p>
 
 <!-- levi div-->
          </div>
