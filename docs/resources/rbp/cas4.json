@@ -177,7 +177,8 @@
     "zadaciZaVezbanje":[
         "Izdvojiti ime i prezime studenata za koga važi da postoji student koji je rođen u istom mestu i koji je godinu dana ranije upisao fakultet.",
         "Napisati na SQL-u upit koji za svaki predmet izdvaja studenta koji je taj predmet položio u poslednjih 5 godina i 3 meseca. Izdvojiti naziv predmeta i ime i prezime studenta. Ime i prezime studenta izdvojiti kao jednu nisku i kolonu koja sadrži ime i prezime studenta nazvati Student. Ako nijedan student nije položio predmet u zadatom periodu, umesto imena i prezimena studenta ispisati Nema studenata. Rezultat urediti prema nazivu predmeta.",
-        "Za sve studente koji su fakultet upisali u julu ili septembru kod kojih su ime i prezime iste dužine, izdvojiti informacije o polaganjima svih predmeta čiji naziv počinje slovom P. Izdvojiti indeks studenta, ime i prezime studenta u obliku prezime razmak ime (kolonu nazvati Prezime pa ime), naziv predmeta i dobijenu ocenu. U rezultatu izdvojiti i podatke o studentima koji su fakultet upisali u julu ili septembru, a nisu polagali predmet čiji naziv pocinje slovom P.",
-        "Pronaći nazive ispitnih rokova u kojima su polagali svi studenti koji imaju bar jednu ocenu 10."
+        "Za sve studente koji su fakultet upisali u julu ili septembru kod kojih su ime i prezime iste dužine, izdvojiti informacije o polaganjima svih predmeta čiji naziv počinje slovom P. Izdvojiti indeks studenta, ime i prezime studenta u obliku prezime razmak ime (kolonu nazvati Prezime pa ime), naziv predmeta i dobijenu ocenu. U rezultatu izdvojiti i podatke o studentima koji su fakultet upisali u julu ili septembru, a nisu polagali predmet čiji naziv pocinje slovom P. U ovom slučaju umesto predmeta ispisati ----, a umesto ocene -1.",
+        "Pronaći nazive ispitnih rokova u kojima su polagali svi studenti koji imaju bar jednu ocenu 10.",
+        "Ispisati nazive ispitnih rokove takvih da su svi studenti dobili 10 u tom roku."
     ]
 }
