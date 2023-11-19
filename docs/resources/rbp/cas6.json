@@ -16,9 +16,10 @@
         },{
             "z": "Naći broj ispitnih rokova u kojima su studenti položili bar 2 različita predmeta.  ",
             "r": [
-                "WITH STUDENT_ROK_POLOZENO AS (<br><tab></tab>SELECT INDEKS, OZNAKAROKA, SKGODINA, COUNT(*) POLOZENO<br><tab></tab>FROM DA.ISPIT<br><tab></tab>WHERE STATUS='o' AND OCENA>5<br><tab></tab>GROUP BY INDEKS, OZNAKAROKA, SKGODINA<br><tab></tab>HAVING COUNT(*)>2<br>)<br>SELECT COUNT(*)<br>FROM STUDENT_ROK_POLOZENO;",
-                "WITH STUDENT_ROK_POLOZENO AS (<br><tab></tab>SELECT INDEKS, OZNAKAROKA, SKGODINA, COUNT(*) POLOZENO<br><tab></tab>FROM DA.ISPIT<br><tab></tab>WHERE STATUS='o' AND OCENA>5<br><tab></tab>GROUP BY INDEKS, OZNAKAROKA, SKGODINA<br>)<br>SELECT COUNT(*)<br>FROM STUDENT_ROK_POLOZENO<br>WHERE POLOZENO>2;"
-            ]
+                "WITH STUDENT_ROK_POLOZENO AS (<br><tab></tab>SELECT INDEKS, OZNAKAROKA, SKGODINA, COUNT(*) POLOZENO<br><tab></tab>FROM DA.ISPIT<br><tab></tab>WHERE STATUS='o' AND OCENA>5<br><tab></tab>GROUP BY INDEKS, OZNAKAROKA, SKGODINA<br><tab></tab>HAVING COUNT(*)>2<br>)<br>SELECT COUNT(DISTINCT OZNAKAROKA || SKGODINA)<br>FROM STUDENT_ROK_POLOZENO;",
+                "WITH STUDENT_ROK_POLOZENO AS (<br><tab></tab>SELECT INDEKS, OZNAKAROKA, SKGODINA, COUNT(*) POLOZENO<br><tab></tab>FROM DA.ISPIT<br><tab></tab>WHERE STATUS='o' AND OCENA>5<br><tab></tab>GROUP BY INDEKS, OZNAKAROKA, SKGODINA<br>)<br>SELECT COUNT(DISTINCT SKGODINA || OZNAKAROKA)<br>FROM STUDENT_ROK_POLOZENO<br>WHERE POLOZENO>2;"
+            ],
+            "n": "Ako bi radili count(*) imali bi ponovljene studente i ponovljene rokove. Na primer ako je jedan student položio 3 ispita u jan1, jan2... Ali ako imamo drugog studenta koji je položio više od dva ispita u tim rokovima i oni će biti prebrojani. Različite rokove bi dobili ako u select stavimo distinct skgodina, oznakaroka; njih treba da prebrojimo. Treba da ih ima manje ili jednako od ukupnog broja rokova. Pošto u count distinct ne može da se stavi više kolona potrebano je da kolone koje bi stavili tu spojimo u jednu kolonu, i time zaobiđemo ograničenje."
         },{
             "z": "Za svaki predmet izdvojiti identifikator i broj različitih studenata koji su ga polagali. Uz identifikatore predmeta koje niko nije polagao izdvojiti 0.",
             "r": [
