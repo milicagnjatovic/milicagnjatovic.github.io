@@ -697,10 +697,23 @@ loadClassFromJSON("cas7zadaci", "resources/rbp/cas7.json")
     <b>CREATE VIEW</b> IME_POGLEDA <b>AS</b><br>
     SELECT ... <br>
     FROM ... <br>
-    WHERE ...
+    WHERE ... <br>
+    [WITH CHECK OPTION]
 </p>
 
 <p class="kod"><b>DROP VIEW</b> IME_POGLEDA;</p>
+
+<p>
+    Originalna tabela može da se menja preko pogleda samo ako je pogled definisan nad jednom tabelom. Ukoliko bi nam bilo potrebno spajanje više tabela, to može da se zaobiđe podupitima.
+    Ukoliko kolona nije navedena u pogledu pri unosu će njena vrednost biti null. Zbog ovoga je važno da ukoliko radimo unos preko pogleda u pogledu budu navedene sve not null kolone. 
+    Koje kolone su not null možemo videti u komandi za kreiranje tabele ili na dijagramu. <br>
+    With check option navodimo ukoliko želimo da se pri unosu proveri da li dati red zadovoljava uslov pogleda. 
+    Na primer, ako pogleda sadrži studente upisane posle 2018e:
+    <ul>
+        <li>Ukoliko je pogled defisnisan BEZ with chevk opcije moći ćemo da unesemo studenta upisanog na primer 2015e. Ovaj student će biti unet u tabelu, ali nećemo moći da ga vidimo preko pogleda (jer je pogled definisan tako da prikazuje studente upisane posle 2018e).</li>
+        <li>Ukoliko je pogled definisan SA with check opcijom preko njega nećemo moći da unesemo studenta uposanog pre 2018e.</li>
+    </ul>
+</p>
 
 <h2>Indeksi</h2>
 <img src="./resources/rbp/index.gif" alt="index" style="width: 80%;">
@@ -722,6 +735,19 @@ loadClassFromJSON("cas7zadaci", "resources/rbp/cas7.json")
 
 </p>
 <p class="kod"><b>DROP FUNCTION</b> IME_FUNKCIJE;</p>
+
+<p>
+    Pri kreiranju korisnički definisanih funkcija treba obratiti pažnju na sledeće:
+    <ul>
+        <li>Izbegavati nazivanje argumenata funkcije kao kolone tabele koja se koristi. Ako na primer imamo argument funkcije INDEKS i poređenje D.INDEKS=INDEKS poređenje će uvek vraćati true. Odnosno dobićemo više redova umesto jedne vrednosti. Greška se ovde vidi tek pri pozivu funkcije.</li>
+        <li>Tipovi argumenta sa kojim se poziva funkcija treba da se poklope sa vrednošću sa kojom se poziva funkcija. Ako ćemo na primer prosleđivati indeks kao argument, u funkciji mora biti integer tip argumenta, ako bi stavili smallint dobili bi grešku pri pozivu funkcije.</li>
+        <li>Možemo imati više funkcija istog naziva koje primaju različite argumente. Koja funckija će biti pozvana zavisi od tipa argumenta. Ako imamo dve funkcije CENA, jedna prima INTEGER, druga SMALLINT. Ako pozovemo funkciju sa velikim brojem (više nego što samllint dozvoljava), biće pozvana funkcija koja prima INTEGER. Ako pozovemo sa 123 na primer, opet će biti pozvana za integer jer se vrši sutomatsko kastovanje. Ako želimo da naglasimo da se poziva funkcija za smallint potrebano je da vršimo kastovanje: SMALLINT(123). Identično može da uradi za integer: INTEGER(123).
+            Drugi problem ako imamo više funkcija istog naziva je njihovo brisanje. Ako pokušamo DROP FUNCTION CENA neće uspeti jer sistem ne zna koju od dve funkcije da obriše. 
+            Da bi obrisali odgovarajuću funkciju moramo da naglasimo koju želimo, to radimo tako što stavimo koji je tip argumenta: DROP FUNCITON CENA(INTGER), ili DROP FUNCTION(SMALLINT). Tip nije potreban ako imamo samo jednu funkciju.
+            Možemo imati funkcije istog naziva i različitog broja argumenata.
+        </li>
+    </ul>
+</p>
 
 <h2>Gde naći šta sve ima u bazi?</h2>
 <p>Sve tabele se nalaze u tabeli SYSCAT.TABLES. Ako želimo samo tabele neke scheme možemo iskorisiti naredni upit:</p>
