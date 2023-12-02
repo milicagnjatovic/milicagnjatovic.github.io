@@ -50,7 +50,7 @@
         {
             "z":"Izdvojiti parove predmeta koji imaju isti broj bodova. Izdvojiti šifre i nazive predmeta. ",
             "r":[
-                "define alias predmet1 for predmet<br>define alias predmet2 for predmet <br>((predmet1 times predmet2)<br> where predmet1.espb=predmet2.espb and predmet1.idpredmeta<predmet2.idpredmeta)<br>[predmet1.oznaka, predmet1.naziv, predmet2.oznaka, predmet2.naziv] "
+                "define alias predmet1 for predmet<br>define alias predmet2 for predmet <br>((predmet1 times predmet2)<br> where predmet1.espb=predmet2.espb and predmet1.idpredmeta>predmet2.idpredmeta)<br>[predmet1.oznaka, predmet1.naziv, predmet2.oznaka, predmet2.naziv] "
             ],
             "n": "RARRChecker ovde ne daje dobar rezultat."
         },
