@@ -58,7 +58,8 @@
             "z":"Izdvojiti nazive ispitnih rokova u kojima je polozen predmet Analiza 1.",
             "r":[
                 "(((predmet where naziv='Analiza 1')[idpredmeta]<br>join (ispit where ocena>5))<br>join ispitnirok)[naziv]"
-            ]
+            ],
+            "n": "Ukoliko ne bi izdvojili idpredmeta iz tabele predmete onda bi imali sve redove iz tabele predmet, uključujući i naziv. Join radi spajanje po nazivima kolona, u SQL-u bi to bilo kao da u ON stavimo sve kolone istog naziva (table1.A=table2.A and table1.B=table2.B...).Ovde pravi problem ukoliko imamo naziv predmeta jer će u spajanju podrazumevano biti spojeno sa nazivom roka (odnosno ON P.NAZIV=ROK.NAZIV)."
         },
         {
             "z":"Izdvojiti indekse studenata koji nisu polagali ispite u ispitnom roku sa oznakom apr.",
