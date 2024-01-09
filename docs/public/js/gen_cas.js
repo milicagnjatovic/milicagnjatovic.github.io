@@ -1,7 +1,10 @@
-// if(!localStorage.hasOwnProperty("prikazanoObavestenje") || localStorage.getItem("prikazanoObavestenje") != (new Date()).toDateString()) {
-    // window.alert("Na zvaničnoj strani predmeta je postavljena anketa za prijavu ispita. Molimo Vas da je savesno popunite. Hvala!");
-    // localStorage.setItem("prikazanoObavestenje", (new Date()).toDateString())
-// } 
+if(!localStorage.hasOwnProperty("prikazanoObavestenje") || localStorage.getItem("prikazanoObavestenje") != (new Date()).toDateString()) {
+    window.alert("Na zvaničnoj strani predmeta je postavljena anketa za prijavu ispita. Molimo Vas da je savesno popunite. Hvala!");
+    localStorage.setItem("prikazanoObavestenje", (new Date()).toDateString())
+} 
+
+// window.alert("Na zvaničnoj strani predmeta je anketa za prijavu ispita. Molimo studente koji planiraju da polažu u junu 1 da se prijave.")
+
 
 function loadClassFromJSON(elId, classFile, prikazi = 'block'){
     let root = document.getElementById(elId)
