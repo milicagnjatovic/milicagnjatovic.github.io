@@ -87,7 +87,7 @@ function loadClassFromJSON(elId, classFile, prikazi = 'block'){
 
 function dohvatiRokove(){
     let root = document.getElementById("rokoviLinkovi")
-    fetch("/docs//resources/rbp/rokovi/files.json") // vr=1.0 da bi se video najnoviji fajl
+    fetch("../../resources/rbp/rokovi/files.json") // vr=1.0 da bi se video najnoviji fajl
     .then(response => response.json())
     .then(data => {
         let tabela = document.createElement('table');
