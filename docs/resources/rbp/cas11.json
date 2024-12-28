@@ -99,7 +99,7 @@
         {
             "z":"[Rešiti na relacionom računu i algebri] Pronaći predmete koje su položili dva studenta rođena istog dana. Izdvojiti datum rođenja i naziv predmeta. ",
             "r":[
-                "[Račun]<br>range of px is predmet <br>range of dx is dosije <br>range of dy is dosije <br>range of ix is ispit <br>range of iy is ispit <br><br>dx.datupisa, px.naziv <br>where exists ix(ix.indeks=dx.indeks and ix.idpredmeta=px.idpredmeta and ix.ocena>5 and <br>exists iy(iy.idpredmeta=px.idpredmeta and iy.ocena>5 and exists dy(dy.indeks&lt;dx.indeks <br>and dx.datupisa=dy.datupisa)))",
+                "[Račun]<br>range of px is predmet <br>range of dx is dosije <br>range of dy is dosije <br>range of ix is ispit <br>range of iy is ispit <br><br>dx.datupisa, px.naziv <br>where exists ix(ix.indeks=dx.indeks and ix.idpredmeta=px.idpredmeta and ix.ocena>5 and <br>exists iy(iy.idpredmeta=px.idpredmeta and iy.ocena>5 and exists dy(dy.indeks&lt;dx.indeks <br>and dx.datupisa=dy.datupisa and iy.indeks=dy.indeks)))",
                 "[Algebra]<br>define alias i1 for ispit <br>define alias i2 for ispit <br>define alias d1 for dosije <br>define alias d2 for dosije <br>(((((i1 where i1.ocena>5) join d1) <br>times <br>((i2 where i2.ocena>5) join d2)) <br>where i1.idpredmeta=i2.idpredmeta and i1.indeks&lt;i2.indeks and d1.datupisa=d2.datupisa)<br>join predmet)[d1.datupisa, naziv]"
             ]
         },
