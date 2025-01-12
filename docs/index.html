@@ -829,8 +829,8 @@ STRING može biti neka kolona, kol1 || kol2, DISTINCT kol...
 
 <p><b>Napomena:</b> OLD vrednost ako imamo one su u BEFORE triggeru, NEW vrednosti možemo imati u BEFORE i AFTER.</p>
 
-<p>Kada radimo sa triggerima u većini slučajva ćemo imati više naredbi u telu i te naredbe treba razdvojiti sa ";". Ali ako ";" iskoistimo unutar kreiranja triggera (koji je jedna komanda), onda ne možemo to iskoristiti za kraj naredbe.
-    Zbog toga uvodimo novi terminator, tipično @. 
+<p>Ukoliko se koriste Data Studio ili se upiti za kreiranje okidača pokreću preko terminala potrebno je uvesti novi separator. Kada radimo sa triggerima u većini slučajva ćemo imati više naredbi u telu i te naredbe treba razdvojiti sa ";". Ali ako ";" iskoistimo unutar kreiranja triggera (koji je jedna komanda), onda ne možemo to iskoristiti za kraj naredbe.
+    Zbog toga uvodimo novi terminator, tipično @. U DataGrip-u ovo pravi grešku i dovoljno je koristiti ;.
 </p>
 <p class="kod">--#SET TERMINATOR @</p>
 <p>Komanda ide baš ovako, -- u ovom slučaju ne gledaju ovo kao komentar. <br>
